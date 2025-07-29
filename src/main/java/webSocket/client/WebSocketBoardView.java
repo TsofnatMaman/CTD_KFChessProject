@@ -1,9 +1,9 @@
-package server.client;
+package webSocket.client;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import game.IBoardView;
 import interfaces.IGame;
-import server.dto.GameDelta;
+import webSocket.server.dto.GameDelta;
 import utils.LogUtils;
 
 import javax.websocket.Session;

@@ -1,4 +1,4 @@
-package server.dto;
+package webSocket.server.dto;
 
 public class PieceDTO {
     private final String id;

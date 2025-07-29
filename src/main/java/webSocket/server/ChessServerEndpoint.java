@@ -1,4 +1,4 @@
-package server;
+package webSocket.server;
 
 import game.GameController;
 import game.Game;

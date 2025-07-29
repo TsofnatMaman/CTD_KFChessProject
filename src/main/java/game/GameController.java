@@ -6,11 +6,9 @@ import interfaces.IGame;
 import interfaces.IPlayer;
 import pieces.Position;
 import player.Player;
-import player.PlayerCursor;
-import server.client.Client;
+import webSocket.client.Client;
 
 import javax.websocket.Session;
-import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 

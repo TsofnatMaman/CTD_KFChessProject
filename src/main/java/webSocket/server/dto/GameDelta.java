@@ -1,10 +1,9 @@
-package server.dto;
+package webSocket.server.dto;
 
 import interfaces.IBoard;
 import interfaces.IGame;
 import interfaces.IPiece;
 import interfaces.IPlayer;
-import moves.Move;
 import pieces.Position;
 
 import java.util.ArrayList;

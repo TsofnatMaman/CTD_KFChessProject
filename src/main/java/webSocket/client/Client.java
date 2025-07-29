@@ -1,4 +1,4 @@
-package server.client;
+package webSocket.client;
 
 import interfaces.IGame;
 

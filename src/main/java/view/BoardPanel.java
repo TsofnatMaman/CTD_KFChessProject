@@ -3,6 +3,8 @@ package view;
 import game.IBoardView;
 import interfaces.*;
 import board.BoardRenderer;
+import pieces.Position;
+import utils.LogUtils;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -16,15 +18,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 
-import pieces.Position;
-import utils.LogUtils;
-
 /**
  * Panel for displaying the game board and handling player input.
+ * מעודכן לתמיכה בעדכון מצב מבחוץ (למשל מ-WebSocket).
  */
 public class BoardPanel extends JPanel implements IBoardView {
     private BufferedImage boardImage;
-    private final IBoard board;
+    private IBoard board;  // אפשר לעדכן את הלוח לפי המצב שהתקבל
 
     private final IPlayerCursor cursor1;
     private final IPlayerCursor cursor2;
@@ -40,7 +40,6 @@ public class BoardPanel extends JPanel implements IBoardView {
 
     private static final Color SELECT_COLOR_P1 = new Color(255, 0, 0, 128);   // אדום חצי שקוף
     private static final Color SELECT_COLOR_P2 = new Color(0, 0, 255, 128);   // כחול חצי שקוף
-
 
     public BoardPanel(IBoard board, IPlayerCursor pc1, IPlayerCursor pc2) {
         this.board = board;
@@ -100,9 +99,9 @@ public class BoardPanel extends JPanel implements IBoardView {
                 if (onPlayer1Action != null) onPlayer1Action.accept(null);
                 repaint();
             }
-            }
+        }
 
-            switch (key) {
+        switch (key) {
             case KeyEvent.VK_W -> cursor2.moveUp();
             case KeyEvent.VK_S -> cursor2.moveDown();
             case KeyEvent.VK_A -> cursor2.moveLeft();
@@ -112,7 +111,6 @@ public class BoardPanel extends JPanel implements IBoardView {
                 if (selected2 == null) {
                     IPiece p = board.getPiece(pos);
                     if (p == null || p.isCaptured() || board.getPlayerOf(p) != 1 || !p.getCurrentStateName().isCanAction()) {
-                        System.err.println("can not choose piece");
                         LogUtils.logDebug("can not choose piece");
                     } else {
                         selected2 = pos;
@@ -126,6 +124,35 @@ public class BoardPanel extends JPanel implements IBoardView {
             }
         }
 
+        repaint();
+    }
+
+    // SETTERS לעדכון מבחוץ (למשל מהשרת)
+    public void setSelectedForPlayer(int playerId, Position selected) {
+        if (playerId == 0) {
+            selected1 = selected;
+        } else if (playerId == 1) {
+            selected2 = selected;
+        }
+        repaint();
+    }
+
+    public void setLegalMovesForPlayer(int playerId, List<Position> moves) {
+        if (playerId == 0) {
+            legalMoves1 = moves;
+        } else if (playerId == 1) {
+            legalMoves2 = moves;
+        }
+        repaint();
+    }
+
+    /**
+     * עדכון לוח לפי רשימת כלים שנשלחה מבחוץ (למשל מ-WebSocket).
+     * כאן אפשר להחליף או לעדכן את ה-board או מודל הלוח בהתאם.
+     * חשוב שה-board שלך תומך בעדכון כלים.
+     */
+    public void setBoard(IBoard newBoard) {
+        this.board = newBoard;
         repaint();
     }
 
@@ -188,5 +215,4 @@ public class BoardPanel extends JPanel implements IBoardView {
             }
         }
     }
-
 }
