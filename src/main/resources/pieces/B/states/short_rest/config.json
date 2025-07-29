@@ -1,0 +1,10 @@
+{
+  "physics": {
+    "speed_m_per_sec": 50.0,
+    "next_state_when_finished": "idle"
+  },
+  "graphics": {
+    "frames_per_sec": 2,
+    "is_loop": false
+  }
+}
