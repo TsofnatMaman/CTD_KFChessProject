@@ -1,14 +1,11 @@
 package events.listeners;
 
-import events.EventPublisher;
-import events.GameEvent;
-import events.IEventListener;
-import events.SoundManager;
+import events.*;
 
 public class JumpsLogger implements IEventListener {
 
     public JumpsLogger(){
-        EventPublisher.getInstance().subscribe(GameEvent.PIECE_JUMP, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);
     }
 
     @Override

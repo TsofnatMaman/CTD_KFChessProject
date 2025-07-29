@@ -1,5 +1,6 @@
         package board;
 
+        import events.EGameEvent;
         import events.EventPublisher;
         import events.GameEvent;
         import events.listeners.ActionData;
@@ -213,7 +214,7 @@
 
             private void logCapture(String message, IPiece piece) {
                 String mes = message + ": " + piece.getId();
-                EventPublisher.getInstance().publish(GameEvent.PIECE_CAPTURED, new GameEvent(GameEvent.PIECE_CAPTURED, new ActionData(-1 ,"score update")));
+                EventPublisher.getInstance().publish(EGameEvent.PIECE_CAPTURED, new GameEvent(EGameEvent.PIECE_CAPTURED, new ActionData(-1 ,"score update")));
                 LogUtils.logDebug(mes);
             }
 

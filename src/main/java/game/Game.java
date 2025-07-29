@@ -2,6 +2,7 @@ package game;
 
 import board.Board;
 import board.BoardConfig;
+import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.listeners.CapturedLogger;
@@ -14,6 +15,7 @@ import pieces.Position;
 import utils.LogUtils;
 
 import javax.swing.*;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -104,7 +106,7 @@ public class Game implements IGame {
     }
 
     @Override
-    public void run(IBoardView bv){
+    public void run(IBoardView[] clientViews){
         if (timer == null) {
             timer = new Timer(16, e -> {
                 if(!running){
@@ -115,9 +117,10 @@ public class Game implements IGame {
                 if (win() == null) {
                     update();
                     board.updateAll();
-                    if(bv != null) bv.repaint();
+                    if(clientViews != null) Arrays.stream(clientViews).forEach(IBoardView::repaint);
+                    EventPublisher.getInstance().publish(EGameEvent.GAME_UPDATE, new GameEvent(EGameEvent.GAME_UPDATE, null));
                 } else {
-                    EventPublisher.getInstance().publish(GameEvent.GAME_ENDED, new GameEvent(GameEvent.GAME_ENDED, null));
+                    EventPublisher.getInstance().publish(EGameEvent.GAME_ENDED, new GameEvent(EGameEvent.GAME_ENDED, null));
                     stopGameLoop();
                     LogUtils.logDebug("Game Over. Winner: Player " + win().getName());
                 }
@@ -126,6 +129,7 @@ public class Game implements IGame {
         timer.start();
     }
 
+    @Override
     public void stopGameLoop() {
         if (timer != null && timer.isRunning()) {
             timer.stop();

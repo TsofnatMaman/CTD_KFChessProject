@@ -18,7 +18,6 @@ import java.util.List;
 public class Player implements IPlayer{
     private final int id;
     private String name;
-    private final IPlayerCursor cursor;
     private Position pending;
     private static int mone=0;
 
@@ -29,9 +28,8 @@ public class Player implements IPlayer{
     /**
      * Constructs a Player, initializes pieces and status.
      */
-    public Player(String name ,IPlayerCursor pc, BoardConfig bc){
+    public Player(String name ,BoardConfig bc){
         id = mone++;
-        this.cursor = pc;
         pending=null;
         isFailed = false;
         this.name = name;
@@ -67,14 +65,6 @@ public class Player implements IPlayer{
     @Override
     public String getName() {
         return name;
-    }
-
-    /**
-     * Returns the player's cursor.
-     */
-    @Override
-    public IPlayerCursor getCursor() {
-        return cursor;
     }
 
     /**

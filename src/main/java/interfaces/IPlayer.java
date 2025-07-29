@@ -24,12 +24,6 @@ public interface IPlayer {
     String getName();
 
     /**
-     * Gets the player's cursor.
-     * @return The player cursor
-     */
-    public IPlayerCursor getCursor();
-
-    /**
      * Gets the pending position for selection.
      * @return The pending position
      */

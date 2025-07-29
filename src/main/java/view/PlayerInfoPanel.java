@@ -1,5 +1,6 @@
 package view;
 
+import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
@@ -45,10 +46,10 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
 
         // MovesLogger.subscribe(this, player.getId()); --> onEvent: addMove(((ActionData)event.data).message);
 
-        EventPublisher.getInstance().subscribe(GameEvent.PIECE_MOVED, this);
-        EventPublisher.getInstance().subscribe(GameEvent.PIECE_JUMP, this);
-        EventPublisher.getInstance().subscribe(GameEvent.GAME_STARTED, this);
-        EventPublisher.getInstance().subscribe(GameEvent.PIECE_CAPTURED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_MOVED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_STARTED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);
     }
 
     @Override
@@ -58,7 +59,7 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
             if (player.getId() == ((ActionData) event.data).playerId)
                 addMove(((ActionData) event.data).message);
 
-            if (event.type.equals(GameEvent.PIECE_CAPTURED))
+            if (event.type.equals(EGameEvent.PIECE_CAPTURED))
                 setScore(player.getScore());
         }
 

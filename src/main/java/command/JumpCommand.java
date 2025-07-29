@@ -1,5 +1,6 @@
 package command;
 
+import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.listeners.ActionData;
@@ -35,7 +36,7 @@ public class JumpCommand implements ICommand {
             return;
         board.jump(p);
         EventPublisher.getInstance()
-                .publish(GameEvent.PIECE_JUMP,
-                        new GameEvent(GameEvent.PIECE_JUMP, new ActionData(board.getPlayerOf(Integer.parseInt(p.getId().split(",")[0])),"piece "+p+" jumping")));
+                .publish(EGameEvent.PIECE_JUMP,
+                        new GameEvent(EGameEvent.PIECE_JUMP, new ActionData(board.getPlayerOf(Integer.parseInt(p.getId().split(",")[0])),"piece "+p+" jumping")));
     }
 }

@@ -1,10 +1,14 @@
 package view;
 
+import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
+import game.IBoardView;
 import interfaces.IGame;
 import interfaces.IPlayerCursor;
+import pieces.Position;
+import player.PlayerCursor;
 import utils.LogUtils;
 
 import javax.imageio.ImageIO;
@@ -51,8 +55,8 @@ public class GamePanel extends JPanel implements IEventListener {
         player2Panel.setBackground(semiTransparent);
 
         // Board
-        IPlayerCursor c1 = model.getPlayerById(0).getCursor();
-        IPlayerCursor c2 = model.getPlayerById(1).getCursor();
+        IPlayerCursor c1 = new PlayerCursor(new Position(0,0), Color.RED);
+        IPlayerCursor c2 = new PlayerCursor(new Position(7,7),Color.BLUE);
 
         boardPanel = new BoardPanel(model.getBoard(), c1, c2);
         boardPanel.setPreferredSize(new Dimension(700, 700));
@@ -89,11 +93,11 @@ public class GamePanel extends JPanel implements IEventListener {
 
         LogUtils.logDebug("Initial game state setup");
 
-        EventPublisher.getInstance().subscribe(GameEvent.GAME_ENDED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
     }
 
     public void run() {
-        model.run(boardPanel);
+        model.run(new IBoardView[]{ boardPanel });
     }
 
     private void updateTimer() {

@@ -1,5 +1,6 @@
 package command;
 
+import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.listeners.ActionData;
@@ -42,15 +43,15 @@ public class MoveCommand implements ICommand {
         if (!board.isMoveLegal(from, to)) {
             String mes = "Illegal move from " + from + " to " + to;
             EventPublisher.getInstance()
-                            .publish(GameEvent.PIECE_MOVED,
-                                    new GameEvent(GameEvent.PIECE_MOVED ,new ActionData(board.getPlayerOf(board.getPiece(from)), mes)));
+                            .publish(EGameEvent.PIECE_MOVED,
+                                    new GameEvent(EGameEvent.PIECE_MOVED ,new ActionData(board.getPlayerOf(board.getPiece(from)), mes)));
             LogUtils.logDebug(mes);
             return;
         }
         String mes = ConvertPiecePositionToName.getName(from) + " --> " + ConvertPiecePositionToName.getName(to);
         EventPublisher.getInstance()
-                        .publish(GameEvent.PIECE_MOVED,
-                                new GameEvent(GameEvent.PIECE_MOVED, new ActionData(board.getPlayerOf(board.getPiece(from)), mes)));
+                        .publish(EGameEvent.PIECE_MOVED,
+                                new GameEvent(EGameEvent.PIECE_MOVED, new ActionData(board.getPlayerOf(board.getPiece(from)), mes)));
         LogUtils.logDebug(mes);
         board.move(from, to);
     }

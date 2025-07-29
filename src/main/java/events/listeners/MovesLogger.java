@@ -1,9 +1,6 @@
 package events.listeners;
 
-import events.EventPublisher;
-import events.GameEvent;
-import events.IEventListener;
-import events.SoundManager;
+import events.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,7 +10,7 @@ import java.util.Map;
 public class MovesLogger implements IEventListener {
 
     public MovesLogger(){
-        EventPublisher.getInstance().subscribe(GameEvent.PIECE_MOVED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_MOVED, this);
     }
 
     @Override

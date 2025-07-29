@@ -39,7 +39,9 @@ public interface IGame {
      */
     IPlayer win();
 
-    void run(IBoardView bv);
+    void run(IBoardView[] bvs);
+
+    void stopGameLoop();
 
     long getElapsedTimeMillis();
 

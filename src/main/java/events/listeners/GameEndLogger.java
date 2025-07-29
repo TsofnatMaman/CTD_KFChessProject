@@ -1,14 +1,11 @@
 package events.listeners;
 
-import events.EventPublisher;
-import events.GameEvent;
-import events.IEventListener;
-import events.SoundManager;
+import events.*;
 
 public class GameEndLogger implements IEventListener {
 
     public GameEndLogger(){
-        EventPublisher.getInstance().subscribe(GameEvent.GAME_ENDED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
     }
 
     @Override
