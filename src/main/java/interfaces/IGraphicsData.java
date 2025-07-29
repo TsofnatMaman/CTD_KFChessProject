@@ -56,4 +56,6 @@ public interface IGraphicsData {
      * @return The current frame as BufferedImage
      */
     BufferedImage getCurrentFrame();
+
+    int getCurrentFrameIdx();
 }

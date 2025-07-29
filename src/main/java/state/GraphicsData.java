@@ -115,4 +115,9 @@ public class GraphicsData implements IGraphicsData {
     public BufferedImage getCurrentFrame() {
         return frames[currentFrame];
     }
+
+    @Override
+    public int getCurrentFrameIdx(){
+        return currentFrame;
+    }
 }

@@ -43,5 +43,5 @@ public interface IGame {
 
     long getElapsedTimeMillis();
 
-    String toJson();
+    IPlayer[] getPlayers();
 }

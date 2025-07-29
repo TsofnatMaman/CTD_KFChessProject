@@ -141,7 +141,7 @@ public class Game implements IGame {
     }
 
     @Override
-    public String toJson(){//TODO:implement
-        return "";
+    public IPlayer[] getPlayers() {
+        return players;
     }
 }
