@@ -1,4 +1,4 @@
 -1,0:non_capture
--2,0:first_time
+-2,0:first_time,non_capture
 -1,-1:capture
 -1,1:capture

@@ -2,11 +2,16 @@ package server;
 
 import game.GameController;
 import game.Game;
+import interfaces.ICommand;
+import interfaces.IPlayer;
 import pieces.Position;
 
+import javax.json.Json;
+import javax.json.JsonObject;
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.io.StringReader;
 import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/chess")
@@ -31,10 +36,15 @@ public class ChessServerEndpoint {
     }
 
     @OnMessage
-    public void onMessage(Session session, Position selection) {
-        Integer client = connections.get(session);
-        if (client != null && selection != null) {
-            gameController.handleMessage(client, selection);
+    public void onMessage(Session session, String msg) {
+        JsonObject json = Json.createReader(new StringReader(msg)).readObject();
+        String type = json.getString("type");
+
+        if ("selection".equals(type)) {
+            Position pos = Position.fromString(json.getString("position"));
+            int playerId = json.getInt("playerId");
+
+            gameController.handleMessage(playerId, pos);
         }
     }
 

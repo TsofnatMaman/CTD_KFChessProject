@@ -94,5 +94,10 @@ public class Position {
     public Position copy(){
         return new Position(getRow(), getCol());
     }
+
+    public static Position fromString(String s){
+        String[]rowCol = s.split(",");
+        return new Position(Integer.parseInt(rowCol[0].trim()), Integer.parseInt(rowCol[1].trim()));
+    }
 }
 

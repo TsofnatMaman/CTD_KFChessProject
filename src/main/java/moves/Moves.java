@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -33,7 +34,10 @@ public class Moves {
                     if (steps.length == 2) {
                         int dx = Integer.parseInt(steps[0]);
                         int dy = Integer.parseInt(steps[1]);
-                        moves.add(new Move(dx, dy, parts.length<2?null: ECondition.valueOf(parts[1].toUpperCase())));
+                        String[]conditions = parts.length<2?null:parts[1].split(",");
+                        moves.add(new Move(dx, dy, conditions == null?null: Arrays.stream(conditions)
+                                .map(c -> ECondition.valueOf(c.toUpperCase()))
+                                .toArray(ECondition[]::new)));
                     }
                 }
             }

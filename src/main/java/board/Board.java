@@ -10,6 +10,7 @@
         import pieces.Position;
         import utils.LogUtils;
 
+        import java.util.Arrays;
         import java.util.List;
 
         /**
@@ -258,7 +259,7 @@
                 int dy = to.getCol() - from.getCol();
 
                 Data data = new Data(this, fromPiece, to);
-                boolean isLegal = moves.stream().anyMatch(m -> m.getDx() == dx && m.getDy() == dy && (m.getCondition() == null || m.getCondition().isCanMove(data)));
+                boolean isLegal = moves.stream().anyMatch(m -> m.getDx() == dx && m.getDy() == dy && (m.getCondition() == null || Arrays.stream(m.getCondition()).allMatch(c->c.isCanMove(data))));
 
                 if (!isLegal)
                     return false;

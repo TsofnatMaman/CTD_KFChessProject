@@ -139,4 +139,9 @@ public class Game implements IGame {
         long elapsedNano = System.nanoTime() - startTimeNano;
         return elapsedNano / 1_000_000; // convert from nano to milliseconds
     }
+
+    @Override
+    public String toJson(){//TODO:implement
+        return "";
+    }
 }

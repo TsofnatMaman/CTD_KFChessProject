@@ -42,4 +42,6 @@ public interface IGame {
     void run(IBoardView bv);
 
     long getElapsedTimeMillis();
+
+    String toJson();
 }

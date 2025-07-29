@@ -8,14 +8,14 @@ import java.util.Objects;
 public class Move {
     int dx;
     int dy;
-    ECondition condition;
+    ECondition condition[];
 
     /**
      * Constructs a move with the given delta x and delta y.
      * @param dx Delta x (row difference)
      * @param dy Delta y (column difference)
      */
-    Move(int dx, int dy, ECondition condition) {
+    Move(int dx, int dy, ECondition[] condition) {
         this.dx = dx;
         this.dy = dy;
         this.condition = condition;
@@ -49,7 +49,7 @@ public class Move {
         return Objects.hash(getDx(), getDy());
     }
 
-    public ECondition getCondition() {
+    public ECondition[] getCondition() {
         return condition;
     }
 }

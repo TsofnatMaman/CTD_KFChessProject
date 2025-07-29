@@ -7,13 +7,13 @@ public enum EState {
     /** Idle state, can perform actions, cannot move over. */
     IDLE("idle", true, false),
     /** Jump state, cannot perform actions, cannot move over. */
-    JUMP("jump", false, false),
+    JUMP("jump", false, true),
     /** Move state, cannot perform actions, can move over. */
     MOVE("move", false, true),
     /** Long rest state, cannot perform actions, can move over. */
-    LONG_REST("long_rest", false, true),
+    LONG_REST("long_rest", false, false),
     /** Short rest state, cannot perform actions, can move over. */
-    SHORT_REST("short_rest", false, true);
+    SHORT_REST("short_rest", false, false);
 
     private String name;
     private boolean canAction;
