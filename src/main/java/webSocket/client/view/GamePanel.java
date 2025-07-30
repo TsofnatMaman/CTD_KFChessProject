@@ -1,4 +1,4 @@
-package webSocket.client;
+package webSocket.client.view;
 
 import events.EGameEvent;
 import events.EventPublisher;
@@ -9,7 +9,6 @@ import interfaces.IPlayerCursor;
 import pieces.Position;
 import player.PlayerCursor;
 import utils.LogUtils;
-import view.PlayerInfoPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -20,50 +19,51 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 
 /**
- * Full game panel with board in center, players on sides, and background.
+ * ממשק המשחק הכולל: לוח במרכז, מידע שחקנים בצדדים, רקע וטיימר.
+ * מקבל מודל משחק מלא שמתחיל מהשרת.
  */
 public class GamePanel extends JPanel implements IEventListener {
+
     private final BoardPanel boardPanel;
-    private final PlayerInfoPanel player1Panel;
-    private final PlayerInfoPanel player2Panel;
+    private final PlayerInfoPanel playerPanel;
     private final IGame model;
     private Image backgroundImage;
 
     private JLabel timerLabel;
     private Timer timerForUI;
 
-    public GamePanel(IGame model, int playerId){
+    public GamePanel(IGame model, int playerId) {
         this.model = model;
 
-        // Set layout with gaps between regions
-        setLayout(new BorderLayout(20, 20)); // Spacing between center and sides
-        setBorder(new EmptyBorder(20, 20, 20, 20)); // Internal padding from edges
+        // הגדרות פריסה ומרווחים
+        setLayout(new BorderLayout(20, 20));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
 
-        // Load background image
+        // טעינת תמונת רקע
         try {
             backgroundImage = ImageIO.read(getClass().getClassLoader().getResource("background/background.jpg"));
         } catch (IOException | IllegalArgumentException e) {
             LogUtils.logDebug("Could not load background image: " + e.getMessage());
         }
 
-        // Players info panels
-        player1Panel = new PlayerInfoPanel(model.getPlayerById(0));
-        player2Panel = new PlayerInfoPanel(model.getPlayerById(1));
-
+        // יצירת פאנל מידע שחקן בצד שמאל עם השחקן המקומי
+        playerPanel = new PlayerInfoPanel(model.getPlayerById(playerId));
         Color semiTransparent = new Color(255, 255, 255, 180);
-        player1Panel.setBackground(semiTransparent);
-        player2Panel.setBackground(semiTransparent);
+        playerPanel.setBackground(semiTransparent);
 
-        // Board
-        IPlayerCursor c1 = new PlayerCursor(new Position(0,0), Color.RED);
+        // יצירת סמן שחקן עם צבע ייחודי (לפי מזהה שחקן)
+        Color cursorColor = (playerId == 0) ? Color.RED : Color.BLUE;
+        IPlayerCursor cursor = new PlayerCursor(new Position(0, 0), cursorColor);
 
-        boardPanel = new BoardPanel(model.getBoard(), c1);
+        // יצירת לוח המשחק עם הסמן
+        boardPanel = new BoardPanel(model.getBoard(), cursor);
         boardPanel.setPreferredSize(new Dimension(700, 700));
         boardPanel.setOpaque(false);
 
-        // Events
-        boardPanel.setOnPlayerAction((v) -> model.handleSelection(model.getPlayerById(playerId), c1.getPosition()));
+        // הגדרת מאזין לפעולות השחקן - העברת הבחירה למודל המשחק
+        boardPanel.setOnPlayerAction((v) -> model.handleSelection(model.getPlayerById(playerId), cursor.getPosition()));
 
+        // הבטחת לוח הפוקוס ללוח בעת לחיצה
         boardPanel.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -71,14 +71,13 @@ public class GamePanel extends JPanel implements IEventListener {
             }
         });
 
-        SwingUtilities.invokeLater(() -> boardPanel.requestFocusInWindow());
+        SwingUtilities.invokeLater(boardPanel::requestFocusInWindow);
 
-        // Layout
-        add(player1Panel, BorderLayout.WEST);
-        add(player2Panel, BorderLayout.EAST);
+        // הוספת פאנלים לפריסה
+        add(playerPanel, BorderLayout.WEST);
         add(boardPanel, BorderLayout.CENTER);
 
-        // --- הוספת תצוגת טיימר מעל הלוח ---
+        // יצירת תצוגת טיימר מעל הלוח
         timerLabel = new JLabel("Time: 00:00");
         timerLabel.setFont(new Font("Arial", Font.BOLD, 18));
         timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -87,15 +86,11 @@ public class GamePanel extends JPanel implements IEventListener {
 
         timerForUI = new Timer(1000, e -> updateTimer());
         timerForUI.start();
-        // ---------------------------------------
 
-        LogUtils.logDebug("Initial game state setup");
+        LogUtils.logDebug("GamePanel initialized");
 
+        // הרשמה לאירוע סיום המשחק
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
-    }
-
-    public void run() {
-        model.run();
     }
 
     private void updateTimer() {
@@ -117,5 +112,13 @@ public class GamePanel extends JPanel implements IEventListener {
     public void onEvent(GameEvent event) {
         timerForUI.stop();
         JOptionPane.showMessageDialog(this, "Game Over. Winner: Player " + model.win().getName());
+    }
+
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
+    }
+
+    public IGame getModel() {
+        return model;
     }
 }

@@ -3,6 +3,7 @@ package interfaces;
 import board.BoardConfig;
 import pieces.Position;
 
+import java.awt.*;
 import java.io.Serializable;
 import java.util.List;
 
@@ -59,4 +60,6 @@ public interface IPlayer extends Serializable {
     int getScore();
 
     IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc);
+
+    Color getColor();
 }

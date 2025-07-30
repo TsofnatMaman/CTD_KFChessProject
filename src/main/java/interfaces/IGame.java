@@ -32,6 +32,8 @@ public interface IGame {
      */
     void handleSelection(IPlayer player, Position selected);
 
+    void handleSelection(int playerId, Position selected);
+
     /**
      * Returns the winner: 0 for player 1, 1 for player 2, -1 if no winner yet.
      * @return The winner's player index, or -1 if no winner

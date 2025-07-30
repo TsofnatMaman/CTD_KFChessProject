@@ -1,63 +1,129 @@
 package webSocket.client;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import game.Game;
+import interfaces.IPlayer;
+import interfaces.IGame;
 import pieces.Position;
 import player.PlayerCursor;
-import utils.LogUtils;
-
+import webSocket.client.view.GamePanel;
+import webSocket.server.ServerMessage;
 import webSocket.server.dto.GameDTO;
+import webSocket.server.dto.PlayerDTO;
+import webSocket.server.dto.PlayerSelected;
 
 import javax.swing.*;
-import java.awt.*;
 import java.net.URI;
+import java.util.Arrays;
 
 public class KFChessClientApp {
 
-    public static void main(String[] args) throws Exception {
-        // URI לשרת WebSocket
-        URI uri = new URI("ws://localhost:8025/ws/game");
-        ChessClientEndpoint client = new ChessClientEndpoint(uri);
+    private final ChessClientEndpoint client;
+    private int playerId = -1;
+    private PlayerCursor cursor;
+    private GamePanel gamePanel;
+    private IGame gameModel;  // מודל המשחק המקומי
+    private final ObjectMapper mapper = new ObjectMapper();
 
-        // חכה לעדכון הראשון עם מזהה שחקן ולוח
-        GameDTO initialDelta = client.waitForNextDelta();
-        int playerId = client.getPlayerId();
+    public KFChessClientApp() throws Exception {
+        URI uri = new URI("ws://localhost:8025/ws/game");  // חשוב שהכתובת תתאים לשרת שלך!
 
-        // יצירת GUI בסיסי
-        JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1));
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        client = new ChessClientEndpoint(uri);
 
-        // יצירת סמן רק לשחקן הנוכחי
-        Color color = (playerId == 0) ? Color.RED : Color.BLUE;
-        PlayerCursor cursor = new PlayerCursor(new Position(0, 0), color);
+        // מחכים לקבלת playerId (מזהה השחקן מהשרת)
+        while (client.getPlayerId() < 0) {
+            Thread.sleep(100);
+        }
+        playerId = client.getPlayerId();
+        System.out.println("Client playerId = " + playerId);
 
-        // יצירת לוח תצוגה
-        BoardPanel boardPanel = new BoardPanel(null, cursor);
-
-        boardPanel.setBoardFromSnapshot(initialDelta.board);
-        boardPanel.setPreferredSize(new Dimension(700, 700));
-
-        // פעולה על מקש או תזוזה תשלח לשרת
-        boardPanel.setOnPlayerAction((v) -> {
-            client.sendSelection(cursor.getPosition());
-        });
-
-        frame.add(boardPanel);
-        frame.pack();
-        frame.setVisible(true);
-
-        // Thread לעדכון קבוע של הלוח מהשרת
+        // מאזין להודעות מהשרת בלולאה נפרדת
         new Thread(() -> {
             try {
                 while (true) {
-                    GameDTO delta = client.waitForNextDelta();
-                    SwingUtilities.invokeLater(() -> {
-                        boardPanel.setBoardFromSnapshot(delta.board);
-                        boardPanel.setSelectedForPlayer(delta.players[playerId].pending);
-                        boardPanel.setLegalMovesForPlayer(delta.players[playerId].pending);
-                    });
+                    String message = client.waitForNextMessage();
+                    if (message == null) continue;
+
+                    System.out.println("Received raw message: " + message);
+
+                    JsonNode root = mapper.readTree(message);
+                    String type = root.has("type") ? root.get("type").asText() : "";
+
+                    switch (type) {
+                        case "gameInit": {
+                            JsonNode dataNode = root.get("data");
+                            GameDTO gameDTO = (GameDTO) mapper.treeToValue(dataNode, ServerMessage.class).getData();
+
+                            // יצירת מערך שחקנים מ-PlayerDTO
+                            IPlayer[] players = Arrays.stream(gameDTO.getPlayers())
+                                    .map(p -> PlayerDTO.to(p, gameDTO.getBoardConfig()))
+                                    .toArray(IPlayer[]::new);
+
+                            // יצירת מופע משחק מלא עם הנתונים מהשרת
+                            gameModel = new Game(gameDTO.getBoardConfig(), players);
+
+                            // יצירת GUI על EDT
+                            SwingUtilities.invokeLater(() -> {
+                                gamePanel = new GamePanel(gameModel, playerId);
+
+                                // שמירת הסמן מקומי (למשל סמן עבור המשתמש)
+                                cursor = (PlayerCursor) gamePanel.getBoardPanel().getPlayerCursor();
+
+                                // מאזין לפעולות של השחקן בלוח
+                                gamePanel.getBoardPanel().setOnPlayerAction((v) -> {
+                                    try {
+                                        Position pos = cursor.getPosition();
+                                        PlayerSelected cmd = new PlayerSelected(playerId, pos);
+                                        String jsonCmd = mapper.writeValueAsString(cmd);
+                                        client.sendText(jsonCmd);
+                                        System.out.println("Sent selection: " + pos);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+                                });
+
+                                JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1));
+                                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+                                frame.add(gamePanel);
+                                frame.pack();
+                                frame.setLocationRelativeTo(null);
+                                frame.setVisible(true);
+
+                                gamePanel.setFocusable(true);
+                                gamePanel.requestFocusInWindow();
+
+                                // אפשר להפעיל את הלולאת המשחק (טיימר וכו')
+                                gameModel.run();
+                            });
+                            break;
+                        }
+                        case "playerSelected": {
+                            PlayerSelected cmd = mapper.treeToValue(root.get("data"), PlayerSelected.class);
+                            if (gameModel != null) {
+                                // עדכון מצב המשחק המקומי בהתאם לבחירה מהשרת
+                                gameModel.handleSelection(cmd.getPlayerId(), cmd.getSelection());
+                                SwingUtilities.invokeLater(() -> gamePanel.getBoardPanel().repaint());
+                            }
+                            break;
+                        }
+                        default:
+                            System.out.println("Unknown message type: " + type);
+                    }
                 }
-            } catch (InterruptedException e) {
-                LogUtils.logDebug("Client listener stopped");
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         }).start();
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            try {
+                new KFChessClientApp();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
     }
 }

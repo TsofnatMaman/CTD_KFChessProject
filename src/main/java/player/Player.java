@@ -9,6 +9,7 @@ import pieces.EPieceType;
 import pieces.Position;
 import utils.LogUtils;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,9 +22,13 @@ public class Player implements IPlayer{
     private Position pending;
     private static int mone=0;
 
+    private Color color;
+
     private final List<IPiece> pieces;
     private int score;
     private boolean isFailed;
+
+    private static Color[]colors = new Color[]{Color.RED, Color.BLUE};
 
     /**
      * Constructs a Player, initializes pieces and status.
@@ -36,6 +41,8 @@ public class Player implements IPlayer{
 
         pieces = new ArrayList<>();
         score = 0;
+
+        this.color = colors[id];
 
         for(int i:BoardConfig.rowsOfPlayer.get(id))
             for(int j=0; j<8; j++) {
@@ -152,4 +159,8 @@ public class Player implements IPlayer{
         return queen;
     }
 
+    @Override
+    public Color getColor() {
+        return color;
+    }
 }

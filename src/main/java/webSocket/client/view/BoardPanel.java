@@ -1,17 +1,15 @@
-package webSocket.client;
+package webSocket.client.view;
 
-import board.BoardConfig;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
 import game.IBoardView;
-import interfaces.*;
+import interfaces.IBoard;
+import interfaces.IPiece;
+import interfaces.IPlayerCursor;
 import pieces.Position;
 import utils.LogUtils;
-import view.BoardRenderer;
-import webSocket.server.dto.BoardDTO;
-import webSocket.server.dto.PieceDTO;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -21,12 +19,9 @@ import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 /**
  * Panel for displaying the game board and handling player input.
@@ -37,13 +32,14 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     private IBoard board;  // אפשר לעדכן את הלוח לפי המצב שהתקבל
 
     private final IPlayerCursor cursor;
+
     private Consumer<Void> onPlayerAction;
 
     private Position selected = null;
     private List<Position> legalMoves = Collections.emptyList();
 
 
-    private static final Color SELECT_COLOR_P = new Color(255, 0, 0, 128);   // אדום חצי שקוף
+    private static final Color SELECT_COLOR = new Color(255, 0, 0, 128);   // אדום חצי שקוף
 
     public BoardPanel(IBoard board, IPlayerCursor pc) {
         this.board = board;
@@ -78,7 +74,7 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         }
     }
 
-    private void handleKey(KeyEvent e) {
+    public void handleKey(KeyEvent e) {
         int key = e.getKeyCode();
 
         switch (key) {
@@ -109,13 +105,13 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     }
 
     // SETTERS לעדכון מבחוץ (למשל מהשרת)
-    public void setSelectedForPlayer(Position selected) {
+    public void setSelectedForPlayer(int playerId, Position selected) {
         this.selected = selected;
         repaint();
     }
 
-    public void setLegalMovesForPlayer(Position pos) {
-        legalMoves = board.getLegalMoves(pos);
+    public void setLegalMovesForPlayer(int playerId, List<Position> moves) {
+        legalMoves = moves;
         repaint();
     }
 
@@ -156,10 +152,10 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
 
         // --- Player 1 selection and legal moves ---
         if (selected != null) {
-            g2.setColor(SELECT_COLOR_P);
+            g2.setColor(SELECT_COLOR);
             g2.fillRect(selected.getCol() * cellW, selected.getRow() * cellH, cellW, cellH);
 
-            g2.setColor(SELECT_COLOR_P);
+            g2.setColor(SELECT_COLOR);
             for (Position move : legalMoves) {
                 int x = move.getCol() * cellW + cellW / 4;
                 int y = move.getRow() * cellH + cellH / 4;
@@ -168,77 +164,15 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                 g2.fillOval(x, y, w, h);
             }
         }
+
+    }
+
+    public IPlayerCursor getPlayerCursor() {
+        return cursor;
     }
 
     @Override
     public void onEvent(GameEvent event) {
         repaint();
     }
-
-    public void setBoardFromSnapshot(BoardDTO snapshot) {
-        if (snapshot == null) return;
-
-        // יצירת רשימת כלים מתוך תמונת מצב
-        List<IPiece> pieces = Arrays.stream(snapshot.boardGrid)
-                .flatMap(row -> Arrays.stream(row))     // משטחים את כל השורות
-                .filter(Objects::nonNull)
-                .map(PieceDTO::toPiece)
-                .toList();          // אוספים לרשימה
-
-        // יצירת לוח תצוגה צד לקוח
-        this.board = new ClientSideBoard(snapshot.rows, snapshot.cols, pieces);
-        repaint();
-    }
-
-    private static class ClientSideBoard implements IBoard {
-        private final int rows;
-        private final int cols;
-        private final IPiece[][] grid;
-
-        public ClientSideBoard(int rows, int cols, List<IPiece> pieces) {
-            this.rows = rows;
-            this.cols = cols;
-            this.grid = new IPiece[rows][cols];
-            for (IPiece p : pieces) {
-                if (!p.isCaptured()) {
-                    grid[p.getRow()][p.getCol()] = p;
-                }
-            }
-        }
-
-        @Override
-        public IPiece getPiece(int row, int col) {
-            if (row < 0 || row >= rows || col < 0 || col >= cols) return null;
-            return grid[row][col];
-        }
-
-        @Override
-        public IPiece getPiece(Position pos) {
-            return getPiece(pos.getRow(), pos.getCol());
-        }
-
-        @Override public boolean hasPiece(int row, int col) { return getPiece(row, col) != null; }
-        @Override public int getPlayerOf(int row) { return row < rows / 2 ? 0 : 1; }
-        @Override public int getPlayerOf(Position pos) { return getPlayerOf(pos.getRow()); }
-        @Override public int getPlayerOf(IPiece piece) { return getPlayerOf(piece.getRow()); }
-
-        @Override public int getCOLS() { return cols; }
-        @Override public int getROWS() { return rows; }
-
-        // שאר הפונקציות לא רלוונטיות לצד לקוח, אז פשוט מחזירות ערכים ברירת מחדל
-        @Override public void placePiece(IPiece piece) {}
-        @Override public void move(Position from, Position to) {}
-        @Override public void jump(IPiece p) {}
-        @Override public void updateAll() {}
-        @Override public boolean isInBounds(int r, int c) { return r >= 0 && r < rows && c >= 0 && c < cols; }
-        @Override public boolean isInBounds(Position p) { return isInBounds(p.getRow(), p.getCol()); }
-        @Override public boolean isMoveLegal(Position from, Position to) { return false; }
-        @Override public boolean isPathClear(Position from, Position to) { return false; }
-        @Override public boolean isJumpLegal(IPiece p) { return false; }
-        @Override public IPlayer[] getPlayers() { return new IPlayer[0]; }
-        @Override public BoardConfig getBoardConfig() { return null; }
-        @Override public List<Position> getLegalMoves(Position selectedPosition) { return List.of(); }
-    }
-
-
 }

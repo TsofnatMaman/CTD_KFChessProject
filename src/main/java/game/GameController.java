@@ -3,17 +3,13 @@ package game;
 import board.BoardConfig;
 import board.Dimension;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import interfaces.IBoard;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import interfaces.IPlayer;
 import pieces.Position;
 import player.Player;
-import webSocket.server.dto.BoardDTO;
-import webSocket.server.dto.GameDTO;
 
 import javax.websocket.Session;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -40,7 +36,7 @@ public class GameController {
             return;
         }
         playerSessions.put(playerId, session);
-        sendDeltaTo(playerId); // שליחת מצב ראשוני
+        // אל תשלח כאן את הדלתא! תן ל־Endpoint לשלוח אחרי קבלת playerId.
     }
 
     public synchronized void handleMessage(int playerId, Position pos) {
@@ -49,26 +45,6 @@ public class GameController {
 
         game.handleSelection(player, pos);
         game.update(); // הפעלת הפקודות בתור
-        sendUpdateToAll();
-    }
-
-    private void sendDeltaTo(int playerId) {
-        Session session = playerSessions.get(playerId);
-        if (session == null || !session.isOpen()) return;
-
-        GameDTO delta = GameDTO.from(game);
-        try {
-            String json = mapper.writeValueAsString(delta);
-            session.getAsyncRemote().sendText(json);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private void sendUpdateToAll() {
-        for (int playerId : playerSessions.keySet()) {
-            sendDeltaTo(playerId);
-        }
     }
 
     public void removeClient(int playerId) {
@@ -77,10 +53,6 @@ public class GameController {
 
     public Game getGame() {
         return game;
-    }
-
-    public GameDTO createGameDTO(){
-        return GameDTO.from(game);
     }
 
 }

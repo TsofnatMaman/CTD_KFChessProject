@@ -1,108 +1,103 @@
 package webSocket.server;
 
+import board.BoardConfig;
+import board.Dimension;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import game.GameController;
-import interfaces.IBoard;
-import pieces.Position;
+import game.Game;
+import interfaces.IGame;
+import interfaces.IPlayer;
+import player.Player;
 import webSocket.server.dto.GameDTO;
+import webSocket.server.dto.PlayerDTO;
+import webSocket.server.dto.PlayerSelected;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
-import javax.json.Json;
-import javax.json.JsonObject;
-import java.io.*;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
+import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @ServerEndpoint("/game")
 public class ChessServerEndpoint {
 
-    private static int nextPlayerId = 0;
-    private static final Map<Session, Integer> sessionPlayerMap = new ConcurrentHashMap<>();
-    private static final GameController controller = new GameController();
+    private static final List<Session> sessions = new CopyOnWriteArrayList<>();
     private static final ObjectMapper mapper = new ObjectMapper();
+
+    private static final IGame game;
+    private static final GameDTO initialGameState;
+
+    static {
+        BoardConfig boardConfig = new BoardConfig(new Dimension(8), new Dimension(64 * 8));
+        IPlayer p1 = new Player("player 1", boardConfig);
+        IPlayer p2 = new Player("player 2", boardConfig);
+        game = new Game(boardConfig, new IPlayer[]{p1, p2});
+        initialGameState = createInitialGameDTO();
+    }
 
     @OnOpen
     public void onOpen(Session session) {
-        if(nextPlayerId == 2){
-            System.out.println("can not support more than 2 players");
-            return;
-        }
-        int assignedId;
-        synchronized (ChessServerEndpoint.class) {
-            assignedId = nextPlayerId++;
-            sessionPlayerMap.put(session, assignedId);
-            controller.addClient(session, assignedId);
-        }
+        sessions.add(session);
+        System.out.println("Client connected: " + session.getId());
 
-        System.out.println("Player " + assignedId + " connected.");
+        int playerId = sessions.indexOf(session); // מזהה שחקן לפי סדר חיבור (0,1,...)
 
-        // שולח ID
         try {
-            JsonObject json = Json.createObjectBuilder()
-                    .add("type", "playerId")
-                    .add("id", assignedId)
-                    .build();
-            StringWriter sw = new StringWriter();
-            Json.createWriter(sw).write(json);
-            session.getAsyncRemote().sendText(sw.toString());
-        } catch (Exception e) {
+            // שולחים מצב התחלתי (gameInit)
+            ServerMessage<GameDTO> initMsg = new ServerMessage<GameDTO>("gameInit", initialGameState);
+            String jsonInit = mapper.writeValueAsString(initMsg);
+            session.getBasicRemote().sendText(jsonInit);
+
+            // שולחים מזהה שחקן (playerId)
+            ServerMessage<Integer> idMsg = new ServerMessage<Integer>("playerId", playerId);
+            String jsonId = mapper.writeValueAsString(idMsg);
+            session.getBasicRemote().sendText(jsonId);
+
+        } catch (IOException e) {
             e.printStackTrace();
         }
-
-        // שולח את מצב הלוח
-        sendBoardToClient(session);
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
+        System.out.println("Received message from " + session.getId() + ": " + message);
         try {
-            Position selection = mapper.readValue(message, Position.class);
-            Integer playerId = sessionPlayerMap.get(session);
+            // קוראים את הפקודה מסוג PlayerSelected מהלקוח
+            PlayerSelected cmd = mapper.readValue(message, PlayerSelected.class);
 
-            if (playerId == null) {
-                System.out.println("Unknown session tried to send a message.");
-                return;
+            // מעדכנים את המשחק בהתאם לבחירה של השחקן
+            game.handleSelection(cmd.getPlayerId(), cmd.getSelection());
+
+            // שולחים עדכון לכל הלקוחות (כולל השולח) כדי לסנכרן את המצב
+            ServerMessage<PlayerSelected> update = new ServerMessage<PlayerSelected>("playerSelected", cmd);
+            String json = mapper.writeValueAsString(update);
+
+            for (Session s : sessions) {
+                s.getAsyncRemote().sendText(json);
             }
-
-            controller.handleMessage(playerId, selection);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
+
     @OnClose
-    public void onClose(Session session) {
-        Integer playerId = sessionPlayerMap.remove(session);
-        if (playerId != null) {
-            System.out.println("Player " + playerId + " disconnected.");
-            // כאן אפשר להוסיף טיפול בלקוח שהתנתק (למשל להסיר אותו מהמשחק)
-        }
+    public void onClose(Session session, CloseReason reason) {
+        sessions.remove(session);
+        System.out.println("Client disconnected: " + session.getId() + " Reason: " + reason);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        System.err.println("WebSocket error: " + throwable.getMessage());
+        System.err.println("Error on session " + session.getId() + ": " + throwable.getMessage());
     }
 
-    public IBoard getBoard(){
-        return controller.getGame().getBoard();
+    private static GameDTO createInitialGameDTO() {
+        GameDTO gameDTO = new GameDTO();
+        gameDTO.setBoardConfig(game.getBoard().getBoardConfig());
+        gameDTO.setPlayers((PlayerDTO[]) Arrays.stream(game.getPlayers())
+                .map(PlayerDTO::from)
+                .toArray(PlayerDTO[]::new));
+        return gameDTO;
     }
-
-    private void sendBoardToClient(Session session) {
-        try {
-            // יצירת GameDelta או מבנה דומה שמתאר את מצב הלוח
-            // לדוגמה: GameDelta delta = controller.getCurrentGameDelta();
-
-            GameDTO delta = controller.createGameDTO(); // הנחה שיש שיטה כזו
-
-            String json = mapper.writeValueAsString(delta);
-            session.getAsyncRemote().sendText(json);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
 }

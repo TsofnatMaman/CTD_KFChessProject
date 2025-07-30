@@ -1,25 +1,42 @@
 package webSocket.server.dto;
 
-import interfaces.IGame;
-
-import java.util.Arrays;
+import board.BoardConfig;
 
 public class GameDTO {
-    public BoardDTO board;
-    public PlayerDTO[] players;
-    public long startTimeNano;
-    public boolean isRun;
+    private BoardConfig boardConfig;
+    private PlayerDTO[] players;
+    private int yourId;
 
-    public static GameDTO from(IGame game){
-        GameDTO gameDTO = new GameDTO();
+    // ברירת מחדל ל-Jackson
+    public GameDTO() {}
 
-        gameDTO.board = BoardDTO.from(game.getBoard());
-        gameDTO.players = Arrays.stream(game.getPlayers())
-                .map(PlayerDTO::from)
-                .toArray(PlayerDTO[]::new);
-        gameDTO.startTimeNano = game.getElapsedTimeNano();
-        gameDTO.isRun = game.isRunning();
+    public GameDTO(BoardConfig boardConfig, PlayerDTO[] players, int yourId) {
+        this.boardConfig = boardConfig;
+        this.players = players;
+        this.yourId = yourId;
+    }
 
-        return gameDTO;
+    public BoardConfig getBoardConfig() {
+        return boardConfig;
+    }
+
+    public void setBoardConfig(BoardConfig boardConfig) {
+        this.boardConfig = boardConfig;
+    }
+
+    public PlayerDTO[] getPlayers() {
+        return players;
+    }
+
+    public void setPlayers(PlayerDTO[] players) {
+        this.players = players;
+    }
+
+    public int getYourId() {
+        return yourId;
+    }
+
+    public void setYourId(int yourId) {
+        this.yourId = yourId;
     }
 }
