@@ -1,8 +1,7 @@
-package board;
+package view;
 
 import interfaces.IBoard;
 import interfaces.IPiece;
-import pieces.PieceRenderer;
 
 import java.awt.*;
 

@@ -3,13 +3,17 @@ package game;
 import board.BoardConfig;
 import board.Dimension;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import interfaces.IBoard;
 import interfaces.IPlayer;
 import pieces.Position;
 import player.Player;
-import webSocket.server.dto.GameDelta;
+import webSocket.server.dto.BoardDTO;
+import webSocket.server.dto.GameDTO;
 
 import javax.websocket.Session;
 import java.io.IOException;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -52,7 +56,7 @@ public class GameController {
         Session session = playerSessions.get(playerId);
         if (session == null || !session.isOpen()) return;
 
-        GameDelta delta = GameDelta.fromGame(game, playerId);
+        GameDTO delta = GameDTO.from(game);
         try {
             String json = mapper.writeValueAsString(delta);
             session.getAsyncRemote().sendText(json);
@@ -74,4 +78,9 @@ public class GameController {
     public Game getGame() {
         return game;
     }
+
+    public GameDTO createGameDTO(){
+        return GameDTO.from(game);
+    }
+
 }

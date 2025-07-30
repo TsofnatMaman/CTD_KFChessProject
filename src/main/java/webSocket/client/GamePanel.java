@@ -1,4 +1,4 @@
-package view;
+package webSocket.client;
 
 import events.EGameEvent;
 import events.EventPublisher;
@@ -9,6 +9,7 @@ import interfaces.IPlayerCursor;
 import pieces.Position;
 import player.PlayerCursor;
 import utils.LogUtils;
+import view.PlayerInfoPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -31,7 +32,7 @@ public class GamePanel extends JPanel implements IEventListener {
     private JLabel timerLabel;
     private Timer timerForUI;
 
-    public GamePanel(IGame model){
+    public GamePanel(IGame model, int playerId){
         this.model = model;
 
         // Set layout with gaps between regions
@@ -55,15 +56,13 @@ public class GamePanel extends JPanel implements IEventListener {
 
         // Board
         IPlayerCursor c1 = new PlayerCursor(new Position(0,0), Color.RED);
-        IPlayerCursor c2 = new PlayerCursor(new Position(7,7),Color.BLUE);
 
-        boardPanel = new BoardPanel(model.getBoard(), c1, c2);
+        boardPanel = new BoardPanel(model.getBoard(), c1);
         boardPanel.setPreferredSize(new Dimension(700, 700));
         boardPanel.setOpaque(false);
 
         // Events
-        boardPanel.setOnPlayer1Action((v) -> model.handleSelection(model.getPlayerById(0), c1.getPosition()));
-        boardPanel.setOnPlayer2Action((v) -> model.handleSelection(model.getPlayerById(1), c2.getPosition()));
+        boardPanel.setOnPlayerAction((v) -> model.handleSelection(model.getPlayerById(playerId), c1.getPosition()));
 
         boardPanel.addMouseListener(new MouseAdapter() {
             @Override

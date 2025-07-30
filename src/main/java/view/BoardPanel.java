@@ -6,7 +6,6 @@ import events.GameEvent;
 import events.IEventListener;
 import game.IBoardView;
 import interfaces.*;
-import board.BoardRenderer;
 import pieces.Position;
 import utils.LogUtils;
 
@@ -19,7 +18,6 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
-import java.util.EventListener;
 import java.util.List;
 import java.util.function.Consumer;
 

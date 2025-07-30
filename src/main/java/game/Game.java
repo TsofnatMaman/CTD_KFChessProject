@@ -39,10 +39,10 @@ public class Game implements IGame {
         this.players = players;
         commandQueue = new LinkedList<>();
 
-        MovesLogger movesLogger = new MovesLogger();
-        JumpsLogger jumpsLogger = new JumpsLogger();
-        CapturedLogger capturedLogger = new CapturedLogger();
-        GameEndLogger gameEndLogger = new GameEndLogger();
+        new MovesLogger();
+        new JumpsLogger();
+        new CapturedLogger();
+        new GameEndLogger();
     }
 
     /**
@@ -136,7 +136,7 @@ public class Game implements IGame {
     }
 
     @Override
-    public long getElapsedTimeMillis() {
+    public long getElapsedTimeNano() {
         if (!running) return 0;
         long elapsedNano = System.nanoTime() - startTimeNano;
         return elapsedNano / 1_000_000; // convert from nano to milliseconds
@@ -145,5 +145,10 @@ public class Game implements IGame {
     @Override
     public IPlayer[] getPlayers() {
         return players;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
     }
 }

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import game.GameController;
 import interfaces.IBoard;
 import pieces.Position;
+import webSocket.server.dto.GameDTO;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -12,8 +13,6 @@ import javax.json.JsonObject;
 import java.io.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import java.nio.ByteBuffer;
 
 
 @ServerEndpoint("/game")
@@ -26,6 +25,10 @@ public class ChessServerEndpoint {
 
     @OnOpen
     public void onOpen(Session session) {
+        if(nextPlayerId == 2){
+            System.out.println("can not support more than 2 players");
+            return;
+        }
         int assignedId;
         synchronized (ChessServerEndpoint.class) {
             assignedId = nextPlayerId++;
@@ -87,17 +90,15 @@ public class ChessServerEndpoint {
         return controller.getGame().getBoard();
     }
 
-    // שליחת מצב הלוח ללקוח מסוים
     private void sendBoardToClient(Session session) {
         try {
-            // סריאליזציה של הלוח למערך בתים
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(controller.getGame().getBoard());
-            oos.flush();
-            byte[] boardBytes = baos.toByteArray();
+            // יצירת GameDelta או מבנה דומה שמתאר את מצב הלוח
+            // לדוגמה: GameDelta delta = controller.getCurrentGameDelta();
 
-            session.getAsyncRemote().sendBinary(ByteBuffer.wrap(boardBytes));
+            GameDTO delta = controller.createGameDTO(); // הנחה שיש שיטה כזו
+
+            String json = mapper.writeValueAsString(delta);
+            session.getAsyncRemote().sendText(json);
 
         } catch (Exception e) {
             e.printStackTrace();

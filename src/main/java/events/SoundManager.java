@@ -3,8 +3,6 @@ package events;
 import utils.LogUtils;
 
 import javax.sound.sampled.*;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
 public class SoundManager {

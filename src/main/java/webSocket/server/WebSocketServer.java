@@ -1,13 +1,7 @@
 package webSocket.server;
 
-import com.sun.net.httpserver.HttpServer;
-import com.sun.net.httpserver.HttpHandler;
-import com.sun.net.httpserver.HttpExchange;
 import org.glassfish.tyrus.server.Server;
-
-import java.io.*;
-import java.net.InetSocketAddress;
-import java.nio.file.*;
+;
 
 public class WebSocketServer {
     public static void main(String[] args) throws Exception {

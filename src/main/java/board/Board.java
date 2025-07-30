@@ -11,7 +11,6 @@
         import pieces.Position;
         import utils.LogUtils;
 
-        import java.io.Serializable;
         import java.util.Arrays;
         import java.util.List;
 

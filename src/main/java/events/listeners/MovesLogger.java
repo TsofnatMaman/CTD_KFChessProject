@@ -2,11 +2,6 @@ package events.listeners;
 
 import events.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 public class MovesLogger implements IEventListener {
 
     public MovesLogger(){

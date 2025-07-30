@@ -1,27 +1,23 @@
 package webSocket.client;
 
-import interfaces.IBoard;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import pieces.Position;
+import webSocket.server.dto.GameDTO;
 
-import javax.swing.*;
 import javax.websocket.*;
-import java.io.ByteArrayInputStream;
-import java.io.ObjectInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.ObjectOutputStream;
 import java.net.URI;
-import java.nio.ByteBuffer;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.LinkedBlockingQueue;
 
 @ClientEndpoint
 public class ChessClientEndpoint {
 
     private Session session;
-    private int playerId = -1;
-    private IBoard receivedBoard;
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final BlockingQueue<GameDTO> deltaQueue = new LinkedBlockingQueue<>();
 
-    private final CountDownLatch idLatch = new CountDownLatch(1);
-    private final CountDownLatch boardLatch = new CountDownLatch(1);
+    private int playerId = -1;
 
     public ChessClientEndpoint(URI serverUri) {
         try {
@@ -32,7 +28,16 @@ public class ChessClientEndpoint {
         }
     }
 
-    // קבלת הודעת טקסט (JSON) עם מזהה שחקן
+    @OnOpen
+    public void onOpen(Session session) {
+        this.session = session;
+        System.out.println("✅ Connected to server.");
+    }
+
+
+    private final CountDownLatch idLatch = new CountDownLatch(1);
+    private final CountDownLatch deltaLatch = new CountDownLatch(1);
+
     @OnMessage
     public void onMessage(String message) {
         try {
@@ -40,72 +45,46 @@ public class ChessClientEndpoint {
                 int start = message.indexOf("\"id\":") + 5;
                 int end = message.indexOf("}", start);
                 playerId = Integer.parseInt(message.substring(start, end));
+                System.out.println("🎮 Received playerId: " + playerId);
                 idLatch.countDown();
-                System.out.println("Player ID received: " + playerId);
+            } else {
+                GameDTO delta = mapper.readValue(message, GameDTO.class);
+                System.out.println("📩 Received GameDelta for player " + playerId);
+                deltaQueue.put(delta); // ← הוספה קריטית!
+                deltaLatch.countDown();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            System.err.println("❌ Failed to parse GameDelta: " + e.getMessage());
         }
-    }
-
-    // קבלת הודעה בינארית - אובייקט IBoard מסריאליזציה
-    @OnMessage
-    public void onMessage(ByteBuffer buffer) {
-        try {
-            // קריאה נכונה למערך בתים מתוך ByteBuffer
-            byte[] bytes = new byte[buffer.remaining()];
-            buffer.get(bytes);
-
-            ByteArrayInputStream bais = new ByteArrayInputStream(bytes);
-            ObjectInputStream ois = new ObjectInputStream(bais);
-            receivedBoard = (IBoard) ois.readObject();
-            boardLatch.countDown();
-            System.out.println("Board received from server.");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @OnOpen
-    public void onOpen(Session session) {
-        this.session = session;
-        System.out.println("Connected to server.");
     }
 
     @OnClose
-    public void onClose(Session session, CloseReason reason) {
-        System.out.println("Connection closed: " + reason.getReasonPhrase());
+    public void onClose(Session session, CloseReason closeReason) {
+        System.out.println("❌ Disconnected: " + closeReason.getReasonPhrase());
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        System.err.println("WebSocket error: " + throwable.getMessage());
+        System.err.println("⚠️ WebSocket Error: " + throwable.getMessage());
     }
 
-    // שליחת בחירה (Position) לשרת
-    public void sendPosition(Position pos) {
+    // --- שליחת בחירת מיקום לשרת ---
+    public void sendSelection(Position pos) {
         try {
-            ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            ObjectOutputStream oos = new ObjectOutputStream(baos);
-            oos.writeObject(pos);
-            oos.flush();
-            byte[] data = baos.toByteArray();
-
-            session.getAsyncRemote().sendBinary(ByteBuffer.wrap(data));
+            String json = mapper.writeValueAsString(pos);
+            session.getAsyncRemote().sendText(json);
+            System.out.println("➡️ Sent position: " + pos);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    // המתנה לקבלת מזהה שחקן
-    public int waitForPlayerId() throws InterruptedException {
-        idLatch.await();
-        return playerId;
+    // --- למשיכת העדכון האחרון ---
+    public GameDTO waitForNextDelta() throws InterruptedException {
+        return deltaQueue.take();
     }
 
-    // המתנה לקבלת לוח מהשרת
-    public IBoard waitForBoard() throws InterruptedException {
-        boardLatch.await();
-        return receivedBoard;
+    public int getPlayerId() {
+        return playerId;
     }
 }

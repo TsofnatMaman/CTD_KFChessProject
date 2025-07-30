@@ -20,7 +20,7 @@ public class EventPublisher {
         listenersMap.computeIfAbsent(topic, k -> new ArrayList<>()).add(listener);
     }
 
-    public void unsubscribe(String topic, IEventListener listener) {
+    public void unsubscribe(EGameEvent topic, IEventListener listener) {
         List<IEventListener> listeners = listenersMap.get(topic);
         if (listeners != null) {
             listeners.remove(listener);

@@ -1,8 +1,6 @@
 package interfaces;
 
-import game.IBoardView;
 import pieces.Position;
-import webSocket.server.dto.GameDelta;
 
 /**
  * Interface for game logic and state management.
@@ -44,7 +42,9 @@ public interface IGame {
 
     void stopGameLoop();
 
-    long getElapsedTimeMillis();
+    long getElapsedTimeNano();
 
     IPlayer[] getPlayers();
+
+    boolean isRunning();
 }

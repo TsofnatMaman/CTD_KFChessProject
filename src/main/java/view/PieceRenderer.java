@@ -1,4 +1,4 @@
-package pieces;
+package view;
 
 import interfaces.IPiece;
 
@@ -19,16 +19,6 @@ public class PieceRenderer {
      */
     public static void draw(Graphics g, IPiece p, int squareWidth, int squareHeight) {
         BufferedImage frame = p.getCurrentState().getGraphics().getCurrentFrame();
-
-        double x = p.getCol();
-        double y = p.getRow();
-
-        // If the piece is moving, use its pixel position for smooth animation
-        if (p.getCurrentStateName().equals("move")) {
-            Point2D.Double pos = p.getCurrentPixelPosition();
-            x = pos.x / 64.0;
-            y = pos.y / 64.0;
-        }
 
         Point2D.Double pos = p.getCurrentPixelPosition();
         int pixelX = (int) (pos.x * squareWidth / 64.0);

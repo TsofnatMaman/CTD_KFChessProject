@@ -36,7 +36,7 @@ public class Piece implements IPiece {
         moves = Moves.createMovesList(type, playerId);
     }
 
-    @Override
+        @Override
     public int getPlayer() {
         return BoardConfig.getPlayerOf(Integer.parseInt(this.getId().split(",")[0]));
     }

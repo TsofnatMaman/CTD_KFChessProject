@@ -54,7 +54,6 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
 
     @Override
     public void onEvent(GameEvent event) {
-        String s = event.data.getClass().getName();
         if(event.data instanceof ActionData) {
             if (player.getId() == ((ActionData) event.data).playerId)
                 addMove(((ActionData) event.data).message);

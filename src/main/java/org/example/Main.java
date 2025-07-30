@@ -5,13 +5,10 @@ import board.Dimension;
 import game.Game;
 import interfaces.IGame;
 import interfaces.IPlayer;
-import pieces.Position;
 import player.Player;
-import player.PlayerCursor;
 import view.GamePanel;
 
 import javax.swing.*;
-import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {

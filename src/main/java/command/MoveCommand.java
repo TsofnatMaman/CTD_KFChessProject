@@ -7,7 +7,6 @@ import events.listeners.ActionData;
 import helps.ConvertPiecePositionToName;
 import interfaces.*;
 import pieces.Position;
-import player.Player;
 import utils.LogUtils;
 
 /**
