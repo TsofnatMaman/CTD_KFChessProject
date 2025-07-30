@@ -1,5 +1,9 @@
 package view;
 
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.IEventListener;
 import game.IBoardView;
 import interfaces.*;
 import board.BoardRenderer;
@@ -15,6 +19,7 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Collections;
+import java.util.EventListener;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -22,7 +27,7 @@ import java.util.function.Consumer;
  * Panel for displaying the game board and handling player input.
  * מעודכן לתמיכה בעדכון מצב מבחוץ (למשל מ-WebSocket).
  */
-public class BoardPanel extends JPanel implements IBoardView {
+public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     private BufferedImage boardImage;
     private IBoard board;  // אפשר לעדכן את הלוח לפי המצב שהתקבל
 
@@ -56,6 +61,7 @@ public class BoardPanel extends JPanel implements IBoardView {
                 handleKey(e);
             }
         });
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
     }
 
     private void loadBoardImage() {
@@ -214,5 +220,10 @@ public class BoardPanel extends JPanel implements IBoardView {
                 g2.fillOval(x, y, w, h);
             }
         }
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        repaint();
     }
 }

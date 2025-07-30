@@ -5,13 +5,14 @@ import pieces.EPieceType;
 import pieces.Position;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Interface for piece operations.
  */
-public interface IPiece {
+public interface IPiece extends Serializable {
 
     /**
      * Gets the player index for this piece.

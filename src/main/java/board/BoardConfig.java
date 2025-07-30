@@ -1,11 +1,12 @@
 package board;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Configuration for the game board, including dimensions and tile size.
  */
-public class BoardConfig {
+public class BoardConfig implements Serializable {
     public final Dimension numRowsCols;
     
     public final Dimension panelSize;

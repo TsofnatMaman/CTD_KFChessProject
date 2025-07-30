@@ -78,7 +78,6 @@ public class GameDelta {
         for (IPlayer plyr : board.getPlayers()) {
             for (IPiece piece : plyr.getPieces()) {
                 pieceDTOs.add(new PieceDTO(
-                        piece.getId(),
                         piece.getPos().getRow(),
                         piece.getPos().getCol(),
                         piece.getType().name(),

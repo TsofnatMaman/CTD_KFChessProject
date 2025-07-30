@@ -4,11 +4,12 @@ import pieces.Position;
 
 import java.awt.*;
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 
 /**
  * Interface for piece state operations.
  */
-public interface IState {
+public interface IState extends Serializable {
 
     /**
      * Resets the state to a new action.

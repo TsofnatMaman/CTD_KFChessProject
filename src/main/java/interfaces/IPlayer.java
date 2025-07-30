@@ -3,12 +3,13 @@ package interfaces;
 import board.BoardConfig;
 import pieces.Position;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Interface for player operations.
  */
-public interface IPlayer {
+public interface IPlayer extends Serializable {
     /**
      * Gets the list of pieces owned by the player.
      * @return List of pieces

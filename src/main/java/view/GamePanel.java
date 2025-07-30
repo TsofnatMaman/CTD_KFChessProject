@@ -97,7 +97,7 @@ public class GamePanel extends JPanel implements IEventListener {
     }
 
     public void run() {
-        model.run(new IBoardView[]{ boardPanel });
+        model.run();
     }
 
     private void updateTimer() {

@@ -15,7 +15,6 @@ import pieces.Position;
 import utils.LogUtils;
 
 import javax.swing.*;
-import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -106,7 +105,7 @@ public class Game implements IGame {
     }
 
     @Override
-    public void run(IBoardView[] clientViews){
+    public void run(){
         if (timer == null) {
             timer = new Timer(16, e -> {
                 if(!running){
@@ -117,7 +116,6 @@ public class Game implements IGame {
                 if (win() == null) {
                     update();
                     board.updateAll();
-                    if(clientViews != null) Arrays.stream(clientViews).forEach(IBoardView::repaint);
                     EventPublisher.getInstance().publish(EGameEvent.GAME_UPDATE, new GameEvent(EGameEvent.GAME_UPDATE, null));
                 } else {
                     EventPublisher.getInstance().publish(EGameEvent.GAME_ENDED, new GameEvent(EGameEvent.GAME_ENDED, null));

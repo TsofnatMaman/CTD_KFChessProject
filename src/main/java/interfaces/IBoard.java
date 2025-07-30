@@ -3,12 +3,13 @@ package interfaces;
 import board.BoardConfig;
 import pieces.Position;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Interface for board operations and queries.
  */
-public interface IBoard {
+public interface IBoard extends Serializable {
 
     /**
      * Places a piece on the board.

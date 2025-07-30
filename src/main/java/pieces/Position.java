@@ -1,9 +1,11 @@
 package pieces;
 
+import java.io.Serializable;
+
 /**
  * Represents a position on the board.
  */
-public class Position {
+public class Position implements Serializable {
     int r;
     int c;
 
