@@ -3,9 +3,6 @@ target/
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-debug.log
-/src/main/resources/pieces/marge.ps1
-
 ### IntelliJ IDEA ###
 .idea/modules.xml
 .idea/jarRepositories.xml

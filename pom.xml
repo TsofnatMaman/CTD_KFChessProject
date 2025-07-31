@@ -1,102 +1,56 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
-    <artifactId>KFChessNewProject</artifactId>
+    <groupId>com.kfchess</groupId>
+    <artifactId>kfchess-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>common</module>
+        <module>client</module>
+        <module>server</module>
+    </modules>
 
     <properties>
-        <maven.compiler.source>21</maven.compiler.source>
-        <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <jackson.version>2.15.2</jackson.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <tyrus.version>1.17</tyrus.version>
     </properties>
 
-    <dependencies>
-        <!-- Jackson for JSON handling -->
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-databind</artifactId>
-            <version>2.15.2</version>
-        </dependency>
-
-        <!-- JUnit 5 for testing -->
-        <dependency>
-            <groupId>org.junit.jupiter</groupId>
-            <artifactId>junit-jupiter</artifactId>
-            <version>5.10.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Mockito for mocking -->
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>5.5.0</version>
-            <scope>test</scope>
-        </dependency>
-
-        <!-- Java WebSocket API -->
-        <dependency>
-            <groupId>javax.websocket</groupId>
-            <artifactId>javax.websocket-api</artifactId>
-            <version>1.1</version>
-        </dependency>
-
-        <!-- JSON Processing API -->
-        <dependency>
-            <groupId>javax.json</groupId>
-            <artifactId>javax.json-api</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-        <dependency>
-            <groupId>org.glassfish</groupId>
-            <artifactId>javax.json</artifactId>
-            <version>1.1.4</version>
-        </dependency>
-
-        <!-- Tyrus WebSocket Client (Standalone) -->
-        <dependency>
-            <groupId>org.glassfish.tyrus.bundles</groupId>
-            <artifactId>tyrus-standalone-client</artifactId>
-            <version>1.17</version>
-        </dependency>
-
-        <!-- Tyrus Server -->
-        <dependency>
-            <groupId>org.glassfish.tyrus</groupId>
-            <artifactId>tyrus-server</artifactId>
-            <version>1.17</version>
-        </dependency>
-
-        <!-- Tyrus Grizzly Server Container -->
-        <dependency>
-            <groupId>org.glassfish.tyrus</groupId>
-            <artifactId>tyrus-container-grizzly-server</artifactId>
-            <version>1.17</version>
-        </dependency>
-
-        <!-- Grizzly HTTP Server -->
-        <dependency>
-            <groupId>org.glassfish.grizzly</groupId>
-            <artifactId>grizzly-http-server</artifactId>
-            <version>2.3.28</version>
-        </dependency>
-
-    </dependencies>
-
-    <build>
-        <plugins>
-            <!-- Maven Surefire Plugin for JUnit 5 -->
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.1.2</version>
-            </plugin>
-        </plugins>
-    </build>
-
+    <dependencyManagement>
+        <dependencies>
+            <!-- גרסאות מרכזיות -->
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 </project>

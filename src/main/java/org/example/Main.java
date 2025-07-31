@@ -1,38 +1,17 @@
 package org.example;
 
-import board.BoardConfig;
-import board.Dimension;
-import game.Game;
-import interfaces.IGame;
-import interfaces.IPlayer;
-import player.Player;
-import view.GamePanel;
-
-import javax.swing.*;
-
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            JFrame frame = new JFrame("KFChess");
-            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
+        // to see how IntelliJ IDEA suggests fixing it.
+        System.out.printf("Hello and welcome!");
 
-            BoardConfig boardConfig = new BoardConfig(new Dimension(8),new Dimension(64*8));
-
-            IPlayer p1 = new Player("player 1",boardConfig);
-            IPlayer p2 = new Player("player 2", boardConfig);
-
-            IGame game = new Game(boardConfig ,new IPlayer[]{p1, p2});
-            GamePanel gameView = new GamePanel(game);
-
-            // Add debug prints
-            System.out.println("Debug: Initial game state setup");
-
-            gameView.run();
-
-            frame.setContentPane(gameView);
-            frame.pack();
-            frame.setLocationRelativeTo(null);
-            frame.setVisible(true);
-        });
+        for (int i = 1; i <= 5; i++) {
+            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
+            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
+            System.out.println("i = " + i);
+        }
     }
 }
