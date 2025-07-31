@@ -35,6 +35,8 @@ public class GamePanel extends JPanel implements IEventListener {
     private JLabel timerLabel;
     private Timer timerForUI;
 
+    private long startTimeNano;
+
     private final ObjectMapper mapper;
     private final ChessClientEndpoint client;
 
@@ -59,12 +61,10 @@ public class GamePanel extends JPanel implements IEventListener {
         Color semiTransparent = new Color(255, 255, 255, 180);
         playerPanel.setBackground(semiTransparent);
 
-        // יצירת סמן שחקן עם צבע ייחודי (לפי מזהה שחקן)
-        Color cursorColor = (playerId == 0) ? Color.RED : Color.BLUE;
-        IPlayerCursor cursor = new PlayerCursor(new Position(0, 0), cursorColor);
+        IPlayerCursor cursor = new PlayerCursor(new Position(0, 0), model.getPlayerById(playerId).getColor());
 
         // יצירת לוח המשחק עם הסמן
-        boardPanel = new BoardPanel(model.getBoard(), cursor);
+        boardPanel = new BoardPanel(model.getBoard(), playerId, cursor);
         boardPanel.setPreferredSize(new Dimension(700, 700));
         boardPanel.setOpaque(false);
 
@@ -111,9 +111,13 @@ public class GamePanel extends JPanel implements IEventListener {
     }
 
     private void updateTimer() {
-        long elapsedMillis = model.getElapsedTimeNano();
+        long nowNano = System.nanoTime();
+        long elapsedNanos = nowNano - startTimeNano;  // הזמן שחלף
+        long elapsedMillis = elapsedNanos / 1_000_000; // ממיר לננו-שניות למילישניות
+
         int seconds = (int) (elapsedMillis / 1000) % 60;
         int minutes = (int) (elapsedMillis / (1000 * 60));
+
         timerLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
     }
 
@@ -137,5 +141,9 @@ public class GamePanel extends JPanel implements IEventListener {
 
     public IGame getModel() {
         return model;
+    }
+
+    public void setStartTimeNano(long startTimeNano) {
+        this.startTimeNano = startTimeNano;
     }
 }

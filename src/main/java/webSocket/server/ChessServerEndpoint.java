@@ -25,7 +25,6 @@ public class ChessServerEndpoint {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private static IGame game = null; // עוד לא נוצר
-    private static GameDTO initialGameState = null;
 
     private static final int MAX_PLAYERS = 2;
 
@@ -50,7 +49,7 @@ public class ChessServerEndpoint {
             game = new Game(boardConfig, new IPlayer[]{p1, p2});
             game.run();
 
-            initialGameState = createInitialGameDTO();
+            GameDTO initialGameState = createInitialGameDTO();
 
             // שולחים לכל הלקוחות את מצב המשחק ההתחלתי ומזהה השחקן
             for (Map.Entry<Session, Integer> entry : sessionPlayerIds.entrySet()) {
@@ -100,7 +99,7 @@ public class ChessServerEndpoint {
             sendBrodcast(json);
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
     }
 
@@ -124,7 +123,7 @@ public class ChessServerEndpoint {
     private static GameDTO createInitialGameDTO() {
         GameDTO gameDTO = new GameDTO();
         gameDTO.setBoardConfig(game.getBoard().getBoardConfig());
-        gameDTO.setStartTimeNano(game.getElapsedTimeNano());
+        gameDTO.setStartTimeNano(game.getStartTimeNano());
         gameDTO.setPlayers((PlayerDTO[]) Arrays.stream(game.getPlayers())
                 .map(PlayerDTO::from)
                 .toArray(PlayerDTO[]::new));

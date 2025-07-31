@@ -30,6 +30,7 @@ import java.util.function.Consumer;
 public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     private BufferedImage boardImage;
     private IBoard board;  // אפשר לעדכן את הלוח לפי המצב שהתקבל
+    private int playerId;
 
     private final IPlayerCursor cursor;
 
@@ -39,11 +40,14 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     private List<Position> legalMoves = Collections.emptyList();
 
 
-    private static final Color SELECT_COLOR = new Color(255, 0, 0, 128);   // אדום חצי שקוף
+    private final Color SELECT_COLOR;//new Color(255, 0, 0, 128);   // אדום חצי שקוף
 
-    public BoardPanel(IBoard board, IPlayerCursor pc) {
+    public BoardPanel(IBoard board, int playerId, IPlayerCursor pc) {
         this.board = board;
         this.cursor = pc;
+        this.playerId = playerId;
+        Color base = cursor.getColor();
+        SELECT_COLOR = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
 
         setPreferredSize(new Dimension(800, 800));
         setFocusable(true);
@@ -86,8 +90,8 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                 Position pos = cursor.getPosition();
                 if (selected == null) {
                     IPiece p = board.getPiece(pos);
-                    if (p == null || p.isCaptured() || board.getPlayerOf(p) != 0 || !p.getCurrentStateName().isCanAction()) {
-                        LogUtils.logDebug("can not choose piece");
+                    if (p == null || p.getPlayer() != playerId || p.isCaptured() || !p.getCurrentStateName().isCanAction()) {
+                        System.out.println("can not choose piece");
                     } else {
                         selected = pos;
                         legalMoves = board.getLegalMoves(pos);

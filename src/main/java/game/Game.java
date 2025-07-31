@@ -38,6 +38,7 @@ public class Game implements IGame {
         this.board = new Board(bc,players);
         this.players = players;
         commandQueue = new LinkedList<>();
+        this.startTimeNano = System.nanoTime();
 
         new MovesLogger();
         new JumpsLogger();
@@ -114,7 +115,6 @@ public class Game implements IGame {
         if (timer == null) {
             timer = new Timer(16, e -> {
                 if(!running){
-                    startTimeNano = System.nanoTime();
                     running = true;
                 }
 
@@ -138,6 +138,11 @@ public class Game implements IGame {
             timer.stop();
         }
         running = false;
+    }
+
+    @Override
+    public long getStartTimeNano() {
+        return startTimeNano;
     }
 
     @Override

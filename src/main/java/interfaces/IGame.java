@@ -44,6 +44,8 @@ public interface IGame {
 
     void stopGameLoop();
 
+    long getStartTimeNano();
+
     long getElapsedTimeNano();
 
     IPlayer[] getPlayers();

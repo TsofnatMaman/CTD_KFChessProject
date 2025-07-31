@@ -105,4 +105,9 @@ public class PlayerCursor implements IPlayerCursor {
     public Position getPosition(){
         return pos;
     }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
 }

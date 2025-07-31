@@ -58,6 +58,7 @@ public class KFChessClientApp {
                             // יצירת GUI על EDT
                             SwingUtilities.invokeLater(() -> {
                                 gamePanel = new GamePanel(gameModel, playerId, client, new ObjectMapper());
+                                gamePanel.setStartTimeNano(gameDTO.getStartTimeNano());
 
                                 // שמירת הסמן מקומי (למשל סמן עבור המשתמש)
                                 cursor = (PlayerCursor) gamePanel.getBoardPanel().getPlayerCursor();

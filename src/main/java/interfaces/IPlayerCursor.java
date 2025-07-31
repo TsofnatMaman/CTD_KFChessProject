@@ -57,4 +57,6 @@ public interface IPlayerCursor {
      * @return The position object
      */
     Position getPosition();
+
+    Color getColor();
 }
