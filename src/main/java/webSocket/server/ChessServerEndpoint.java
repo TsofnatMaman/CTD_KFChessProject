@@ -15,13 +15,14 @@ import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 @ServerEndpoint("/game")
 public class ChessServerEndpoint {
 
-    private static final List<Session> sessions = new CopyOnWriteArrayList<>();
+    // Map שממפה Session ל-playerId שלו
+    private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
     private static final ObjectMapper mapper = new ObjectMapper();
 
     private static final IGame game;
@@ -32,24 +33,25 @@ public class ChessServerEndpoint {
         IPlayer p1 = new Player("player 1", boardConfig);
         IPlayer p2 = new Player("player 2", boardConfig);
         game = new Game(boardConfig, new IPlayer[]{p1, p2});
+
         initialGameState = createInitialGameDTO();
     }
 
     @OnOpen
     public void onOpen(Session session) {
-        sessions.add(session);
-        System.out.println("Client connected: " + session.getId());
+        int playerId = sessionPlayerIds.size(); // מזהה שחקן לפי סדר חיבור (0,1,...)
+        sessionPlayerIds.put(session, playerId);
 
-        int playerId = sessions.indexOf(session); // מזהה שחקן לפי סדר חיבור (0,1,...)
+        System.out.println("Client connected: " + session.getId() + ", assigned playerId: " + playerId);
 
         try {
             // שולחים מצב התחלתי (gameInit)
-            ServerMessage<GameDTO> initMsg = new ServerMessage<GameDTO>("gameInit", initialGameState);
+            ServerMessage<GameDTO> initMsg = new ServerMessage<>("gameInit", initialGameState);
             String jsonInit = mapper.writeValueAsString(initMsg);
             session.getBasicRemote().sendText(jsonInit);
 
             // שולחים מזהה שחקן (playerId)
-            ServerMessage<Integer> idMsg = new ServerMessage<Integer>("playerId", playerId);
+            ServerMessage<Integer> idMsg = new ServerMessage<>("playerId", playerId);
             String jsonId = mapper.writeValueAsString(idMsg);
             session.getBasicRemote().sendText(jsonId);
 
@@ -61,18 +63,31 @@ public class ChessServerEndpoint {
     @OnMessage
     public void onMessage(String message, Session session) {
         System.out.println("Received message from " + session.getId() + ": " + message);
+
+        Integer playerId = sessionPlayerIds.get(session);
+        if (playerId == null) {
+            System.err.println("Unknown session, ignoring message");
+            return;
+        }
+
         try {
             // קוראים את הפקודה מסוג PlayerSelected מהלקוח
             PlayerSelected cmd = mapper.readValue(message, PlayerSelected.class);
+
+            // בדיקה שה-playerId בפקודה תואם ל-session
+            if (cmd.getPlayerId() != playerId) {
+                System.err.println("Player ID mismatch! Ignoring message from player " + playerId);
+                return;
+            }
 
             // מעדכנים את המשחק בהתאם לבחירה של השחקן
             game.handleSelection(cmd.getPlayerId(), cmd.getSelection());
 
             // שולחים עדכון לכל הלקוחות (כולל השולח) כדי לסנכרן את המצב
-            ServerMessage<PlayerSelected> update = new ServerMessage<PlayerSelected>("playerSelected", cmd);
+            ServerMessage<PlayerSelected> update = new ServerMessage<>("playerSelected", cmd);
             String json = mapper.writeValueAsString(update);
 
-            for (Session s : sessions) {
+            for (Session s : sessionPlayerIds.keySet()) {
                 s.getAsyncRemote().sendText(json);
             }
         } catch (Exception e) {
@@ -80,10 +95,9 @@ public class ChessServerEndpoint {
         }
     }
 
-
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        sessions.remove(session);
+        sessionPlayerIds.remove(session);
         System.out.println("Client disconnected: " + session.getId() + " Reason: " + reason);
     }
 

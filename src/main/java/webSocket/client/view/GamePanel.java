@@ -1,5 +1,6 @@
 package webSocket.client.view;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
@@ -9,6 +10,8 @@ import interfaces.IPlayerCursor;
 import pieces.Position;
 import player.PlayerCursor;
 import utils.LogUtils;
+import webSocket.client.ChessClientEndpoint;
+import webSocket.server.dto.PlayerSelected;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -32,8 +35,13 @@ public class GamePanel extends JPanel implements IEventListener {
     private JLabel timerLabel;
     private Timer timerForUI;
 
-    public GamePanel(IGame model, int playerId) {
+    private final ObjectMapper mapper;
+    private final ChessClientEndpoint client;
+
+    public GamePanel(IGame model, int playerId, ChessClientEndpoint client, ObjectMapper mapper) {
         this.model = model;
+        this.client = client;
+        this.mapper = mapper;
 
         // הגדרות פריסה ומרווחים
         setLayout(new BorderLayout(20, 20));
@@ -61,7 +69,16 @@ public class GamePanel extends JPanel implements IEventListener {
         boardPanel.setOpaque(false);
 
         // הגדרת מאזין לפעולות השחקן - העברת הבחירה למודל המשחק
-        boardPanel.setOnPlayerAction((v) -> model.handleSelection(model.getPlayerById(playerId), cursor.getPosition()));
+        boardPanel.setOnPlayerAction((v) -> {
+            try {
+                Position pos = cursor.getPosition();
+                PlayerSelected cmd = new PlayerSelected(playerId, pos);
+                String jsonCmd = mapper.writeValueAsString(cmd);
+                client.sendText(jsonCmd);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        });
 
         // הבטחת לוח הפוקוס ללוח בעת לחיצה
         boardPanel.addMouseListener(new MouseAdapter() {

@@ -1,5 +1,8 @@
 package webSocket.client;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.websocket.*;
 import java.net.URI;
 import java.util.concurrent.BlockingQueue;
@@ -23,27 +26,20 @@ public class ChessClientEndpoint {
         System.out.println("Connected to server");
     }
 
+    private final ObjectMapper mapper = new ObjectMapper();
+
     @OnMessage
     public void onMessage(String message) {
         messageQueue.add(message);
 
-        // בדיקת מזהה שחקן מתוך ההודעה
-        if (message.contains("\"playerId\"")) {
-            // לדוגמה עדכון playerId מתוך ההודעה (אפשר לשפר עם JSON parsing)
-            try {
-                // פשוט נשלוף את המספר בין המרכאות - או להשתמש ב-Jackson
-                int idx = message.indexOf("playerId");
-                if (idx >= 0) {
-                    String sub = message.substring(idx);
-                    String number = sub.replaceAll("[^0-9]", "");
-                    if (!number.isEmpty()) {
-                        playerId = Integer.parseInt(number);
-                        System.out.println("Updated playerId to " + playerId);
-                    }
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            JsonNode root = mapper.readTree(message);
+            if (root.has("type") && root.get("type").asText().equals("playerId")) {
+                playerId = root.get("data").asInt();
+                System.out.println("Updated playerId to " + playerId);
             }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

@@ -2,47 +2,45 @@ package pieces;
 
 import java.io.Serializable;
 
-/**
- * Represents a position on the board.
- */
 public class Position implements Serializable {
-    int r;
-    int c;
+    private int r;
+    private int c;
 
-    /**
-     * Constructs a position with the given row and column.
-     */
+    // קונסטרקטור ריק דרוש ל-Jackson
+    public Position() {}
+
+    // קונסטרקטור רגיל
     public Position(int r, int c){
         this.r = r;
         this.c = c;
     }
 
-    /**
-     * Gets the row index.
-     */
+    // getters ו-setters ציבוריים
+
     public int getRow() {
         return r;
     }
 
-    /**
-     * Gets the column index.
-     */
+    public void setRow(int r) {
+        this.r = r;
+    }
+
     public int getCol() {
         return c;
     }
 
-    /**
-     * Returns the difference in rows between this and another position.
-     */
-    public int dx(Position other){
-        return r-other.r;
+    public void setCol(int c) {
+        this.c = c;
     }
 
-    /**
-     * Returns the difference in columns between this and another position.
-     */
+    // שאר הקוד שלך נשאר זהה
+
+    public int dx(Position other){
+        return r - other.r;
+    }
+
     public int dy(Position other){
-        return c-other.c;
+        return c - other.c;
     }
 
     @Override
@@ -50,56 +48,37 @@ public class Position implements Serializable {
         return obj instanceof Position && ((Position)obj).r == r && ((Position)obj).c == c;
     }
 
-    /**
-     * Returns a new position offset by x rows and y columns.
-     */
     public Position add(int x, int y){
-        return new Position(r+x, c+y);
+        return new Position(r + x, c + y);
     }
 
     @Override
     public String toString() {
-        return r+","+c;
+        return r + "," + c;
     }
 
-    /**
-     * Reduces the row index by one.
-     */
     public void reduceOneRow(){
         r--;
     }
 
-    /**
-     * Reduces the column index by one.
-     */
     public void reduceOneCol(){
         c--;
     }
 
-    /**
-     * Increases the row index by one.
-     */
     public void addOneRow(){
         r++;
     }
 
-    /**
-     * Increases the column index by one.
-     */
     public void addOneCol(){
         c++;
     }
 
-    /**
-     * Returns a copy of this position.
-     */
     public Position copy(){
         return new Position(getRow(), getCol());
     }
 
     public static Position fromString(String s){
-        String[]rowCol = s.split(",");
+        String[] rowCol = s.split(",");
         return new Position(Integer.parseInt(rowCol[0].trim()), Integer.parseInt(rowCol[1].trim()));
     }
 }
-

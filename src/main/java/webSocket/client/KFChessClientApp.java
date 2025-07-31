@@ -8,7 +8,6 @@ import interfaces.IGame;
 import pieces.Position;
 import player.PlayerCursor;
 import webSocket.client.view.GamePanel;
-import webSocket.server.ServerMessage;
 import webSocket.server.dto.GameDTO;
 import webSocket.server.dto.PlayerDTO;
 import webSocket.server.dto.PlayerSelected;
@@ -31,13 +30,6 @@ public class KFChessClientApp {
 
         client = new ChessClientEndpoint(uri);
 
-        // מחכים לקבלת playerId (מזהה השחקן מהשרת)
-        while (client.getPlayerId() < 0) {
-            Thread.sleep(100);
-        }
-        playerId = client.getPlayerId();
-        System.out.println("Client playerId = " + playerId);
-
         // מאזין להודעות מהשרת בלולאה נפרדת
         new Thread(() -> {
             try {
@@ -53,7 +45,7 @@ public class KFChessClientApp {
                     switch (type) {
                         case "gameInit": {
                             JsonNode dataNode = root.get("data");
-                            GameDTO gameDTO = (GameDTO) mapper.treeToValue(dataNode, ServerMessage.class).getData();
+                            GameDTO gameDTO = mapper.treeToValue(dataNode, GameDTO.class);
 
                             // יצירת מערך שחקנים מ-PlayerDTO
                             IPlayer[] players = Arrays.stream(gameDTO.getPlayers())
@@ -65,23 +57,11 @@ public class KFChessClientApp {
 
                             // יצירת GUI על EDT
                             SwingUtilities.invokeLater(() -> {
-                                gamePanel = new GamePanel(gameModel, playerId);
+                                gamePanel = new GamePanel(gameModel, playerId, client, new ObjectMapper());
 
                                 // שמירת הסמן מקומי (למשל סמן עבור המשתמש)
                                 cursor = (PlayerCursor) gamePanel.getBoardPanel().getPlayerCursor();
 
-                                // מאזין לפעולות של השחקן בלוח
-                                gamePanel.getBoardPanel().setOnPlayerAction((v) -> {
-                                    try {
-                                        Position pos = cursor.getPosition();
-                                        PlayerSelected cmd = new PlayerSelected(playerId, pos);
-                                        String jsonCmd = mapper.writeValueAsString(cmd);
-                                        client.sendText(jsonCmd);
-                                        System.out.println("Sent selection: " + pos);
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                });
 
                                 JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1));
                                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -107,6 +87,12 @@ public class KFChessClientApp {
                             }
                             break;
                         }
+
+                        case "playerId": {
+                            playerId = root.get("data").asInt();
+                            System.out.println("Client playerId = " + playerId);
+                            break;
+                        }
                         default:
                             System.out.println("Unknown message type: " + type);
                     }
@@ -115,6 +101,11 @@ public class KFChessClientApp {
                 e.printStackTrace();
             }
         }).start();
+
+        // מחכים לקבלת playerId (מזהה השחקן מהשרת) לפני המשך
+        while (playerId < 0) {
+            Thread.sleep(100);
+        }
     }
 
     public static void main(String[] args) {

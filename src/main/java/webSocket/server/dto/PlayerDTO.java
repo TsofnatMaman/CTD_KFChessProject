@@ -9,14 +9,14 @@ import java.awt.*;
 public class PlayerDTO {
     private int id;
     private String name;
-    private Color color; // אפשר גם enum או צבע בפורמט אחר
+    private String colorHex; // נשתמש ב-HEX (למשל "#FF0000")
 
     public PlayerDTO() {}
 
-    public PlayerDTO(int id, String name, Color color) {
+    public PlayerDTO(int id, String name, String colorHex) {
         this.id = id;
         this.name = name;
-        this.color = color;
+        this.colorHex = colorHex;
     }
 
     public int getId() {
@@ -35,23 +35,29 @@ public class PlayerDTO {
         this.name = name;
     }
 
-    public Color getColor() {
-        return color;
+    public String getColorHex() {
+        return colorHex;
     }
 
-    public void setColor(Color color) {
-        this.color = color;
+    public void setColorHex(String colorHex) {
+        this.colorHex = colorHex;
     }
 
-    public static PlayerDTO from(IPlayer player){
-        PlayerDTO playerDTO = new PlayerDTO();
-        playerDTO.name = player.getName();
-        playerDTO.id =player.getId();
-        playerDTO.color = player.getColor();
-        return playerDTO;
+    // ממיר מאובייקט שחקן DTO רגיל
+    public static PlayerDTO from(IPlayer player) {
+        PlayerDTO dto = new PlayerDTO();
+        dto.id = player.getId();
+        dto.name = player.getName();
+
+        // נניח של-player.getColor() מחזיר java.awt.Color
+        Color c = player.getColor();
+        dto.colorHex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
+
+        return dto;
     }
 
-    public static IPlayer to(PlayerDTO playerDTO, BoardConfig bc){
+    // יוצר אובייקט Player מלא מתוך DTO
+    public static IPlayer to(PlayerDTO playerDTO, BoardConfig bc) {
         return new Player(playerDTO.name, bc);
     }
 }
