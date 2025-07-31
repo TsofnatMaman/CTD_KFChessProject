@@ -20,6 +20,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * ממשק המשחק הכולל: לוח במרכז, מידע שחקנים בצדדים, רקע וטיימר.
@@ -28,12 +29,11 @@ import java.io.IOException;
 public class GamePanel extends JPanel implements IEventListener {
 
     private final BoardPanel boardPanel;
-    private final PlayerInfoPanel playerPanel;
     private final IGame model;
     private Image backgroundImage;
 
-    private JLabel timerLabel;
-    private Timer timerForUI;
+    private final JLabel timerLabel;
+    private final Timer timerForUI;
 
     private long startTimeNano;
 
@@ -51,13 +51,13 @@ public class GamePanel extends JPanel implements IEventListener {
 
         // טעינת תמונת רקע
         try {
-            backgroundImage = ImageIO.read(getClass().getClassLoader().getResource("background/background.jpg"));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("background/background.jpg")));
         } catch (IOException | IllegalArgumentException e) {
             LogUtils.logDebug("Could not load background image: " + e.getMessage());
         }
 
         // יצירת פאנל מידע שחקן בצד שמאל עם השחקן המקומי
-        playerPanel = new PlayerInfoPanel(model.getPlayerById(playerId));
+        PlayerInfoPanel playerPanel = new PlayerInfoPanel(model.getPlayerById(playerId));
         Color semiTransparent = new Color(255, 255, 255, 180);
         playerPanel.setBackground(semiTransparent);
 
