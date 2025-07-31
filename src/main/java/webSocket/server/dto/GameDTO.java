@@ -7,13 +7,16 @@ public class GameDTO {
     private PlayerDTO[] players;
     private int yourId;
 
+    private long startTimeNano;
+
     // ברירת מחדל ל-Jackson
     public GameDTO() {}
 
-    public GameDTO(BoardConfig boardConfig, PlayerDTO[] players, int yourId) {
+    public GameDTO(BoardConfig boardConfig, PlayerDTO[] players, int yourId, long startTimeNano) {
         this.boardConfig = boardConfig;
         this.players = players;
         this.yourId = yourId;
+        this.startTimeNano = startTimeNano;
     }
 
     public BoardConfig getBoardConfig() {
@@ -38,5 +41,9 @@ public class GameDTO {
 
     public void setYourId(int yourId) {
         this.yourId = yourId;
+    }
+
+    public long getStartTimeNano() {
+        return startTimeNano;
     }
 }

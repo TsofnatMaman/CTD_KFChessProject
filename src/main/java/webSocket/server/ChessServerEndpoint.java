@@ -34,6 +34,8 @@ public class ChessServerEndpoint {
         IPlayer p2 = new Player("player 2", boardConfig);
         game = new Game(boardConfig, new IPlayer[]{p1, p2});
 
+        game.run();
+
         initialGameState = createInitialGameDTO();
     }
 
@@ -87,11 +89,16 @@ public class ChessServerEndpoint {
             ServerMessage<PlayerSelected> update = new ServerMessage<>("playerSelected", cmd);
             String json = mapper.writeValueAsString(update);
 
-            for (Session s : sessionPlayerIds.keySet()) {
-                s.getAsyncRemote().sendText(json);
-            }
+            sendBrodcast(json);
+
         } catch (Exception e) {
             e.printStackTrace();
+        }
+    }
+
+    public void sendBrodcast(String msg){
+        for (Session s : sessionPlayerIds.keySet()) {
+            s.getAsyncRemote().sendText(msg);
         }
     }
 
