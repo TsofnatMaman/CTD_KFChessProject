@@ -24,9 +24,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 public class KFChessClientApp {
-
-    private static int numPlayerConnect = 0;
-    private static final int MAX_PLAYER=2;
     private static final Logger logger = Logger.getLogger(KFChessClientApp.class.getName());
 
     private final ChessClientEndpoint client;
@@ -42,18 +39,12 @@ public class KFChessClientApp {
     private final MessageListener messageListener;
 
     public KFChessClientApp() throws Exception {
-        if(numPlayerConnect > MAX_PLAYER){
-            System.out.println("game full");
-            throw new RuntimeException("game full");
-        }
-
         String username = JOptionPane.showInputDialog(null, "Enter your name:", "Welcome to KFCHESS", JOptionPane.PLAIN_MESSAGE);
         if (username == null || username.trim().isEmpty()) {
             username = "Anonymous"; // ברירת מחדל
         }
         
         client = new ChessClientEndpoint(new URI("ws://localhost:8025/ws/game"));
-        numPlayerConnect++;
 
         client.sendText("{\"type\":\"setName\", \"data\":\"" + username + "\"}");
 
