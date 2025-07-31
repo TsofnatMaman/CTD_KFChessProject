@@ -93,7 +93,7 @@ public class PiecesFactory {
             }
 
             // Step 3 – Create the Piece with the first state as default
-            EState initialState = EState.IDLE;
+            EState initialState = EState.LONG_REST;
             return new Piece(id, code, playerId, states, initialState, pos);
 
         } catch (Exception e) {

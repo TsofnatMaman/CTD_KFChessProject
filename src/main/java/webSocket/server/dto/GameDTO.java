@@ -46,4 +46,8 @@ public class GameDTO {
     public long getStartTimeNano() {
         return startTimeNano;
     }
+
+    public void setStartTimeNano(long startTimeNano) {
+        this.startTimeNano = startTimeNano;
+    }
 }

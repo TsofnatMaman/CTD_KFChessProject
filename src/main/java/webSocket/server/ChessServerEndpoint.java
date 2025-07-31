@@ -21,44 +21,52 @@ import java.util.concurrent.ConcurrentHashMap;
 @ServerEndpoint("/game")
 public class ChessServerEndpoint {
 
-    // Map שממפה Session ל-playerId שלו
     private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
     private static final ObjectMapper mapper = new ObjectMapper();
 
-    private static final IGame game;
-    private static final GameDTO initialGameState;
+    private static IGame game = null; // עוד לא נוצר
+    private static GameDTO initialGameState = null;
 
-    static {
-        BoardConfig boardConfig = new BoardConfig(new Dimension(8), new Dimension(64 * 8));
-        IPlayer p1 = new Player("player 1", boardConfig);
-        IPlayer p2 = new Player("player 2", boardConfig);
-        game = new Game(boardConfig, new IPlayer[]{p1, p2});
-
-        game.run();
-
-        initialGameState = createInitialGameDTO();
-    }
+    private static final int MAX_PLAYERS = 2;
 
     @OnOpen
-    public void onOpen(Session session) {
-        int playerId = sessionPlayerIds.size(); // מזהה שחקן לפי סדר חיבור (0,1,...)
+    public synchronized void onOpen(Session session) throws IOException {
+        int playerId = sessionPlayerIds.size();
+        if (playerId >= MAX_PLAYERS) {
+            // אפשר לדחות חיבורים נוספים או להודיע שהמשחק מלא
+            session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER, "Game is full"));
+            return;
+        }
+
         sessionPlayerIds.put(session, playerId);
 
         System.out.println("Client connected: " + session.getId() + ", assigned playerId: " + playerId);
 
-        try {
-            // שולחים מצב התחלתי (gameInit)
-            ServerMessage<GameDTO> initMsg = new ServerMessage<>("gameInit", initialGameState);
-            String jsonInit = mapper.writeValueAsString(initMsg);
-            session.getBasicRemote().sendText(jsonInit);
+        // אם התחברו עכשיו כל השחקנים (2)
+        if (sessionPlayerIds.size() == MAX_PLAYERS) {
+            BoardConfig boardConfig = new BoardConfig(new Dimension(8), new Dimension(64 * 8));
+            IPlayer p1 = new Player("player 1", boardConfig);
+            IPlayer p2 = new Player("player 2", boardConfig);
+            game = new Game(boardConfig, new IPlayer[]{p1, p2});
+            game.run();
 
-            // שולחים מזהה שחקן (playerId)
-            ServerMessage<Integer> idMsg = new ServerMessage<>("playerId", playerId);
-            String jsonId = mapper.writeValueAsString(idMsg);
-            session.getBasicRemote().sendText(jsonId);
+            initialGameState = createInitialGameDTO();
 
-        } catch (IOException e) {
-            e.printStackTrace();
+            // שולחים לכל הלקוחות את מצב המשחק ההתחלתי ומזהה השחקן
+            for (Map.Entry<Session, Integer> entry : sessionPlayerIds.entrySet()) {
+                Session s = entry.getKey();
+                int id = entry.getValue();
+
+                ServerMessage<GameDTO> initMsg = new ServerMessage<>("gameInit", initialGameState);
+                s.getBasicRemote().sendText(mapper.writeValueAsString(initMsg));
+
+                ServerMessage<Integer> idMsg = new ServerMessage<>("playerId", id);
+                s.getBasicRemote().sendText(mapper.writeValueAsString(idMsg));
+            }
+        } else {
+            // אם זה השחקן הראשון, אפשר לשלוח הודעה זמנית או פשוט להמתין
+            ServerMessage<String> waitMsg = new ServerMessage<>("wait", "Waiting for second player to join...");
+            session.getBasicRemote().sendText(mapper.writeValueAsString(waitMsg));
         }
     }
 
@@ -116,6 +124,7 @@ public class ChessServerEndpoint {
     private static GameDTO createInitialGameDTO() {
         GameDTO gameDTO = new GameDTO();
         gameDTO.setBoardConfig(game.getBoard().getBoardConfig());
+        gameDTO.setStartTimeNano(game.getElapsedTimeNano());
         gameDTO.setPlayers((PlayerDTO[]) Arrays.stream(game.getPlayers())
                 .map(PlayerDTO::from)
                 .toArray(PlayerDTO[]::new));
