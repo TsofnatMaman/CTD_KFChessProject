@@ -49,7 +49,8 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         Color base = cursor.getColor();
         SELECT_COLOR = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
 
-        setPreferredSize(new Dimension(800, 800));
+        setPreferredSize(new Dimension(constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE,
+                                      constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE)); // extracted board size
         setFocusable(true);
         loadBoardImage();
 
@@ -141,8 +142,8 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         if (cursor != null) cursor.draw(g, getWidth(), getHeight());
 
         Graphics2D g2 = (Graphics2D) g;
-        int cellW = getWidth() / board.getCOLS();
-        int cellH = getHeight() / board.getROWS();
+        int cellW = getWidth() / constants.GameConstants.BOARD_COLS; // extracted board size
+        int cellH = getHeight() / constants.GameConstants.BOARD_ROWS; // extracted board size
 
         // --- Player 1 selection and legal moves ---
         if (selected != null) {

@@ -20,7 +20,8 @@ public class Moves {
         List<Move> moves = new ArrayList<>();
         moves = new ArrayList<>();
 
-        String resourcePath = "pieces/" + pieceType.getVal() + "/moves" + playerId + ".txt";
+        // Extracted resource path to PieceConstants
+        String resourcePath = constants.PieceConstants.PIECE_MOVES_PATH_PREFIX + pieceType.getVal() + constants.PieceConstants.PIECE_MOVES_PATH_SUFFIX + playerId + constants.PieceConstants.PIECE_MOVES_PATH_EXT;
         try (InputStream is = Moves.class.getClassLoader().getResourceAsStream(resourcePath)) {
             if (is == null) {
                 throw new IOException("Resource not found: " + resourcePath);

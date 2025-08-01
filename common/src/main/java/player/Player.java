@@ -29,7 +29,8 @@ public class Player implements IPlayer{
     private int score;
     private boolean isFailed;
 
-    private static Color[]colors = new Color[]{Color.RED, Color.BLUE};
+    // Use PlayerConstants for player colors
+    private static Color[] colors = constants.PlayerConstants.PLAYER_COLORS;
 
     /**
      * Constructs a Player, initializes pieces and status.
@@ -46,7 +47,7 @@ public class Player implements IPlayer{
         this.color = colors[id];
 
         for(int i:BoardConfig.rowsOfPlayer.get(id))
-            for(int j=0; j<8; j++) {
+            for(int j=0; j<constants.GameConstants.BOARD_COLS; j++) { // extracted board size
                 IPiece p = PiecesFactory.createPieceByCode(EPieceType.valueOf(LoadPieces.board[i][j].charAt(0) + ""), id, new Position(i, j), bc);
                 this.pieces.add(p);
                 score += p.getType().getScore();

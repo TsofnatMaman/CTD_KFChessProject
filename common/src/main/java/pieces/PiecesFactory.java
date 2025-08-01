@@ -73,8 +73,9 @@ public class PiecesFactory {
                 IPhysicsData physics = new PhysicsData(speed, nextState);
 
                 JsonNode graphicsNode = root.path("graphics");
-                int fps = graphicsNode.path("frames_per_sec").asInt(1);
-                boolean isLoop = graphicsNode.path("is_loop").asBoolean(true);
+                // Extracted fps and isLoop to config.properties
+                int fps = graphicsNode.path("frames_per_sec").asInt(Integer.parseInt(utils.ConfigLoader.getConfig("piece.sprite.frames_per_sec", "1")));
+                boolean isLoop = graphicsNode.path("is_loop").asBoolean(Boolean.parseBoolean(utils.ConfigLoader.getConfig("piece.sprite.is_loop", "true")));
 
                 BufferedImage[] sprites = GraphicsLoader.loadAllSprites(code, playerId, stateName);
                 if (sprites.length == 0) {

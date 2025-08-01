@@ -78,7 +78,8 @@ public class Position implements Serializable {
     }
 
     public static Position fromString(String s){
-        String[] rowCol = s.split(",");
+        // Extracted position separator to PieceConstants
+        String[] rowCol = s.split(constants.PieceConstants.POSITION_SEPARATOR);
         return new Position(Integer.parseInt(rowCol[0].trim()), Integer.parseInt(rowCol[1].trim()));
     }
 }

@@ -39,14 +39,22 @@ public class KFChessClientApp {
     private final MessageListener messageListener;
 
     public KFChessClientApp() throws Exception {
-        String username = JOptionPane.showInputDialog(null, "Enter your name:", "Welcome to KFCHESS", JOptionPane.PLAIN_MESSAGE);
+        String username = JOptionPane.showInputDialog(null,
+            utils.ConfigLoader.getMessage("enter.name", "Enter your name:"),
+            utils.ConfigLoader.getMessage("welcome.title", "Welcome to KFCHESS"),
+            JOptionPane.PLAIN_MESSAGE);
         if (username == null || username.trim().isEmpty()) {
-            username = "Anonymous"; // ברירת מחדל
+            username = utils.ConfigLoader.getMessage("anonymous.name", "Anonymous"); // extracted default name
         }
-        
-        client = new ChessClientEndpoint(new URI("ws://localhost:8025/ws/game"));
 
-        client.sendText("{\"type\":\"setName\", \"data\":\"" + username + "\"}");
+        String wsHost = utils.ConfigLoader.getConfig("server.host", "localhost");
+        String wsPort = utils.ConfigLoader.getConfig("server.port", "8025");
+        String wsPath = utils.ConfigLoader.getConfig("server.ws.path", "/ws");
+        String wsEndpoint = utils.ConfigLoader.getConfig("server.endpoint.game", "/game");
+        String wsUrl = String.format("ws://%s:%s%s%s", wsHost, wsPort, wsPath, wsEndpoint); // extracted connection string
+        client = new ChessClientEndpoint(new URI(wsUrl));
+
+        client.sendText(String.format("{\"type\":\"%s\", \"data\":\"%s\"}", constants.CommandNames.SET_NAME, username)); // extracted message type
 
         waitDialog = new WaitDialog();
         messageListener = new MessageListener(client, mapper, this);
@@ -55,13 +63,13 @@ public class KFChessClientApp {
 
         boolean gotId = playerIdLatch.await(60, TimeUnit.SECONDS);
         if (!gotId) {
-            logger.severe("Did not receive playerId in time.");
-            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Error: Did not receive player ID from server."));
+            logger.severe(utils.ConfigLoader.getMessage("error.no.playerid", "Did not receive playerId in time."));
+            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(utils.ConfigLoader.getMessage("error.no.playerid", "Error: Did not receive player ID from server.")));
             throw new RuntimeException("Failed to receive playerId from server");
         }
 
         if (!gameStarted) {
-            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for the game to start..."));
+            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(utils.ConfigLoader.getMessage("waiting.game.start", "Waiting for the game to start...")));
         }
     }
 
@@ -71,20 +79,20 @@ public class KFChessClientApp {
     public void onMessage(JsonNode root) {
         String type = root.path("type").asText("");
         switch (type) {
-            case "wait":
+            case constants.CommandNames.WAIT: // replaced "wait"
                 if (gameStarted) return;
                 String msg = root.path("data").asText("");
                 SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(msg));
                 break;
 
-            case "gameInit":
+            case constants.CommandNames.GAME_INIT: // replaced "gameInit"
                 gameStarted = true;
                 SwingUtilities.invokeLater(waitDialog::close);
                 GameDTO gameDTO;
                 try {
                     gameDTO = mapper.treeToValue(root.path("data"), GameDTO.class);
                 } catch (Exception e) {
-                    logger.log(Level.SEVERE, "Failed to deserialize gameInit data", e);
+                    logger.log(Level.SEVERE, utils.ConfigLoader.getMessage("process.message.error", "Failed to deserialize gameInit data"), e); // replaced string with messages.properties key
                     return;
                 }
                 IPlayer[] players = Arrays.stream(gameDTO.getPlayers())
@@ -100,13 +108,13 @@ public class KFChessClientApp {
                 SwingUtilities.invokeLater(() -> initializeGameUI(gameDTO));
                 break;
 
-            case "playerSelected":
+            case constants.CommandNames.PLAYER_SELECTED: // replaced "playerSelected"
                 if (gameModel == null) return;
                 PlayerSelected cmd;
                 try {
                     cmd = mapper.treeToValue(root.path("data"), PlayerSelected.class);
                 } catch (Exception e) {
-                    logger.log(Level.WARNING, "Failed to deserialize playerSelected data", e);
+                    logger.log(Level.WARNING, utils.ConfigLoader.getMessage("process.message.error", "Failed to deserialize playerSelected data"), e); // replaced string with messages.properties key
                     return;
                 }
                 gameModel.handleSelection(cmd.getPlayerId(), cmd.getSelection());
@@ -117,19 +125,19 @@ public class KFChessClientApp {
                 });
                 break;
 
-            case "playerId":
+            case constants.CommandNames.PLAYER_ID: // replaced "playerId"
                 playerId = root.path("data").asInt(-1);
-                logger.info("Received playerId: " + playerId);
+                logger.info(utils.ConfigLoader.getMessage("client.connected.log", "Received playerId: ") + playerId); // replaced string with messages.properties key
                 playerIdLatch.countDown();
                 break;
 
             default:
-                logger.warning("Unknown message type: " + type);
+                logger.warning(utils.ConfigLoader.getMessage("unknown.message.type.error", "Unknown message type: ") + type); // replaced string with messages.properties key
         }
     }
 
     private void initializeGameUI(GameDTO gameDTO) {
-        JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1));
+        JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1) + " - " + gameModel.getPlayerById(playerId).getName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         gamePanel = new GamePanel(gameModel, playerId, client, new ObjectMapper());

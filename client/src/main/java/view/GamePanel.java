@@ -58,9 +58,11 @@ public class GamePanel extends JPanel implements IEventListener {
         }
 
         // Create player info panel on the left with the local player
-        PlayerInfoPanel playerPanel = new PlayerInfoPanel(model.getPlayerById(playerId));
+        PlayerInfoPanel playerPanel1 = new PlayerInfoPanel(model.getPlayerById(0));
+        PlayerInfoPanel playerPanel2 = new PlayerInfoPanel(model.getPlayerById(1));
+
         Color semiTransparent = new Color(255, 255, 255, 180);
-        playerPanel.setBackground(semiTransparent);
+        playerPanel1.setBackground(semiTransparent);
 
         IPlayerCursor cursor = new PlayerCursor(new Position(0, 0), model.getPlayerById(playerId).getColor());
 
@@ -75,7 +77,7 @@ public class GamePanel extends JPanel implements IEventListener {
                 Position pos = cursor.getPosition();
                 PlayerSelected cmd = new PlayerSelected(playerId, pos);
 
-                Message<PlayerSelected> msg = new Message<>("playerSelected", cmd);
+                Message<PlayerSelected> msg = new Message<>(constants.CommandNames.PLAYER_SELECTED, cmd); // extracted message type
                 String jsonCmd = mapper.writeValueAsString(msg);
 
                 client.sendText(jsonCmd);
@@ -96,7 +98,9 @@ public class GamePanel extends JPanel implements IEventListener {
         SwingUtilities.invokeLater(boardPanel::requestFocusInWindow);
 
         // Add panels to layout
-        add(playerPanel, BorderLayout.WEST);
+        add(playerPanel1, BorderLayout.WEST);
+        add(playerPanel2, BorderLayout.EAST);
+
         add(boardPanel, BorderLayout.CENTER);
 
         // Create timer display above the board
@@ -106,7 +110,7 @@ public class GamePanel extends JPanel implements IEventListener {
         timerLabel.setOpaque(false);
         add(timerLabel, BorderLayout.NORTH);
 
-        timerForUI = new Timer(1000, e -> updateTimer());
+        timerForUI = new Timer(constants.GameConstants.UI_TIMER_MS, e -> updateTimer());
         timerForUI.start();
 
         LogUtils.logDebug("GamePanel initialized");

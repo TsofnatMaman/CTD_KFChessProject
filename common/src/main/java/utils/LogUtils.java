@@ -9,10 +9,12 @@ import java.io.PrintWriter;
  */
 public class LogUtils {
     public static void logDebug(String message) {
-        try (PrintWriter out = new PrintWriter(new FileWriter("debug.log", true))) {
+        // Extracted log file name to config.properties
+        String logFile = ConfigLoader.getConfig("log.file", "debug.log");
+        try (PrintWriter out = new PrintWriter(new FileWriter(logFile, true))) {
             out.println(message);
         } catch (IOException e) {
-            System.err.println("Failed to write to debug.log: " + e.getMessage());
+            System.err.println("Failed to write to " + logFile + ": " + e.getMessage());
         }
     }
 }

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
-@ServerEndpoint("/game")
+@ServerEndpoint(constants.GameConstants.SERVER_ENDPOINT) // Extracted endpoint to GameConstants
 public class ChessServerEndpoint {
 
     private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
@@ -27,41 +27,52 @@ public class ChessServerEndpoint {
 
     private static IGame game = null; // Not yet created
 
-    private static final int MAX_PLAYERS = 2;
+    // Use constant from GameConstants
+    private static final int MAX_PLAYERS = constants.GameConstants.MAX_PLAYERS;
 
+    // Extracted player names to messages.properties
     private static final List<String> playersName = Collections
-            .synchronizedList(new ArrayList<>(List.of("player 1", "player 2")));
+            .synchronizedList(new ArrayList<>(List.of(
+                utils.ConfigLoader.getMessage("player.1.name", "player 1"),
+                utils.ConfigLoader.getMessage("player.2.name", "player 2")
+            )));
 
     @OnOpen
     public synchronized void onOpen(Session session) throws IOException {
         int playerId = sessionPlayerIds.size();
         if (playerId >= MAX_PLAYERS) {
             // Reject additional connections or notify that the game is full
-            session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER, "Game is full"));
+            session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER,
+                utils.ConfigLoader.getMessage("game.full.message", "Game is full")));
             return;
         }
 
         sessionPlayerIds.put(session, playerId);
 
-        System.out.println("Client connected: " + session.getId() + ", assigned playerId: " + playerId);
+        System.out.println(utils.ConfigLoader.getMessage("client.connected.log", "Client connected: ")
+            + session.getId() + utils.ConfigLoader.getMessage("assigned.playerId.log", ", assigned playerId: ") + playerId);
 
-        // If all players (2) are now connected
+        // If all players are now connected
         if (sessionPlayerIds.size() == MAX_PLAYERS) {
-
+            // ...existing code...
         } else {
             // If this is the first player, send a waiting message
-            Message<String> waitMsg = new Message<>("wait", "Waiting for second player to join...");
+            Message<String> waitMsg = new Message<>(
+                constants.CommandNames.WAIT,
+                utils.ConfigLoader.getMessage("wait.message", "Waiting for second player to join...")
+            );
             session.getBasicRemote().sendText(mapper.writeValueAsString(waitMsg));
         }
     }
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        System.out.println("Received message from " + session.getId() + ": " + message);
+        System.out.println(utils.ConfigLoader.getMessage("received.message.log", "Received message from ")
+            + session.getId() + ": " + message);
 
         Integer playerId = sessionPlayerIds.get(session);
         if (playerId == null) {
-            System.err.println("Unknown session, ignoring message");
+            System.err.println(utils.ConfigLoader.getMessage("unknown.session.error", "Unknown session, ignoring message"));
             return;
         }
 
@@ -74,28 +85,31 @@ public class ChessServerEndpoint {
             JsonNode dataNode = genericMsg.getData();
 
             switch (type) {
-                case "playerSelected":
+                case constants.CommandNames.PLAYER_SELECTED:
                     PlayerSelected cmd = mapper.treeToValue(dataNode, PlayerSelected.class);
 
                     if (cmd.getPlayerId() != playerId) {
-                        System.err.println("Player ID mismatch! Ignoring message from player " + playerId);
+                        System.err.println(utils.ConfigLoader.getMessage("player.id.mismatch.error", "Player ID mismatch! Ignoring message from player ") + playerId);
                         return;
                     }
 
                     game.handleSelection(cmd.getPlayerId(), cmd.getSelection());
 
-                    Message<PlayerSelected> update = new Message<>("playerSelected", cmd);
+                    Message<PlayerSelected> update = new Message<>(constants.CommandNames.PLAYER_SELECTED, cmd);
                     String json = mapper.writeValueAsString(update);
                     sendBrodcast(json);
                     break;
 
-                case "setName":
+                case constants.CommandNames.SET_NAME:
                     String name = dataNode.asText("");
                     playersName.set(playerId, name);
-                    System.out.println("Set name for player " + playerId + ": " + name);
+                    System.out.println(utils.ConfigLoader.getMessage("set.name.log", "Set name for player ") + playerId + ": " + name);
 
                     if (sessionPlayerIds.size() == MAX_PLAYERS) {
-                        BoardConfig boardConfig = new BoardConfig(new Dimension(8), new Dimension(64 * 8));
+                        BoardConfig boardConfig = new BoardConfig(
+                            new Dimension(constants.GameConstants.BOARD_SIZE),
+                            new Dimension(constants.GameConstants.SQUARE_SIZE * constants.GameConstants.BOARD_SIZE)
+                        );
                         IPlayer p1 = new Player(playersName.get(0), boardConfig);
                         IPlayer p2 = new Player(playersName.get(1), boardConfig);
                         game = new Game(boardConfig, new IPlayer[] { p1, p2 });
@@ -107,21 +121,21 @@ public class ChessServerEndpoint {
                             Session s = entry.getKey();
                             int id = entry.getValue();
 
-                            Message<GameDTO> initMsg = new Message<>("gameInit", initialGameState);
+                            Message<GameDTO> initMsg = new Message<>(constants.CommandNames.GAME_INIT, initialGameState);
                             s.getBasicRemote().sendText(mapper.writeValueAsString(initMsg));
 
-                            Message<Integer> idMsg = new Message<>("playerId", id);
+                            Message<Integer> idMsg = new Message<>(constants.CommandNames.PLAYER_ID, id);
                             s.getBasicRemote().sendText(mapper.writeValueAsString(idMsg));
                         }
                     }
                     break;
 
                 default:
-                    System.err.println("Unknown message type: " + type);
+                    System.err.println(utils.ConfigLoader.getMessage("unknown.message.type.error", "Unknown message type: ") + type);
             }
 
         } catch (Exception e) {
-            System.err.println("Failed to process message: " + e.getMessage());
+            System.err.println(utils.ConfigLoader.getMessage("process.message.error", "Failed to process message: ") + e.getMessage());
             e.printStackTrace();
         }
     }
@@ -136,13 +150,15 @@ public class ChessServerEndpoint {
     @OnClose
     public void onClose(Session session, CloseReason reason) {
         sessionPlayerIds.remove(session);
-        System.out.println("Client disconnected: " + session.getId() + " Reason: " + reason);
+        System.out.println(utils.ConfigLoader.getMessage("client.disconnected.log", "Client disconnected: ")
+            + session.getId() + utils.ConfigLoader.getMessage("reason.log", " Reason: ") + reason);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
         throwable.printStackTrace();
-        System.err.println("Error on session " + session.getId() + ": " + throwable.getMessage());
+        System.err.println(utils.ConfigLoader.getMessage("session.error.log", "Error on session ")
+            + session.getId() + ": " + throwable.getMessage());
     }
 
     private static GameDTO createInitialGameDTO() {

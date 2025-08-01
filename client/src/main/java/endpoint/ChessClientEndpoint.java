@@ -23,7 +23,7 @@ public class ChessClientEndpoint {
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
-        System.out.println("Connected to server");
+        System.out.println(utils.ConfigLoader.getMessage("client.connected.log", "Connected to server")); // replaced string with messages.properties key
     }
 
     private final ObjectMapper mapper = new ObjectMapper();
@@ -34,9 +34,9 @@ public class ChessClientEndpoint {
 
         try {
             JsonNode root = mapper.readTree(message);
-            if (root.has("type") && root.get("type").asText().equals("playerId")) {
+            if (root.has("type") && root.get("type").asText().equals(constants.CommandNames.PLAYER_ID)) { // replaced "playerId" with constant
                 playerId = root.get("data").asInt();
-                System.out.println("Updated playerId to " + playerId);
+                System.out.println(utils.ConfigLoader.getMessage("client.connected.log", "Updated playerId to ") + playerId); // replaced string with messages.properties key
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -45,7 +45,7 @@ public class ChessClientEndpoint {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-        System.out.println("Connection closed: " + reason);
+        System.out.println(utils.ConfigLoader.getMessage("client.disconnected.log", "Connection closed: ") + reason); // replaced string with messages.properties key
     }
 
     public int getPlayerId() {

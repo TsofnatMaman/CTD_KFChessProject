@@ -20,8 +20,9 @@ public class PlayerCursor implements IPlayerCursor {
      * @param color The color used to draw the cursor
      */
     public PlayerCursor(Position pos, Color color) {
-        ROWS=8;
-        COLS=8;
+        // Extracted board size to GameConstants
+        ROWS = constants.GameConstants.BOARD_ROWS;
+        COLS = constants.GameConstants.BOARD_COLS;
         this.pos = pos;
         this.color = color;
     }

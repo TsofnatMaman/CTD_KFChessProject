@@ -5,18 +5,18 @@ package pieces;
  * Each piece type has a letter code, movement capability, and point value.
  */
 public enum EPieceType {
-    /** Bishop - can only move diagonally */
-    B("B", false, 1),
-    /** King - most important piece, can move one square in any direction */
-    K("K", false, 100),
-    /** Knight - can jump over other pieces */
-    N("N", true, 50),
-    /** Pawn - basic piece that can be promoted */
-    P("P", false, 20),
-    /** Queen - most powerful piece, can move in any direction */
-    Q("Q", false, 80),
-    /** Rook - can move horizontally and vertically */
-    R("R", false, 30);
+    /** Bishop - can only move diagonally (code and score extracted to PieceConstants if needed) */
+    B("B", false, 3),
+    /** King - most important piece, can move one square in any direction (code and score extracted to PieceConstants if needed) */
+    K("K", false, 0),
+    /** Knight - can jump over other pieces (code and score extracted to PieceConstants if needed) */
+    N("N", true, 3),
+    /** Pawn - basic piece that can be promoted (code and score extracted to PieceConstants if needed) */
+    P("P", false, 1),
+    /** Queen - most powerful piece, can move in any direction (code and score extracted to PieceConstants if needed) */
+    Q("Q", false, 9),
+    /** Rook - can move horizontally and vertically (code and score extracted to PieceConstants if needed) */
+    R("R", false, 5);
 
     /** The letter code representing this piece type */
     private final String val;

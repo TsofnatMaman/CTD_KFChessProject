@@ -51,7 +51,8 @@ public class PlayerDTO {
 
         // Assumes player.getColor() returns java.awt.Color
         Color c = player.getColor();
-        dto.colorHex = String.format("#%02x%02x%02x", c.getRed(), c.getGreen(), c.getBlue());
+        // Extracted color hex format to PieceConstants
+        dto.colorHex = String.format(constants.PieceConstants.COLOR_HEX_FORMAT, c.getRed(), c.getGreen(), c.getBlue());
 
         return dto;
     }

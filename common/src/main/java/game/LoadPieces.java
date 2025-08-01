@@ -10,9 +10,9 @@ import java.io.InputStreamReader;
 public class LoadPieces {
 
     /** Number of rows in the board. */
-    public static final int ROWS = 8;
+    public static final int ROWS = constants.GameConstants.BOARD_ROWS; // extracted board size
     /** Number of columns in the board. */
-    public static final int COLS = 8;
+    public static final int COLS = constants.GameConstants.BOARD_COLS; // extracted board size
 
     /** Static matrix holding the piece codes for the board. */
     public static final String[][] board = new String[ROWS][COLS];
@@ -27,7 +27,7 @@ public class LoadPieces {
      * The CSV is expected to be located at /board/board.csv in the resources.
      */
     private static void loadFromCSV() {
-        String csvResourcePath = "/board/board.csv";
+        String csvResourcePath = utils.ConfigLoader.getConfig("piece.csv.path", "/board/board.csv"); // extracted to config.properties
 
         try (InputStream is = LoadPieces.class.getResourceAsStream(csvResourcePath);
              BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {

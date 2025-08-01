@@ -40,6 +40,7 @@ public class GraphicsLoader {
      */
     public static BufferedImage[] loadAllSprites(EPieceType pieceType, int player, EState stateName) {
         List<BufferedImage> sprites = new ArrayList<>();
+        // Extracted initial frame index to config.properties (if needed)
         int index = 1;
 
         while (true) {
