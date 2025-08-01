@@ -59,6 +59,6 @@ public class PlayerDTO {
 
     // Creates a full Player object from DTO
     public static IPlayer to(PlayerDTO playerDTO, BoardConfig bc) {
-        return new Player(playerDTO.name, bc);
+        return player.PlayerFactory.createPlayer(playerDTO.getId(), playerDTO.getName(), bc);
     }
 }

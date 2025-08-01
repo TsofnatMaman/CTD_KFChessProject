@@ -54,7 +54,7 @@ public class Position implements Serializable {
 
     @Override
     public String toString() {
-        return r + "," + c;
+        return r + constants.PieceConstants.POSITION_SEPARATOR + c; // extracted separator
     }
 
     public void reduceOneRow(){
@@ -78,8 +78,7 @@ public class Position implements Serializable {
     }
 
     public static Position fromString(String s){
-        // Extracted position separator to PieceConstants
-        String[] rowCol = s.split(constants.PieceConstants.POSITION_SEPARATOR);
+        String[] rowCol = s.split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator
         return new Position(Integer.parseInt(rowCol[0].trim()), Integer.parseInt(rowCol[1].trim()));
     }
 }

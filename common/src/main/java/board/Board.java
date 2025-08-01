@@ -37,11 +37,16 @@
                 this.boardGrid = new IPiece[bc.numRowsCols.getX()][bc.numRowsCols.getY()];
                 this.players = players;
 
-                for (IPlayer p : players)
+                initializeFromPlayers();
+            }
+
+            private void initializeFromPlayers(){
+                for (IPlayer p : players) {
                     for (IPiece piece : p.getPieces()) {
-                        String[] pos = piece.getId().split(",");
-                        boardGrid[Integer.parseInt(pos[0])][Integer.parseInt(pos[1])] = piece;
+                        Position pos = piece.getIdAsPosition();
+                        boardGrid[pos.getRow()][pos.getCol()] = piece;
                     }
+                }
             }
 
             /**
@@ -106,7 +111,7 @@
              */
             @Override
             public int getPlayerOf(IPiece piece){
-                return getPlayerOf(Integer.parseInt(piece.getId().split(",")[0]));
+                return getPlayerOf(piece.getIdAsPosition().getRow());
             }
 
             /**

@@ -116,4 +116,6 @@ public interface IPiece extends Serializable {
     boolean canMoveOver();
 
     Position getPos();
+
+    Position getIdAsPosition();
 }

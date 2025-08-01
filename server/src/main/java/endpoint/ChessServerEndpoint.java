@@ -35,7 +35,7 @@ public class ChessServerEndpoint {
             .synchronizedList(new ArrayList<>(List.of(
                 utils.ConfigLoader.getMessage("player.1.name", "player 1"),
                 utils.ConfigLoader.getMessage("player.2.name", "player 2")
-            )));
+            ))); // extracted player names
 
     @OnOpen
     public synchronized void onOpen(Session session) throws IOException {
@@ -50,7 +50,7 @@ public class ChessServerEndpoint {
         sessionPlayerIds.put(session, playerId);
 
         System.out.println(utils.ConfigLoader.getMessage("client.connected.log", "Client connected: ")
-            + session.getId() + utils.ConfigLoader.getMessage("assigned.playerId.log", ", assigned playerId: ") + playerId);
+            + session.getId() + utils.ConfigLoader.getMessage("assigned.playerId.log", constants.PieceConstants.POSITION_SEPARATOR + " assigned playerId: ") + playerId); // extracted separator
 
         // If all players are now connected
         if (sessionPlayerIds.size() == MAX_PLAYERS) {
@@ -109,10 +109,14 @@ public class ChessServerEndpoint {
                         BoardConfig boardConfig = new BoardConfig(
                             new Dimension(constants.GameConstants.BOARD_SIZE),
                             new Dimension(constants.GameConstants.SQUARE_SIZE * constants.GameConstants.BOARD_SIZE)
+                        ); // extracted board size and square size
+
+                        IPlayer[] players = player.PlayerFactory.createPlayers(
+                                new String[]{playersName.get(0), playersName.get(1)},
+                                boardConfig
                         );
-                        IPlayer p1 = new Player(playersName.get(0), boardConfig);
-                        IPlayer p2 = new Player(playersName.get(1), boardConfig);
-                        game = new Game(boardConfig, new IPlayer[] { p1, p2 });
+                        game = new Game(boardConfig, players);
+
                         game.run();
 
                         GameDTO initialGameState = createInitialGameDTO();

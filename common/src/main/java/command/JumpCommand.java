@@ -37,6 +37,6 @@ public class JumpCommand implements ICommand {
         board.jump(p);
         EventPublisher.getInstance()
                 .publish(EGameEvent.PIECE_JUMP,
-                        new GameEvent(EGameEvent.PIECE_JUMP, new ActionData(board.getPlayerOf(Integer.parseInt(p.getId().split(",")[0])),"piece "+p+" jumping")));
+                        new GameEvent(EGameEvent.PIECE_JUMP, new ActionData(board.getPlayerOf(Integer.parseInt(p.getId().split(constants.PieceConstants.POSITION_SEPARATOR)[0])),"piece "+p+" jumping")));
     }
 }

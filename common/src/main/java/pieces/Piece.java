@@ -14,7 +14,7 @@ import java.util.Map;
 public class Piece implements IPiece {
     private final String id;
     private final EPieceType type;
-    private Map<EState, IState> states;
+    private final Map<EState, IState> states;
     private EState currentStateName;
     private IState currentState;
 
@@ -38,7 +38,7 @@ public class Piece implements IPiece {
 
         @Override
     public int getPlayer() {
-        return BoardConfig.getPlayerOf(Integer.parseInt(this.getId().split(",")[0]));
+        return BoardConfig.getPlayerOf(Integer.parseInt(this.getId().split(constants.PieceConstants.POSITION_SEPARATOR)[0]));
     }
 
 
@@ -182,5 +182,11 @@ public class Piece implements IPiece {
     @Override
     public boolean equals(Object obj) {
         return id.equals(((Piece)obj).id);
+    }
+
+    @Override
+    public Position getIdAsPosition(){
+        String[] pos = getId().split(constants.PieceConstants.POSITION_SEPARATOR);
+        return new Position(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
     }
 }

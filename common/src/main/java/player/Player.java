@@ -3,8 +3,10 @@ package player;
 import board.BoardConfig;
 import command.JumpCommand;
 import command.MoveCommand;
-import interfaces.*;
-import game.LoadPieces;
+import interfaces.ICommand;
+import interfaces.IBoard;
+import interfaces.IPiece;
+import interfaces.IPlayer;
 import pieces.EPieceType;
 import pieces.PiecesFactory;
 import pieces.Position;
@@ -12,60 +14,53 @@ import utils.LogUtils;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents a player in the game, holding pieces and managing actions.
  */
-public class Player implements IPlayer{
+public class Player implements IPlayer {
     private final int id;
     private String name;
     private Position pending;
-    private static int mone=0;
-
-    private Color color;
+    private final Color color;
 
     private final List<IPiece> pieces;
     private int score;
     private boolean isFailed;
 
-    // Use PlayerConstants for player colors
-    private static Color[] colors = constants.PlayerConstants.PLAYER_COLORS;
-
     /**
-     * Constructs a Player, initializes pieces and status.
+     * Constructs a Player with explicit ID, name, color, and initial pieces.
      */
-    public Player(String name ,BoardConfig bc){
-        id = mone++;
-        pending=null;
-        isFailed = false;
-        this.name = name;
+    Player(int id, String name, Color color, List<IPiece> initialPieces) {
+        if (initialPieces == null) throw new IllegalArgumentException("initialPieces cannot be null");
+        this.id = id;
+        this.name = Objects.requireNonNull(name);
+        this.color = color == null ? Color.WHITE : color;
+        this.pieces = new ArrayList<>(initialPieces);
+        this.pending = null;
+        this.isFailed = false;
 
-        pieces = new ArrayList<>();
-        score = 0;
-
-        this.color = colors[id];
-
-        for(int i:BoardConfig.rowsOfPlayer.get(id))
-            for(int j=0; j<constants.GameConstants.BOARD_COLS; j++) { // extracted board size
-                IPiece p = PiecesFactory.createPieceByCode(EPieceType.valueOf(LoadPieces.board[i][j].charAt(0) + ""), id, new Position(i, j), bc);
-                this.pieces.add(p);
-                score += p.getType().getScore();
-            }
-
+        this.score = 0;
+        for (IPiece p : pieces) {
+            this.score += p.getType().getScore();
+        }
     }
 
     /**
-     * Returns the list of pieces owned by the player.
+     * Convenience constructor when pieces will be added later.
      */
+    public Player(int id, String name, Color color) {
+        this(id, name, color, new ArrayList<>());
+    }
+
     @Override
     public List<IPiece> getPieces() {
-        return pieces;
+        return Collections.unmodifiableList(pieces);
     }
 
-    /**
-     * Returns the player's ID.
-     */
     @Override
     public int getId() {
         return id;
@@ -76,87 +71,94 @@ public class Player implements IPlayer{
         return name;
     }
 
-    /**
-     * Gets the pending position for selection.
-     */
     @Override
     public Position getPendingFrom() {
-        return pending;
+        return pending == null ? null : pending.copy(); // defensive copy
     }
-
-    /**
-     * Sets the pending position for selection.
-     */
 
     @Override
     public void setPendingFrom(Position pending) {
-        this.pending = pending == null? null : pending.copy();
+        this.pending = pending == null ? null : pending.copy();
     }
 
-    /**
-     * Returns true if the player has failed (e.g., lost their king).
-     */
     @Override
-    public boolean isFailed(){
+    public boolean isFailed() {
         return isFailed;
     }
 
-    /**
-     * Marks a piece as captured and updates player status if king is captured.
-     * @param p The piece to mark as captured.
-     */
     @Override
-    public void markPieceCaptured(IPiece p){
+    public void markPieceCaptured(IPiece p) {
+        if (p == null) return;
         p.markCaptured();
         score -= p.getType().getScore();
-        if(p.getType() == EPieceType.K)
+        if (p.getType() == EPieceType.K) {
             isFailed = true;
+        }
     }
 
-    /**
-     * Handles the selection logic for the player, returning a command if an action is performed.
-     * @param board The game board.
-     * @return ICommand representing the action, or null if no action.
-     */
     @Override
-    public ICommand handleSelection(IBoard board, Position selected){
+    public ICommand handleSelection(IBoard board, Position selected) {
         Position previous = getPendingFrom();
 
         if (previous == null) {
-            if(board.getPiece(selected) == null || board.getPlayerOf(board.getPiece(selected)) != id)
+            IPiece piece = board.getPiece(selected);
+            if (piece == null || board.getPlayerOf(piece) != id) {
                 return null;
+            }
 
-            if (board.hasPiece(selected.getRow(), selected.getCol()) && board.getPiece(selected).getCurrentStateName().isCanAction())
+            if (board.hasPiece(selected.getRow(), selected.getCol())
+                    && piece.getCurrentStateName().isCanAction()) {
                 setPendingFrom(selected);
-            else {
-                System.err.println("can not choose piece");
-                LogUtils.logDebug("can not choose piece");
+            } else {
+                LogUtils.logDebug("Cannot choose piece at " + selected + " for player " + id);
             }
         } else {
             setPendingFrom(null);
-            if(previous.equals(selected))
-                return new JumpCommand(board.getPiece(selected), board);
-            return new MoveCommand(previous, selected.copy(), board);
+            if (previous.equals(selected)) {
+                IPiece piece = board.getPiece(selected);
+                if (piece != null) {
+                    return new JumpCommand(piece, board);
+                }
+            } else {
+                return new MoveCommand(previous, selected.copy(), board);
+            }
         }
 
         return null;
     }
 
     @Override
-    public int getScore(){
+    public int getScore() {
         return score;
     }
 
+    /**
+     * Replaces the given piece with a queen (promotion) and updates score.
+     */
     @Override
-    public IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc){
+    public IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc) {
+        if (piece == null) throw new IllegalArgumentException("piece cannot be null");
+
+        // Remove old piece
         pieces.remove(piece);
+        score -= piece.getType().getScore();
 
-        int reversePlayer = -(BoardConfig.getPlayerOf(targetPos.getRow())-1);
-        List<Integer> reversePlayerRows = BoardConfig.rowsOfPlayer.get(reversePlayer);
+        // Build new queen piece at the target position
+        String newId = targetPos.getRow() + "," + targetPos.getCol();
+        IPiece queen = PiecesFactory.createPieceByCode(
+                newId,
+                EPieceType.Q,
+                id,
+                targetPos,
+                bc
+        );
 
-        IPiece queen = PiecesFactory.createPieceByCode(reversePlayerRows.get(reversePlayerRows.size()-1)+","+targetPos.getCol(), EPieceType.Q, reversePlayer, targetPos, bc);
-        pieces.add(queen);
-        score += queen.getType().getScore() - piece.getType().getScore();
+        if (queen != null) {
+            pieces.add(queen);
+            score += queen.getType().getScore();
+        } else {
+            LogUtils.logDebug("Failed to promote piece to Queen at " + targetPos + " for player " + id);
+        }
 
         return queen;
     }
@@ -168,6 +170,6 @@ public class Player implements IPlayer{
 
     @Override
     public void setName(String name) {
-        this.name = name;
+        this.name = Objects.requireNonNull(name);
     }
 }

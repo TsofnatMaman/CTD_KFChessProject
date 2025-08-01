@@ -10,7 +10,8 @@ import events.listeners.GameEndLogger;
 import events.listeners.JumpsLogger;
 import events.listeners.MovesLogger;
 import interfaces.ICommand;
-import interfaces.*;
+import interfaces.IBoard;
+import interfaces.IPlayer;
 import pieces.Position;
 import utils.LogUtils;
 
@@ -22,23 +23,26 @@ import java.util.Queue;
  * Main game logic and state management.
  * Handles command execution, player turns, and win condition.
  */
-public class Game implements IGame {
-    private final IPlayer []players;
+public class Game implements interfaces.IGame {
+    private final IPlayer[] players;
     /** Queue of commands to be executed. */
-    private Queue<ICommand> commandQueue;
+    private final Queue<ICommand> commandQueue;
     /** The board instance for the game. */
     private final IBoard board;
 
     private Timer timer;
 
     private long startTimeNano;
-    private boolean running;
+    private volatile boolean running;
 
-    public Game(BoardConfig bc, IPlayer[]players) {
-        this.board = new Board(bc,players);
+    public Game(BoardConfig bc, IPlayer[] players) {
+        this.board = new Board(bc, players);
         this.players = players;
-        commandQueue = new LinkedList<>();
-        this.startTimeNano = System.nanoTime();
+        this.commandQueue = new LinkedList<>();
+        this.running = false;
+
+        // startTimeNano will be set when run() is invoked, not here.
+        this.startTimeNano = 0;
 
         new MovesLogger();
         new JumpsLogger();
@@ -48,10 +52,11 @@ public class Game implements IGame {
 
     /**
      * Adds a command to the queue.
+     *
      * @param cmd The command to add
      */
     @Override
-    public void addCommand(ICommand cmd){
+    public void addCommand(ICommand cmd) {
         commandQueue.add(cmd);
     }
 
@@ -60,18 +65,23 @@ public class Game implements IGame {
      */
     @Override
     public void update() {
-        while (!commandQueue.isEmpty()) {
-            commandQueue.poll().execute();
+        ICommand cmd;
+        while ((cmd = commandQueue.poll()) != null) {
+            cmd.execute();
         }
     }
 
     @Override
-    public IPlayer getPlayerById(int id){
+    public IPlayer getPlayerById(int id) {
+        if (id < 0 || id >= players.length) {
+            throw new IllegalArgumentException("Invalid player id: " + id);
+        }
         return players[id];
     }
 
     /**
      * Gets the game board.
+     *
      * @return The board instance
      */
     @Override
@@ -82,54 +92,62 @@ public class Game implements IGame {
     /**
      * Handles selection for the given player.
      * Adds the resulting command to the queue if not null.
-     * @param player The player making a selection
+     *
+     * @param player   The player making a selection
+     * @param selected The selected position
      */
     @Override
-    public void handleSelection(IPlayer player, Position selected){
+    public void handleSelection(IPlayer player, Position selected) {
         ICommand cmd = player.handleSelection(getBoard(), selected);
-        if(cmd != null){
+        if (cmd != null) {
             addCommand(cmd);
         }
     }
 
     @Override
-    public void handleSelection(int playerId, Position selected){
+    public void handleSelection(int playerId, Position selected) {
         handleSelection(getPlayerById(playerId), selected);
     }
 
     /**
-     * Returns the winner: 0 for player 1, 1 for player 2, -1 if no winner yet.
-     * @return The winner's player index, or -1 if no winner
+     * Returns the winning player, or null if no winner yet.
      */
     @Override
-    public IPlayer win(){
-        if(board.getPlayers()[0].isFailed())
+    public IPlayer win() {
+        if (board.getPlayers()[0].isFailed())
             return players[1];
-        if(board.getPlayers()[1].isFailed())
+        if (board.getPlayers()[1].isFailed())
             return players[0];
         return null;
     }
 
     @Override
-    public void run(){
+    public void run() {
         if (timer == null) {
-            timer = new Timer(16, e -> {
-                if(!running){
-                    running = true;
-                }
-
-                if (win() == null) {
-                    update();
-                    board.updateAll();
-                    EventPublisher.getInstance().publish(EGameEvent.GAME_UPDATE, new GameEvent(EGameEvent.GAME_UPDATE, null));
-                } else {
-                    EventPublisher.getInstance().publish(EGameEvent.GAME_ENDED, new GameEvent(EGameEvent.GAME_ENDED, null));
-                    stopGameLoop();
-                    LogUtils.logDebug("Game Over. Winner: Player " + win().getName());
-                }
-            });
+            // set running before starting timer to avoid race in elapsed time queries
+            timer = new Timer(16, e -> tick());
+        }
+        if (!running) {
+            running = true;
+            startTimeNano = System.nanoTime();
         }
         timer.start();
+    }
+
+    /**
+     * Single tick of the game loop. Separated to allow deterministic unit testing.
+     */
+    private void tick() {
+        IPlayer winner = win();
+        if (winner == null) {
+            update();
+            board.updateAll();
+            EventPublisher.getInstance().publish(EGameEvent.GAME_UPDATE, new GameEvent(EGameEvent.GAME_UPDATE, null));
+        } else {
+            EventPublisher.getInstance().publish(EGameEvent.GAME_ENDED, new GameEvent(EGameEvent.GAME_ENDED, null));
+            stopGameLoop();
+            LogUtils.logDebug("Game Over. Winner: Player " + winner.getName());
+        }
     }
 
     @Override
@@ -145,11 +163,20 @@ public class Game implements IGame {
         return startTimeNano;
     }
 
+    /**
+     * Returns elapsed time in nanoseconds since run() was invoked.
+     */
     @Override
     public long getElapsedTimeNano() {
         if (!running) return 0;
-        long elapsedNano = System.nanoTime() - startTimeNano;
-        return elapsedNano / 1_000_000; // convert from nano to milliseconds
+        return System.nanoTime() - startTimeNano;
+    }
+
+    /**
+     * Convenience helper if callers expect milliseconds.
+     */
+    public long getElapsedTimeMillis() {
+        return getElapsedTimeNano() / 1_000_000;
     }
 
     @Override
@@ -163,7 +190,7 @@ public class Game implements IGame {
     }
 
     @Override
-    public void setPlayerName(int playerId, String name){
-        players[playerId].setName(name);
+    public void setPlayerName(int playerId, String name) {
+        getPlayerById(playerId).setName(name);
     }
 }

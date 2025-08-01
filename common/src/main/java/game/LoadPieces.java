@@ -36,7 +36,7 @@ public class LoadPieces {
             int row = 0;
 
             while ((line = reader.readLine()) != null && row < ROWS) {
-                String[] cells = line.split(",");
+                String[] cells = line.split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator
                 for (int col = 0; col < Math.min(cells.length, COLS); col++) {
                     String pieceCode = cells[col].trim();
                     if (!pieceCode.isEmpty()) {

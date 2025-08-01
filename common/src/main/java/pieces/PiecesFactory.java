@@ -106,6 +106,6 @@ public class PiecesFactory {
     }
 
     public static Piece createPieceByCode (EPieceType code,int playerId, Position pos, BoardConfig config){
-        return createPieceByCode(pos.getRow() + "," + pos.getCol(), code, playerId, pos, config);
+        return createPieceByCode(pos.getRow() + constants.PieceConstants.POSITION_SEPARATOR + pos.getCol(), code, playerId, pos, config); // extracted separator
     }
 }

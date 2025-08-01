@@ -1,5 +1,7 @@
 package endpoint;
 
+import constants.PieceConstants;
+
 import javax.swing.*;
 import java.awt.*;
 
@@ -57,7 +59,8 @@ public class WaitDialog {
     }
 
     private static String wrapHtml(String s) {
-        return "<html><div style='text-align:center;'>" + s + "</div></html>";
+        // Extracted HTML wrapper to constant
+        return PieceConstants.HTML_WRAP_PREFIX + s + PieceConstants.HTML_WRAP_SUFFIX;
     }
 
     private static String escapeHtml(String s) {
@@ -65,6 +68,6 @@ public class WaitDialog {
         return s.replace("&", "&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
-                .replace("\n", "<br/>");
+                .replace("\n", PieceConstants.HTML_NEWLINE); // extracted newline
     }
 }
