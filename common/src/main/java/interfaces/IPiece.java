@@ -7,7 +7,6 @@ import pieces.Position;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Interface for piece operations.
@@ -102,12 +101,6 @@ public interface IPiece extends Serializable {
     List<Move> getMoves();
 
     void setMoves(List<Move> moves);
-
-    /**
-     * Gets the map of states for the piece.
-     * @return Map of states
-     */
-    Map<EState, IState> getStates();
 
     /**
      * Returns true if the piece can move over other pieces.

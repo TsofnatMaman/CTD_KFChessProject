@@ -12,9 +12,9 @@ import interfaces.*;
 public class JumpCommand implements ICommand {
 
     /** The piece to perform the jump action. */
-    private IPiece p;
+    private final IPiece p;
     /** The board on which the jump is performed. */
-    private IBoard board;
+    private final IBoard board;
 
     /**
      * Constructs a JumpCommand for the given piece and board.

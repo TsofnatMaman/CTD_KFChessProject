@@ -52,7 +52,7 @@ public class ChessClientEndpoint {
         return playerId;
     }
 
-    public void sendText(String message) throws Exception {
+    public void sendText(String message) {
         if (session != null && session.isOpen()) {
             session.getAsyncRemote().sendText(message);
         } else {

@@ -1,14 +1,14 @@
 package events;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class EventPublisher {
     private static final EventPublisher instance = new EventPublisher();
 
-    private final Map<EGameEvent, List<IEventListener>> listenersMap = new HashMap<>();
+    private final Map<EGameEvent, List<IEventListener>> listenersMap = new ConcurrentHashMap<>();
 
     private EventPublisher() {}
 

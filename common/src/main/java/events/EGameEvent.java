@@ -9,7 +9,7 @@ public enum EGameEvent {
     GAME_ENDED(constants.CommandNames.GAME_ENDED),
     GAME_UPDATE(constants.CommandNames.GAME_UPDATE);
 
-    private String val;
+    private final String val;
 
     EGameEvent(String val){
         this.val = val;

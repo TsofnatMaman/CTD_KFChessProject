@@ -11,7 +11,6 @@ import dto.PlayerSelected;
 import game.Game;
 import interfaces.IGame;
 import interfaces.IPlayer;
-import player.Player;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -53,10 +52,7 @@ public class ChessServerEndpoint {
             + session.getId() + utils.ConfigLoader.getMessage("assigned.playerId.log", constants.PieceConstants.POSITION_SEPARATOR + " assigned playerId: ") + playerId); // extracted separator
 
         // If all players are now connected
-        if (sessionPlayerIds.size() == MAX_PLAYERS) {
-            // ...existing code...
-        } else {
-            // If this is the first player, send a waiting message
+        if (sessionPlayerIds.size() < MAX_PLAYERS) {
             Message<String> waitMsg = new Message<>(
                 constants.CommandNames.WAIT,
                 utils.ConfigLoader.getMessage("wait.message", "Waiting for second player to join...")
@@ -169,7 +165,7 @@ public class ChessServerEndpoint {
         GameDTO gameDTO = new GameDTO();
         gameDTO.setBoardConfig(game.getBoard().getBoardConfig());
         gameDTO.setStartTimeNano(game.getStartTimeNano());
-        gameDTO.setPlayers((PlayerDTO[]) Arrays.stream(game.getPlayers())
+        gameDTO.setPlayers(Arrays.stream(game.getPlayers())
                 .map(PlayerDTO::from)
                 .toArray(PlayerDTO[]::new));
         return gameDTO;

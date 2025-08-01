@@ -25,7 +25,6 @@ import java.util.*;
  */
 public class PiecesFactory {
 
-    private static double TILE_SIZE;
     private static final ObjectMapper mapper = new ObjectMapper();
 
     /**
@@ -36,15 +35,13 @@ public class PiecesFactory {
      * @param config Board configuration
      * @return Piece instance or null if failed
      */
-    public static Piece createPieceByCode(String id ,EPieceType code, int playerId, Position pos, BoardConfig config) {
-        TILE_SIZE = config.tileSize;
+    public static Piece createPieceByCode(String id, EPieceType code, int playerId, Position pos, BoardConfig config) {
+        double TILE_SIZE = config.tileSize;
 
-        // ...continue as previously built, using tileSize
         Map<EState, IState> states = new HashMap<>();
         String basePath = "/pieces/" + code.getVal() + "/states/";
 
         try {
-            // Step 1 – Find all existing states in the states directory
             URL dirURL = PiecesFactory.class.getResource(basePath);
             if (dirURL == null || !dirURL.getProtocol().equals("file")) {
                 LogUtils.logDebug("Cannot load states from: " + basePath);
@@ -55,7 +52,7 @@ public class PiecesFactory {
             File[] subdirs = statesDir.listFiles(File::isDirectory);
             if (subdirs == null) return null;
 
-            // Step 2 – Load each state
+            // Load each state
             for (File stateFolder : subdirs) {
                 EState stateName = EState.getValueOf(stateFolder.getName());
                 String configPath = basePath + stateName + "/config.json";
@@ -73,9 +70,10 @@ public class PiecesFactory {
                 IPhysicsData physics = new PhysicsData(speed, nextState);
 
                 JsonNode graphicsNode = root.path("graphics");
-                // Extracted fps and isLoop to config.properties
-                int fps = graphicsNode.path("frames_per_sec").asInt(Integer.parseInt(utils.ConfigLoader.getConfig("piece.sprite.frames_per_sec", "1")));
-                boolean isLoop = graphicsNode.path("is_loop").asBoolean(Boolean.parseBoolean(utils.ConfigLoader.getConfig("piece.sprite.is_loop", "true")));
+                int fps = graphicsNode.path("frames_per_sec")
+                        .asInt(Integer.parseInt(utils.ConfigLoader.getConfig("piece.sprite.frames_per_sec", "1")));
+                boolean isLoop = graphicsNode.path("is_loop")
+                        .asBoolean(Boolean.parseBoolean(utils.ConfigLoader.getConfig("piece.sprite.is_loop", "true")));
 
                 BufferedImage[] sprites = GraphicsLoader.loadAllSprites(code, playerId, stateName);
                 if (sprites.length == 0) {
@@ -94,18 +92,26 @@ public class PiecesFactory {
                 return null;
             }
 
-            // Step 3 – Create the Piece with the first state as default
-            EState initialState = EState.LONG_REST;
-            return new Piece(id, code, playerId, states, initialState, pos);
+            // Create template from loaded states
+            PieceTemplate template = new PieceTemplate(code, states);
+
+            // Decide initial state: prefer LONG_REST if present, else first key
+            EState initialState = states.containsKey(EState.LONG_REST) ? EState.LONG_REST
+                    : states.keySet().iterator().next();
+
+            // Create and return piece with template
+            return new Piece(id, code, playerId, template, initialState, pos);
 
         } catch (Exception e) {
             String mes = "Exception in createPieceByCode: " + e.getMessage();
             LogUtils.logDebug(mes);
-            throw new RuntimeException(mes);
+            throw new RuntimeException(mes, e);
         }
     }
 
-    public static Piece createPieceByCode (EPieceType code,int playerId, Position pos, BoardConfig config){
-        return createPieceByCode(pos.getRow() + constants.PieceConstants.POSITION_SEPARATOR + pos.getCol(), code, playerId, pos, config); // extracted separator
+    public static Piece createPieceByCode(EPieceType code, int playerId, Position pos, BoardConfig config) {
+        String generatedId = pos.getRow() + constants.PieceConstants.POSITION_SEPARATOR + pos.getCol();
+        return createPieceByCode(generatedId, code, playerId, pos, config);
     }
+
 }

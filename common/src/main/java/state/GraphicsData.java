@@ -10,11 +10,11 @@ import java.awt.image.BufferedImage;
  * Handles graphics data for piece animation.
  */
 public class GraphicsData implements IGraphicsData {
-    private BufferedImage[] frames;
-    private int totalFrames;
+    private final BufferedImage[] frames;
+    private final int totalFrames;
     private int currentFrame;
-    private double framesPerSec;
-    private boolean isLoop;
+    private final double framesPerSec;
+    private final boolean isLoop;
     private long lastFrameTimeNanos;
 
     /**

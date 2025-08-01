@@ -15,13 +15,13 @@ public interface IPlayer extends Serializable {
      * Gets the list of pieces owned by the player.
      * @return List of pieces
      */
-    public List<IPiece> getPieces();
+    List<IPiece> getPieces();
 
     /**
      * Gets the player's ID.
      * @return The player ID
      */
-    public int getId();
+    int getId();
 
     String getName();
 
@@ -29,25 +29,25 @@ public interface IPlayer extends Serializable {
      * Gets the pending position for selection.
      * @return The pending position
      */
-    public Position getPendingFrom();
+    Position getPendingFrom();
 
     /**
      * Sets the pending position for selection.
      * @param pending The pending position
      */
-    public void setPendingFrom(Position pending);
+    void setPendingFrom(Position pending);
 
     /**
      * Returns true if the player has failed (e.g., lost their king).
      * @return true if failed, false otherwise
      */
-    public boolean isFailed();
+    boolean isFailed();
 
     /**
      * Marks a piece as captured and updates player status if king is captured.
      * @param p The piece to mark as captured
      */
-    public void markPieceCaptured(IPiece p);
+    void markPieceCaptured(IPiece p);
 
     /**
      * Handles the selection logic for the player, returning a command if an action is performed.

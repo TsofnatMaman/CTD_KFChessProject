@@ -9,7 +9,7 @@ import java.awt.*;
  * Represents a player's cursor for selecting pieces on the board.
  */
 public class PlayerCursor implements IPlayerCursor {
-    private Position pos;
+    private final Position pos;
     private final Color color;
     public final int ROWS;
     public final int COLS;

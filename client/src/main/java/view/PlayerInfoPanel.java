@@ -14,10 +14,9 @@ import java.awt.*;
  * Panel for displaying player information such as name, score, and moves.
  */
 public class PlayerInfoPanel extends JPanel implements IEventListener {
-    private IPlayer player;
-    private JLabel nameLabel;
-    private JLabel scoreLabel;
-    private JTextArea movesArea;
+    private final IPlayer player;
+    private final JLabel scoreLabel;
+    private final JTextArea movesArea;
 
     /**
      * Constructs the player info panel and initializes UI components.
@@ -29,7 +28,7 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
         setLayout(new BorderLayout(5,5));
         setPreferredSize(new Dimension(200, 0));
 
-        nameLabel = new JLabel(player.getName());
+        JLabel nameLabel = new JLabel(player.getName());
         scoreLabel = new JLabel("Score: "+player.getScore());
 
         movesArea = new JTextArea(10, 15);
@@ -55,11 +54,11 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
 
     @Override
     public void onEvent(GameEvent event) {
-        if(event.data instanceof ActionData) {
-            if (player.getId() == ((ActionData) event.data).playerId)
-                addMove(((ActionData) event.data).message);
+        if(event.data() instanceof ActionData) {
+            if (player.getId() == ((ActionData) event.data()).playerId())
+                addMove(((ActionData) event.data()).message());
 
-            if (event.type.equals(EGameEvent.PIECE_CAPTURED))
+            if (event.type().equals(EGameEvent.PIECE_CAPTURED))
                 setScore(player.getScore());
         }
 

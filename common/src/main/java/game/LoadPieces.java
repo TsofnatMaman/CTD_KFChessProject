@@ -29,25 +29,27 @@ public class LoadPieces {
     private static void loadFromCSV() {
         String csvResourcePath = utils.ConfigLoader.getConfig("piece.csv.path", "/board/board.csv"); // extracted to config.properties
 
-        try (InputStream is = LoadPieces.class.getResourceAsStream(csvResourcePath);
-             BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+        try (InputStream is = LoadPieces.class.getResourceAsStream(csvResourcePath)) {
+            assert is != null;
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
 
-            String line;
-            int row = 0;
+                String line;
+                int row = 0;
 
-            while ((line = reader.readLine()) != null && row < ROWS) {
-                String[] cells = line.split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator
-                for (int col = 0; col < Math.min(cells.length, COLS); col++) {
-                    String pieceCode = cells[col].trim();
-                    if (!pieceCode.isEmpty()) {
-                        board[row][col] = pieceCode;
-                    } else {
-                        board[row][col] = null;
+                while ((line = reader.readLine()) != null && row < ROWS) {
+                    String[] cells = line.split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator
+                    for (int col = 0; col < Math.min(cells.length, COLS); col++) {
+                        String pieceCode = cells[col].trim();
+                        if (!pieceCode.isEmpty()) {
+                            board[row][col] = pieceCode;
+                        } else {
+                            board[row][col] = null;
+                        }
                     }
+                    row++;
                 }
-                row++;
-            }
 
+            }
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

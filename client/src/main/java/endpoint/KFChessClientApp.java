@@ -36,7 +36,6 @@ public class KFChessClientApp {
     private volatile boolean gameStarted = false;
 
     private final WaitDialog waitDialog;
-    private final MessageListener messageListener;
 
     public KFChessClientApp() throws Exception {
         String username = JOptionPane.showInputDialog(null,
@@ -57,7 +56,7 @@ public class KFChessClientApp {
         client.sendText(String.format("{\"type\":\"%s\", \"data\":\"%s\"}", constants.CommandNames.SET_NAME, username)); // extracted message type
 
         waitDialog = new WaitDialog();
-        messageListener = new MessageListener(client, mapper, this);
+        MessageListener messageListener = new MessageListener(client, mapper, this);
 
         messageListener.start();
 

@@ -15,9 +15,9 @@ public enum EState {
     /** Short rest state, cannot perform actions, can move over. */
     SHORT_REST("short_rest", false, false);
 
-    private String name;
-    private boolean canAction;
-    private boolean canMoveOver;
+    private final String name;
+    private final boolean canAction;
+    private final boolean canMoveOver;
 
     /**
      * Constructs an EState enum value.

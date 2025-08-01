@@ -17,7 +17,7 @@ public class Moves {
 
 
     public static List<Move> createMovesList(EPieceType pieceType, int playerId) throws IOException {
-        List<Move> moves = new ArrayList<>();
+        List<Move> moves;
         moves = new ArrayList<>();
 
         // Extracted resource path to PieceConstants

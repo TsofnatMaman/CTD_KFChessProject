@@ -201,7 +201,7 @@
 
                         IPiece existing = boardGrid[row][col];
                         if (existing != null && existing != piece && !existing.isCaptured()) {
-                            logState("State", existing.getCurrentStateName());
+                            logState(existing.getCurrentStateName());
                             if (existing.getCurrentStateName() != EState.JUMP) {
                                 players[existing.getPlayer()].markPieceCaptured(existing);
                                 logCapture("Captured on landing", existing);
@@ -223,8 +223,8 @@
                 LogUtils.logDebug(mes);
             }
 
-            private void logState(String message, EState state) {
-                String mes = message + ": " + state;
+            private void logState(EState state) {
+                String mes = "State" + ": " + state;
                 LogUtils.logDebug(mes);
             }
 

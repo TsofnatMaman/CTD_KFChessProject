@@ -2,7 +2,6 @@ package dto;
 
 import board.BoardConfig;
 import interfaces.IPlayer;
-import player.Player;
 
 import java.awt.*;
 

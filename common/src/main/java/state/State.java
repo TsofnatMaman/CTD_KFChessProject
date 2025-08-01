@@ -9,13 +9,12 @@ import java.awt.geom.Point2D;
  * Represents the state of a piece, including physics and graphics.
  */
 public class State implements IState {
-    private EState name;
-    private IPhysicsData physics;
-    private IGraphicsData graphics;
+    private final EState name;
+    private final IPhysicsData physics;
+    private final IGraphicsData graphics;
 
     private Position startPos;
     private Position targetPos;
-    private long startTimeNanos;
     private final double TILE_SIZE;
 
     /**
@@ -51,7 +50,7 @@ public class State implements IState {
             this.targetPos = new Position(to.getRow(), to.getCol());
         }
 
-        this.startTimeNanos = System.nanoTime();
+        long startTimeNanos = System.nanoTime();
 
         if (graphics != null) graphics.reset(state, startPos);
         if (physics != null) physics.reset(state, startPos, targetPos, TILE_SIZE, startTimeNanos);

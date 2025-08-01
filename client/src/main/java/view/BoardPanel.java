@@ -30,7 +30,7 @@ import java.util.function.Consumer;
 public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     private BufferedImage boardImage;
     private final IBoard board;
-    private int playerId;
+    private final int playerId;
 
     private final IPlayerCursor cursor;
 

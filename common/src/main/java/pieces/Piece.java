@@ -1,7 +1,9 @@
 package pieces;
 
 import board.BoardConfig;
-import interfaces.*;
+import interfaces.IState;
+import interfaces.IPiece;
+import interfaces.EState;
 import moves.Move;
 import moves.Moves;
 import utils.LogUtils;
@@ -9,38 +11,54 @@ import utils.LogUtils;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 public class Piece implements IPiece {
     private final String id;
     private final EPieceType type;
-    private final Map<EState, IState> states;
-    private EState currentStateName;
-    private IState currentState;
-
+    private final int playerId;
     private List<Move> moves;
+    private final PieceTemplate template;
+    private IState currentState;
+    private EState currentStateName;
+    private Position position;
+    private boolean wasCaptured;
 
-    private Position pos;
-
-    private boolean wasCaptured = false;
-
-    public Piece(String id, EPieceType type, int playerId, Map<EState, IState> states, EState initialState, Position pos) throws IOException {
+    public Piece(String id, EPieceType type, int playerId, PieceTemplate template, EState initialState, Position position) throws IOException {
         this.id = id;
-        this.states = states;
-        this.currentStateName = initialState;
-        this.currentState = states.get(initialState);
-        this.pos = pos;
-
         this.type = type;
+        this.playerId = playerId;
+        this.template = template;
+        this.currentStateName = initialState;
+        this.currentState = template.getState(initialState);
+        this.position = position;
 
-        moves = Moves.createMovesList(type, playerId);
+        this.moves = Moves.createMovesList(type, playerId);
     }
 
-        @Override
-    public int getPlayer() {
-        return BoardConfig.getPlayerOf(Integer.parseInt(this.getId().split(constants.PieceConstants.POSITION_SEPARATOR)[0]));
+    public PieceTemplate getTemplate() {
+        return template;
     }
 
+    @Override
+    public IState getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(IState newState) {
+        this.currentState = newState;
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    public void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
 
     @Override
     public String getId() {
@@ -53,23 +71,28 @@ public class Piece implements IPiece {
     }
 
     @Override
+    public EState getCurrentStateName() {
+        return currentStateName;
+    }
+
+    @Override
+    public int getPlayer() {
+        return BoardConfig.getPlayerOf(Integer.parseInt(this.getId().split(constants.PieceConstants.POSITION_SEPARATOR)[0]));
+    }
+
+    @Override
     public void setState(EState newStateName) {
-        if (states.containsKey(newStateName) && !newStateName.equals(currentStateName)) {
+        IState state = template.getState(newStateName);
+        if (state != null && !newStateName.equals(currentStateName)) {
             currentStateName = newStateName;
-            currentState = states.get(newStateName);
+            currentState = state;
 
             // Update state.startPos before reset
-            currentState.reset(newStateName, pos, pos);
-        } else if (!states.containsKey(newStateName)) {
+            currentState.reset(newStateName, position, position);
+        } else if (state == null) {
             System.err.println("State '" + newStateName + "' not found!");
             LogUtils.logDebug("State '" + newStateName + "' not found!");
         }
-    }
-
-
-    @Override
-    public IState getCurrentState() {
-        return currentState;
     }
 
     @Override
@@ -78,7 +101,7 @@ public class Piece implements IPiece {
 
         if (currentState.isActionFinished()) {
             // Update logical position only after the action is finished
-            pos = new Position(currentState.getTargetRow(), currentState.getTargetCol());
+            position = new Position(currentState.getTargetRow(), currentState.getTargetCol());
 
             EState nextState = currentState.getPhysics().getNextStateWhenFinished();
 
@@ -94,13 +117,13 @@ public class Piece implements IPiece {
         }
     }
 
-
     @Override
     public void move(Position to) {
-        if (states.containsKey(EState.MOVE)) {
+        IState state = template.getState(EState.MOVE);
+        if (state != null) {
             currentStateName = EState.MOVE;
-            currentState = states.get(EState.MOVE);
-            currentState.reset(EState.MOVE, pos, to);
+            currentState = state;
+            currentState.reset(EState.MOVE, position, to);
         } else {
             System.err.println("Missing 'move' state!");
             LogUtils.logDebug("Missing 'move' state!");
@@ -109,10 +132,11 @@ public class Piece implements IPiece {
 
     @Override
     public void jump() {
-        if (states.containsKey(EState.JUMP)) {
+        IState state = template.getState(EState.JUMP);
+        if (state != null) {
             currentStateName = EState.JUMP;
-            currentState = states.get(EState.JUMP);
-            currentState.reset(EState.JUMP,pos, pos);
+            currentState = state;
+            currentState.reset(EState.JUMP,position, position);
         } else {
             System.err.println("Missing 'jump' state!");
             LogUtils.logDebug("Missing 'jump' state!");
@@ -131,17 +155,12 @@ public class Piece implements IPiece {
 
     @Override
     public int getRow() {
-        return pos.getRow();
+        return position.getRow();
     }
 
     @Override
     public int getCol() {
-        return pos.getCol();
-    }
-
-    @Override
-    public EState getCurrentStateName() {
-        return currentStateName;
+        return position.getCol();
     }
 
     @Override
@@ -160,11 +179,6 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public Map<EState, IState> getStates() {
-        return states;
-    }
-
-    @Override
     public boolean canMoveOver(){
         return currentStateName.isCanMoveOver();
     }
@@ -176,7 +190,7 @@ public class Piece implements IPiece {
 
     @Override
     public Position getPos() {
-        return pos;
+        return position;
     }
 
     @Override

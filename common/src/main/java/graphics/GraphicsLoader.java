@@ -26,7 +26,7 @@ public class GraphicsLoader {
         }
 
         try {
-            BufferedImage image = ImageIO.read(GraphicsLoader.class.getResourceAsStream(path));
+            BufferedImage image = ImageIO.read(Objects.requireNonNull(GraphicsLoader.class.getResourceAsStream(path)));
             cache.put(path, image);
             return image;
         } catch (IOException | IllegalArgumentException e) {

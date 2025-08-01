@@ -8,7 +8,7 @@ import java.util.Objects;
 public class Move {
     int dx;
     int dy;
-    ECondition condition[];
+    ECondition[] condition;
 
     /**
      * Constructs a move with the given delta x and delta y.
