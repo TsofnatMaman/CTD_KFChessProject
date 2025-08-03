@@ -1,14 +1,12 @@
 package endpoint;
 
+import constants.ServerConfig;
 import dto.GameDTO;
 import dto.PlayerDTO;
 import dto.PlayerSelected;
 import game.Game;
 import interfaces.IPlayer;
-import sound.listeners.CapturedSoundListener;
-import sound.listeners.GameEndSoundListener;
-import sound.listeners.JumpsSoundListener;
-import sound.listeners.MovesSoundListener;
+import sound.EventListener;
 import interfaces.IGame;
 import view.GamePanel;
 
@@ -46,10 +44,10 @@ public class KFChessClientApp {
             username = utils.ConfigLoader.getMessage("anonymous.name", "Anonymous"); // extracted default name
         }
 
-        String wsHost = utils.ConfigLoader.getConfig("server.host", "localhost");
-        String wsPort = utils.ConfigLoader.getConfig("server.port", "8025");
-        String wsPath = utils.ConfigLoader.getConfig("server.ws.path", "/ws");
-        String wsEndpoint = utils.ConfigLoader.getConfig("server.endpoint.game", "/game");
+        String wsHost = ServerConfig.HOST;
+        int wsPort = ServerConfig.PORT;
+        String wsPath = ServerConfig.WS_PATH;
+        String wsEndpoint = ServerConfig.SERVER_ENDPOINT;
         String wsUrl = String.format("ws://%s:%s%s%s", wsHost, wsPort, wsPath, wsEndpoint); // extracted connection string
         client = new ChessClientEndpoint(new URI(wsUrl));
 
@@ -78,13 +76,13 @@ public class KFChessClientApp {
     public void onMessage(JsonNode root) {
         String type = root.path("type").asText("");
         switch (type) {
-            case constants.CommandNames.WAIT: // replaced "wait"
+            case constants.CommandNames.WAIT:
                 if (gameStarted) return;
                 String msg = root.path("data").asText("");
                 SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(msg));
                 break;
 
-            case constants.CommandNames.GAME_INIT: // replaced "gameInit"
+            case constants.CommandNames.GAME_INIT:
                 gameStarted = true;
                 SwingUtilities.invokeLater(waitDialog::close);
                 GameDTO gameDTO;
@@ -99,15 +97,12 @@ public class KFChessClientApp {
                         .toArray(IPlayer[]::new);
                 gameModel = new Game(gameDTO.getBoardConfig(), players);
 
-                new MovesSoundListener();
-                new JumpsSoundListener();
-                new CapturedSoundListener();
-                new GameEndSoundListener();
+                new EventListener();
 
                 SwingUtilities.invokeLater(() -> initializeGameUI(gameDTO));
                 break;
 
-            case constants.CommandNames.PLAYER_SELECTED: // replaced "playerSelected"
+            case constants.CommandNames.PLAYER_SELECTED:
                 if (gameModel == null) return;
                 PlayerSelected cmd;
                 try {
@@ -124,7 +119,7 @@ public class KFChessClientApp {
                 });
                 break;
 
-            case constants.CommandNames.PLAYER_ID: // replaced "playerId"
+            case constants.CommandNames.PLAYER_ID:
                 playerId = root.path("data").asInt(-1);
                 logger.info(utils.ConfigLoader.getMessage("client.connected.log", "Received playerId: ") + playerId); // replaced string with messages.properties key
                 playerIdLatch.countDown();

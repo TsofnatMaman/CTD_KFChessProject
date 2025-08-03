@@ -3,6 +3,7 @@ package player;
 import board.BoardConfig;
 import command.JumpCommand;
 import command.MoveCommand;
+import constants.PieceConstants;
 import interfaces.ICommand;
 import interfaces.IBoard;
 import interfaces.IPiece;
@@ -13,10 +14,8 @@ import pieces.Position;
 import utils.LogUtils;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Collections;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a player in the game, holding pieces and managing actions.
@@ -97,13 +96,13 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public ICommand handleSelection(IBoard board, Position selected) {
+    public Optional<ICommand> handleSelection(IBoard board, Position selected) {
         Position previous = getPendingFrom();
 
         if (previous == null) {
             IPiece piece = board.getPiece(selected);
             if (piece == null || board.getPlayerOf(piece) != id) {
-                return null;
+                return Optional.empty();
             }
 
             if (board.hasPiece(selected.getRow(), selected.getCol())
@@ -117,14 +116,14 @@ public class Player implements IPlayer {
             if (previous.equals(selected)) {
                 IPiece piece = board.getPiece(selected);
                 if (piece != null) {
-                    return new JumpCommand(piece, board);
+                    return Optional.of(new JumpCommand(piece, board));
                 }
             } else {
-                return new MoveCommand(previous, selected.copy(), board);
+                return Optional.of(new MoveCommand(previous, selected.copy(), board));
             }
         }
 
-        return null;
+        return Optional.empty();
     }
 
     @Override
@@ -144,7 +143,7 @@ public class Player implements IPlayer {
         score -= piece.getType().getScore();
 
         // Build new queen piece at the target position
-        String newId = targetPos.getRow() + "," + targetPos.getCol();
+        String newId = targetPos.getRow() + PieceConstants.POSITION_SEPARATOR + targetPos.getCol();
         IPiece queen = PiecesFactory.createPieceByCode(
                 newId,
                 EPieceType.Q,

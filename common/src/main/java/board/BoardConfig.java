@@ -10,8 +10,8 @@ import java.util.List;
  * Configuration for the game board, including dimensions and tile size.
  */
 public class BoardConfig implements Serializable {
-    public final Dimension numRowsCols;
-    public final Dimension panelSize;
+    public final Dimension gridDimension;
+    public final Dimension panelDimension;
 
     /** Size of a single tile in pixels. */
     public final double tileSize;
@@ -23,14 +23,14 @@ public class BoardConfig implements Serializable {
 
     @JsonCreator
     public BoardConfig(
-            @JsonProperty("numRowsCols") Dimension numRowsCols,
-            @JsonProperty("panelSize") Dimension panelSize
+            @JsonProperty("gridDimension") Dimension gridDimension,
+            @JsonProperty("panelDimension") Dimension panelDimension
     ) {
-        this.numRowsCols = numRowsCols;
-        this.panelSize = panelSize;
+        this.gridDimension = gridDimension;
+        this.panelDimension = panelDimension;
 
-        double tileW = (double) panelSize.getY() / numRowsCols.getY();
-        double tileH = (double) panelSize.getX() / numRowsCols.getX();
+        double tileW = (double) panelDimension.getY() / gridDimension.getY();
+        double tileH = (double) panelDimension.getX() / gridDimension.getX();
         this.tileSize = Math.min(tileW, tileH);
     }
 
@@ -42,6 +42,6 @@ public class BoardConfig implements Serializable {
     }
 
     public boolean isInBounds(int r, int c) {
-        return r >= 0 && r < numRowsCols.getX() && c >= 0 && c < numRowsCols.getY();
+        return r >= 0 && r < gridDimension.getX() && c >= 0 && c < gridDimension.getY();
     }
 }

@@ -2,6 +2,7 @@ package game;
 
 import board.Board;
 import board.BoardConfig;
+import constants.GameConstants;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
@@ -17,6 +18,7 @@ import utils.LogUtils;
 
 import javax.swing.*;
 import java.util.LinkedList;
+import java.util.Optional;
 import java.util.Queue;
 
 /**
@@ -98,10 +100,8 @@ public class Game implements interfaces.IGame {
      */
     @Override
     public void handleSelection(IPlayer player, Position selected) {
-        ICommand cmd = player.handleSelection(getBoard(), selected);
-        if (cmd != null) {
-            addCommand(cmd);
-        }
+        Optional<ICommand> cmd = player.handleSelection(getBoard(), selected);
+        cmd.ifPresent(this::addCommand);
     }
 
     @Override
@@ -125,7 +125,7 @@ public class Game implements interfaces.IGame {
     public void run() {
         if (timer == null) {
             // set running before starting timer to avoid race in elapsed time queries
-            timer = new Timer(16, e -> tick());
+            timer = new Timer(GameConstants.GAME_LOOP_MS, e -> tick());
         }
         if (!running) {
             running = true;

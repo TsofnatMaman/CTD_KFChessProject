@@ -36,7 +36,6 @@
 
     <build>
         <plugins>
-            <!-- קומפילציה -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -47,7 +46,6 @@
                 </configuration>
             </plugin>
 
-            <!-- Shade ל־fat jar עם main class -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>

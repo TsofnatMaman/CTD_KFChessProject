@@ -6,6 +6,7 @@ import pieces.Position;
 import java.awt.*;
 import java.io.Serializable;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Interface for player operations.
@@ -55,7 +56,7 @@ public interface IPlayer extends Serializable {
      * @return ICommand representing the action, or null if no action
      */
 
-    ICommand handleSelection(IBoard board, Position selected);
+    Optional<ICommand> handleSelection(IBoard board, Position selected);
 
     int getScore();
 

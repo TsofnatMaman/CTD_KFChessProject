@@ -33,14 +33,13 @@ public class Position implements Serializable {
         this.c = c;
     }
 
-    // ---
 
     public int dx(Position other){
-        return r - other.r;
+        return c - other.c;
     }
 
     public int dy(Position other){
-        return c - other.c;
+        return r - other.r;
     }
 
     @Override

@@ -6,8 +6,14 @@ import java.util.Properties;
 /**
  * Central utility for loading configuration and message properties with safe defaults.
  */
+/**
+ * Utility class for loading configuration and message properties from resource files.
+ * Provides access to application configuration and localized messages.
+ */
 public class ConfigLoader {
+    /** Application configuration properties. */
     private static final Properties config = new Properties();
+    /** Localized message properties. */
     private static final Properties messages = new Properties();
 
     static {
@@ -16,7 +22,9 @@ public class ConfigLoader {
         } catch (Exception ignored) {}
         try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream("messages.properties")) {
             if (in != null) messages.load(in);
-        } catch (Exception ignored) {}
+        } catch (Exception e) {
+            LogUtils.logDebug(e.getMessage());
+        }
     }
 
     /**

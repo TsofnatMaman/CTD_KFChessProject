@@ -1,5 +1,6 @@
 package view;
 
+import constants.GameConstants;
 import interfaces.IPiece;
 
 import java.awt.*;
@@ -21,8 +22,8 @@ public class PieceRenderer {
         BufferedImage frame = p.getCurrentState().getGraphics().getCurrentFrame();
 
         Point2D.Double pos = p.getCurrentPixelPosition();
-        int pixelX = (int) (pos.x * squareWidth / 64.0);
-        int pixelY = (int) (pos.y * squareHeight / 64.0);
+        int pixelX = (int) (pos.x * squareWidth / GameConstants.SQUARE_SIZE);
+        int pixelY = (int) (pos.y * squareHeight / GameConstants.SQUARE_SIZE);
 
         g.drawImage(frame, pixelX, pixelY, squareWidth, squareHeight, null);
     }

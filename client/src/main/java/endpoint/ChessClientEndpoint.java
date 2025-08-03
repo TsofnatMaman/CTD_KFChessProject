@@ -2,6 +2,7 @@ package endpoint;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import utils.LogUtils;
 
 import javax.websocket.*;
 import java.net.URI;
@@ -36,7 +37,7 @@ public class ChessClientEndpoint {
             JsonNode root = mapper.readTree(message);
             if (root.has("type") && root.get("type").asText().equals(constants.CommandNames.PLAYER_ID)) { // replaced "playerId" with constant
                 playerId = root.get("data").asInt();
-                System.out.println(utils.ConfigLoader.getMessage("client.connected.log", "Updated playerId to ") + playerId); // replaced string with messages.properties key
+                LogUtils.logDebug(utils.ConfigLoader.getMessage("client.connected.log", "Updated playerId to ") + playerId); // replaced string with messages.properties key
             }
         } catch (Exception e) {
             e.printStackTrace();

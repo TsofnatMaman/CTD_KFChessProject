@@ -38,13 +38,8 @@ public class GamePanel extends JPanel implements IEventListener {
 
     private long startTimeNano;
 
-    private final ObjectMapper mapper;
-    private final ChessClientEndpoint client;
-
     public GamePanel(IGame model, int playerId, ChessClientEndpoint client, ObjectMapper mapper) {
         this.model = model;
-        this.client = client;
-        this.mapper = mapper;
 
         // Layout and spacing settings
         setLayout(new BorderLayout(20, 20));

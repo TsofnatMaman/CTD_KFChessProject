@@ -29,7 +29,7 @@ public class GraphicsLoader {
             BufferedImage image = ImageIO.read(Objects.requireNonNull(GraphicsLoader.class.getResourceAsStream(path)));
             cache.put(path, image);
             return image;
-        } catch (IOException | IllegalArgumentException e) {
+        } catch (IOException | IllegalArgumentException | NullPointerException e) {
             LogUtils.logDebug("Failed to load sprite: " + path);
             return null;
         }

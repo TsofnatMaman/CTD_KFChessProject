@@ -14,7 +14,6 @@
     <artifactId>client</artifactId>
 
     <dependencies>
-        <!-- מימוש WebSocket כולל API -->
         <dependency>
             <groupId>javax.websocket</groupId>
             <artifactId>javax.websocket-api</artifactId>
@@ -31,7 +30,6 @@
             <version>1.17</version>
         </dependency>
 
-        <!-- שימוש ב־DTO/קונסטרקטים משותפים -->
         <dependency>
             <groupId>com.kfchess</groupId>
             <artifactId>common</artifactId>
@@ -39,7 +37,6 @@
         </dependency>
     </dependencies>
 
-    <!-- אופציונלי: להקל על הרצה דרך Maven -->
     <build>
         <plugins>
             <plugin>

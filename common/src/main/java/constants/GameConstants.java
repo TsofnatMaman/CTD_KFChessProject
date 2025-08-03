@@ -4,7 +4,6 @@ package constants;
  * Internal game constants (board size, player count, etc.)
  */
 public class GameConstants {
-    public static final String SERVER_ENDPOINT = "/game"; // extracted for ServerEndpoint annotation
     public static final int BOARD_SIZE = 8; // logical board size (for square board)
     public static final int SQUARE_SIZE = 64; // pixel size per square
     public static final int BOARD_ROWS = Integer.parseInt(utils.ConfigLoader.getConfig("board.rows", "8")); // extracted from config.properties

@@ -34,7 +34,7 @@
              */
             public Board(BoardConfig bc, IPlayer[] players) {
                 boardConfig = bc;
-                this.boardGrid = new IPiece[bc.numRowsCols.getX()][bc.numRowsCols.getY()];
+                this.boardGrid = new IPiece[bc.gridDimension.getX()][bc.gridDimension.getY()];
                 this.players = players;
 
                 initializeFromPlayers();
@@ -146,8 +146,8 @@
             }
 
             private void resetPreviousPositions() {
-                for (int row = 0; row < boardConfig.numRowsCols.getX(); row++) {
-                    for (int col = 0; col < boardConfig.numRowsCols.getY(); col++) {
+                for (int row = 0; row < boardConfig.gridDimension.getX(); row++) {
+                    for (int col = 0; col < boardConfig.gridDimension.getY(); col++) {
                         IPiece piece = boardGrid[row][col];
                         if (piece != null) {
                             int newRow = piece.getRow();
@@ -182,7 +182,7 @@
                                 }
                             }
 
-                            if(piece.getType() == EPieceType.P && (targetRow == 0 || targetRow == boardConfig.numRowsCols.getX()-1))
+                            if(piece.getType() == EPieceType.P && (targetRow == 0 || targetRow == boardConfig.gridDimension.getX()-1))
                                 player.replacePToQ(piece, new Position(targetRow, targetCol) ,boardConfig);
                         }
 
@@ -286,8 +286,8 @@
              */
             @Override
             public boolean isPathClear(Position from, Position to) {
-                int dRow = Integer.signum(to.dx(from));
-                int dCol = Integer.signum(to.dy(from));
+                int dRow = Integer.signum(to.dy(from));
+                int dCol = Integer.signum(to.dx(from));
 
                 Position current = from.add(dRow, dCol);
 
@@ -330,7 +330,7 @@
              */
             @Override
             public int getCOLS() {
-                return boardConfig.numRowsCols.getY();
+                return boardConfig.gridDimension.getY();
             }
 
             /**
@@ -338,7 +338,7 @@
              */
             @Override
             public int getROWS() {
-                return boardConfig.numRowsCols.getX();
+                return boardConfig.gridDimension.getX();
             }
 
             /**

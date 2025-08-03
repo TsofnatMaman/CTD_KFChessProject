@@ -1,6 +1,8 @@
 package player;
 
 import board.BoardConfig;
+import constants.PieceConstants;
+import interfaces.IPiece;
 import interfaces.IPlayer;
 import pieces.EPieceType;
 import pieces.PiecesFactory;
@@ -49,8 +51,8 @@ public class PlayerFactory {
                 }
 
                 Position pos = new Position(row, col);
-                interfaces.IPiece piece = PiecesFactory.createPieceByCode(
-                        pos.getRow() + "," + pos.getCol(), // id string
+                IPiece piece = PiecesFactory.createPieceByCode(
+                        pos.getRow() + PieceConstants.POSITION_SEPARATOR + pos.getCol(), // id string
                         type,
                         id,
                         pos,
@@ -75,9 +77,8 @@ public class PlayerFactory {
      * @return array of two IPlayer instances
      */
     public static IPlayer[] createPlayers(String[] names, BoardConfig bc) {
-        if (names == null || names.length < 2) throw new IllegalArgumentException("Need at least two player names");
-        IPlayer p0 = createPlayer(0, names[0], bc);
-        IPlayer p1 = createPlayer(1, names[1], bc);
-        return new IPlayer[]{p0, p1};
+        return java.util.stream.IntStream.range(0, names.length)
+                .mapToObj(i -> createPlayer(i, names[i], bc))
+                .toArray(IPlayer[]::new);
     }
 }

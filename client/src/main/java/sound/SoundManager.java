@@ -10,20 +10,23 @@ import java.net.URL;
 public class SoundManager {
 
     public static void playSound(String filePath) {
+        Clip clip = null;
         try {
             // load the file from resources
             URL soundURL = SoundManager.class.getClassLoader().getResource("sounds/"+filePath);
             if (soundURL == null) {
-                System.err.println("Sound file not found: " + filePath);
+                LogUtils.logDebug("Sound file not found: " + filePath);
                 return;
             }
 
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL);
-            Clip clip = AudioSystem.getClip();
+            clip = AudioSystem.getClip();
             clip.open(audioInputStream);
             clip.start(); // play the file
         } catch (Exception e) {
             LogUtils.logDebug(e.getMessage());
+        } finally {
+//                clip.close();
         }
     }
 }

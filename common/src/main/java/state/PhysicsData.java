@@ -99,8 +99,8 @@ public class PhysicsData implements IPhysicsData {
         long now = System.nanoTime();
         double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
 
-        double dx = targetPos.dy(startPos) * tileSize;
-        double dy = targetPos.dx(startPos) * tileSize;
+        double dx = targetPos.dx(startPos) * tileSize;
+        double dy = targetPos.dy(startPos) * tileSize;
 
         double totalDistance = Math.sqrt(dx * dx + dy * dy);
 
@@ -125,8 +125,8 @@ public class PhysicsData implements IPhysicsData {
         long now = System.nanoTime();
         double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
 
-        double dx = targetPos.dy(startPos) * tileSize;
-        double dy = targetPos.dx(startPos) * tileSize;
+        double dx = targetPos.dx(startPos) * tileSize;
+        double dy = targetPos.dy(startPos) * tileSize;
         double totalDistance = Math.sqrt(dx * dx + dy * dy);
 
         double distanceSoFar = speed * elapsedSec;

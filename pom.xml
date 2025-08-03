@@ -25,7 +25,6 @@
 
     <dependencyManagement>
         <dependencies>
-            <!-- גרסאות מרכזיות -->
             <dependency>
                 <groupId>com.fasterxml.jackson.core</groupId>
                 <artifactId>jackson-databind</artifactId>

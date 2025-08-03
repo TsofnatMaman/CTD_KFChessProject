@@ -2,12 +2,12 @@ package events;
 
 public enum EGameEvent {
     // Extracted event names to CommandNames
-    PIECE_MOVED(constants.CommandNames.PIECE_MOVED),
-    PIECE_JUMP(constants.CommandNames.PIECE_JUMP),
-    PIECE_CAPTURED(constants.CommandNames.PIECE_CAPTURED),
-    GAME_STARTED(constants.CommandNames.GAME_STARTED),
-    GAME_ENDED(constants.CommandNames.GAME_ENDED),
-    GAME_UPDATE(constants.CommandNames.GAME_UPDATE);
+    PIECE_MOVED("pieceMoved"),
+    PIECE_JUMP("pieceJump"),
+    PIECE_CAPTURED("pieceCaptured"),
+    GAME_STARTED("gameStarted"),
+    GAME_ENDED("gameEnded"),
+    GAME_UPDATE("gameUpdate");
 
     private final String val;
 
