@@ -5,8 +5,6 @@ import java.util.Properties;
 
 /**
  * Central utility for loading configuration and message properties with safe defaults.
- */
-/**
  * Utility class for loading configuration and message properties from resource files.
  * Provides access to application configuration and localized messages.
  */

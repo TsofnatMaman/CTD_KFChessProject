@@ -1,9 +1,5 @@
 package utils;
 
-/**
- * Utility class for converting a chess board position to its standard name (e.g., A1, H8).
- */
-
 import pieces.Position;
 
 public class ConvertPiecePositionToName {

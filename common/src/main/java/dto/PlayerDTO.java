@@ -1,10 +1,5 @@
 package dto;
 
-/**
- * Data Transfer Object for player information.
- * Contains player ID, name, and color (in HEX format).
- */
-
 import board.BoardConfig;
 import interfaces.IPlayer;
 

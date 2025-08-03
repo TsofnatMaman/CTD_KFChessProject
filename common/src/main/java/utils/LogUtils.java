@@ -1,10 +1,5 @@
 package utils;
 
-/**
- * Utility class for logging debug messages to a file.
- * Provides a static method to append messages to the application's log file.
- */
-
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;

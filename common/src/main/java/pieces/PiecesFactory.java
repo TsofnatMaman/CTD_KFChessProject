@@ -105,7 +105,6 @@ public class PiecesFactory {
         } catch (Exception e) {
             String mes = "Exception in createPieceByCode: " + e.getMessage();
             LogUtils.logDebug(mes);
-            e.printStackTrace();
             throw new RuntimeException(mes, e);
         }
     }

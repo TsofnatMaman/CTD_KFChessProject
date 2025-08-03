@@ -3,20 +3,26 @@ package endpoint;
 import javax.swing.*;
 import java.awt.*;
 
-/**
- * Dialog for displaying waiting messages to the user (e.g., waiting for opponent).
- */
 public class WaitDialog {
 
     private JDialog dialog;
     private JLabel label;
     private JProgressBar progressBar;
+    private Runnable onCloseAction;
 
-    /**
-     * Shows or updates the waiting dialog with the given message.
-     * @param message The message to display
-     */
-    public void showOrUpdate(String message) {
+    public void setOnCloseAction(Runnable onCloseAction) {
+        this.onCloseAction = onCloseAction;
+    }
+
+    public synchronized void showOrUpdate(String message) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            internalShowOrUpdate(message);
+        } else {
+            SwingUtilities.invokeLater(() -> internalShowOrUpdate(message));
+        }
+    }
+
+    private void internalShowOrUpdate(String message) {
         if (dialog == null) {
             label = new JLabel(wrapHtml(escapeHtml(message)), SwingConstants.CENTER);
             progressBar = new JProgressBar();
@@ -34,7 +40,17 @@ public class WaitDialog {
             dialog.setSize(360, 140);
             dialog.setResizable(false);
             dialog.setLocationRelativeTo(null);
-            dialog.setDefaultCloseOperation(JDialog.DO_NOTHING_ON_CLOSE);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    if (onCloseAction != null) {
+                        onCloseAction.run();
+                    }
+                }
+            });
+
             dialog.setVisible(true);
         } else {
             label.setText(wrapHtml(escapeHtml(message)));
@@ -44,10 +60,15 @@ public class WaitDialog {
         }
     }
 
-    /**
-     * Closes the waiting dialog if open.
-     */
-    public void close() {
+    public synchronized void close() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            internalClose();
+        } else {
+            SwingUtilities.invokeLater(this::internalClose);
+        }
+    }
+
+    private void internalClose() {
         if (dialog != null) {
             dialog.dispose();
             dialog = null;
@@ -57,7 +78,6 @@ public class WaitDialog {
     }
 
     private static String wrapHtml(String s) {
-        // Extracted HTML wrapper to constant
         return "<html><div style='text-align:center;'>" + s + "</div></html>";
     }
 
@@ -66,6 +86,6 @@ public class WaitDialog {
         return s.replace("&", "&amp;")
                 .replace("<", "&lt;")
                 .replace(">", "&gt;")
-                .replace("\n", "<br/>"); // extracted newline
+                .replace("\n", "<br/>");
     }
 }

@@ -1,10 +1,5 @@
 package dto;
 
-/**
- * Data Transfer Object representing a player's selection on the board.
- * Contains the player ID and the selected position.
- */
-
 import pieces.Position;
 
 public class PlayerSelected {
