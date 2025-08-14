@@ -25,6 +25,8 @@ public interface IBoard extends Serializable {
      */
     boolean hasPiece(int row, int col);
 
+    boolean hasPieceOrIsTarget(Position pos);
+
     /**
      * Gets the piece at the specified row and column.
      * @param row The row index

@@ -101,7 +101,7 @@ public class Piece implements IPiece {
 
         if (currentState.isActionFinished()) {
             // Update logical position only after the action is finished
-            position = new Position(currentState.getTargetRow(), currentState.getTargetCol());
+            setPosition(new Position(currentState.getTargetRow(), currentState.getTargetCol()));
 
             EState nextState = currentState.getPhysics().getNextStateWhenFinished();
 
@@ -125,7 +125,6 @@ public class Piece implements IPiece {
             currentState = state;
             currentState.reset(EState.MOVE, position, to);
         } else {
-            System.err.println("Missing 'move' state!");
             LogUtils.logDebug("Missing 'move' state!");
         }
     }
@@ -138,7 +137,6 @@ public class Piece implements IPiece {
             currentState = state;
             currentState.reset(EState.JUMP,position, position);
         } else {
-            System.err.println("Missing 'jump' state!");
             LogUtils.logDebug("Missing 'jump' state!");
         }
     }
@@ -179,8 +177,8 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public boolean canMoveOver(){
-        return currentStateName.isCanMoveOver();
+    public boolean isCanCapturable(){
+        return currentStateName.isCanCapturable();
     }
 
     @Override
@@ -203,4 +201,5 @@ public class Piece implements IPiece {
         String[] pos = getId().split(constants.PieceConstants.POSITION_SEPARATOR);
         return new Position(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
     }
+
 }

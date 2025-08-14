@@ -2,7 +2,7 @@ package view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.Message;
-import dto.PlayerSelected;
+import dto.PlayerSelectedDTO;
 import endpoint.ChessClientEndpoint;
 import events.EGameEvent;
 import events.EventPublisher;
@@ -70,9 +70,9 @@ public class GamePanel extends JPanel implements IEventListener {
         boardPanel.setOnPlayerAction((v) -> {
             try {
                 Position pos = cursor.getPosition();
-                PlayerSelected cmd = new PlayerSelected(playerId, pos);
+                PlayerSelectedDTO cmd = new PlayerSelectedDTO(playerId, pos);
 
-                Message<PlayerSelected> msg = new Message<>(constants.CommandNames.PLAYER_SELECTED, cmd); // extracted message type
+                Message<PlayerSelectedDTO> msg = new Message<>(constants.CommandNames.PLAYER_SELECTED, cmd); // extracted message type
                 String jsonCmd = mapper.writeValueAsString(msg);
 
                 client.sendText(jsonCmd);

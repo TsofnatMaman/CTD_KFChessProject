@@ -9,7 +9,7 @@ import constants.ServerConfig;
 import dto.GameDTO;
 import dto.Message;
 import dto.PlayerDTO;
-import dto.PlayerSelected;
+import dto.PlayerSelectedDTO;
 import game.Game;
 import interfaces.IGame;
 import interfaces.IPlayer;
@@ -90,7 +90,7 @@ public class ChessServerEndpoint {
                         return;
                     }
 
-                    PlayerSelected cmd = mapper.treeToValue(dataNode, PlayerSelected.class);
+                    PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
 
                     if (cmd.getPlayerId() != playerId) {
                         LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));

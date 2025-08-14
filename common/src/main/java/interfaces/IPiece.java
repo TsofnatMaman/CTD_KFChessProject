@@ -106,7 +106,7 @@ public interface IPiece extends Serializable {
      * Returns true if the piece can move over other pieces.
      * @return true if can move over, false otherwise
      */
-    boolean canMoveOver();
+    boolean isCanCapturable();
 
     Position getPos();
 

@@ -5,30 +5,30 @@ package interfaces;
  */
 public enum EState {
     /** Idle state, can perform actions, cannot move over. */
-    IDLE("idle", true, false),
+    IDLE("idle", true, true),
     /** Jump state, cannot perform actions, cannot move over. */
-    JUMP("jump", false, true),
+    JUMP("jump", false, false),
     /** Move state, cannot perform actions, can move over. */
-    MOVE("move", false, true),
+    MOVE("move", false, false),
     /** Long rest state, cannot perform actions, can move over. */
-    LONG_REST("long_rest", false, false),
+    LONG_REST("long_rest", false, true),
     /** Short rest state, cannot perform actions, can move over. */
-    SHORT_REST("short_rest", false, false);
+    SHORT_REST("short_rest", false, true);
 
     private final String name;
     private final boolean canAction;
-    private final boolean canMoveOver;
+    private final boolean canCapturable;
 
     /**
      * Constructs an EState enum value.
      * @param name State name
      * @param canAction Whether the state allows actions
-     * @param canMoveOver Whether the state allows moving over
+     * @param canCapturable Whether the state allows moving over
      */
-    EState(String name, boolean canAction, boolean canMoveOver){
+    EState(String name, boolean canAction, boolean canCapturable){
         this.name = name;
         this.canAction = canAction;
-        this.canMoveOver = canMoveOver;
+        this.canCapturable = canCapturable;
     }
 
     /**
@@ -52,8 +52,8 @@ public enum EState {
      * Returns true if the state allows moving over.
      * @return true if can move over
      */
-    public boolean isCanMoveOver() {
-        return canMoveOver;
+    public boolean isCanCapturable() {
+        return canCapturable;
     }
 
     /**

@@ -2,6 +2,7 @@ package view;
 
 import interfaces.IBoard;
 import interfaces.IPiece;
+import interfaces.IPlayer;
 
 import java.awt.*;
 
@@ -20,12 +21,11 @@ public class BoardRenderer {
         int squareWidth = panelWidth / board.getCOLS();
         int squareHeight = panelHeight / board.getROWS();
 
-        for (int row = 0; row < board.getROWS(); row++) {
-            for (int col = 0; col < board.getCOLS(); col++) {
-                IPiece p = board.getPiece(row, col);
-                if (p != null) {
-                    PieceRenderer.draw(g, p, squareWidth, squareHeight);
-                }
+        for(IPlayer p:board.getPlayers()){
+            for(IPiece piece:p.getPieces()){
+                if(!piece.isCaptured())
+                    PieceRenderer.draw(g, piece, squareWidth, squareHeight);
+
             }
         }
     }

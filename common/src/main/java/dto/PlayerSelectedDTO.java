@@ -2,7 +2,7 @@ package dto;
 
 import pieces.Position;
 
-public class PlayerSelected {
+public class PlayerSelectedDTO {
     /** The ID of the player making the selection. */
     private int playerId;
     /** The position selected by the player. */
@@ -11,14 +11,14 @@ public class PlayerSelected {
     /**
      * Default constructor for serialization/deserialization frameworks (e.g., Jackson).
      */
-    public PlayerSelected() {}
+    public PlayerSelectedDTO() {}
 
     /**
      * Constructs a PlayerSelected DTO.
      * @param playerId the ID of the player
      * @param selection the selected position
      */
-    public PlayerSelected(int playerId, Position selection){
+    public PlayerSelectedDTO(int playerId, Position selection){
         this.playerId = playerId;
         this.selection = selection;
     }

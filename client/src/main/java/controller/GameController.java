@@ -3,7 +3,7 @@ package controller;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.GameDTO;
-import dto.PlayerSelected;
+import dto.PlayerSelectedDTO;
 import endpoint.ChessClientEndpoint;
 import utils.LogUtils;
 
@@ -89,7 +89,7 @@ public class GameController implements Runnable {
                     }
                     case constants.CommandNames.PLAYER_SELECTED -> {
                         LogUtils.logDebug("Dispatching PLAYER_SELECTED message");
-                        PlayerSelected cmd = mapper.treeToValue(dataNode, PlayerSelected.class);
+                        PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
                         firePlayerSelected(cmd);
                     }
                     case constants.CommandNames.PLAYER_ID -> {
@@ -138,7 +138,7 @@ public class GameController implements Runnable {
         }
     }
 
-    private void firePlayerSelected(PlayerSelected cmd) {
+    private void firePlayerSelected(PlayerSelectedDTO cmd) {
         synchronized (listeners) {
             for (GameEventListener l : listeners) {
                 try {
@@ -177,7 +177,7 @@ public class GameController implements Runnable {
     public interface GameEventListener {
         void onWaitMessage(String message);
         void onGameInit(GameDTO gameDTO);
-        void onPlayerSelected(PlayerSelected cmd);
+        void onPlayerSelected(PlayerSelectedDTO cmd);
         void onPlayerId(int playerId);
         void onUnknownMessage(String type);
     }

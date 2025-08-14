@@ -4,7 +4,7 @@ import constants.ServerConfig;
 import controller.GameController;
 import dto.GameDTO;
 import dto.PlayerDTO;
-import dto.PlayerSelected;
+import dto.PlayerSelectedDTO;
 import game.Game;
 import interfaces.IPlayer;
 import sound.EventListener;
@@ -170,7 +170,7 @@ public class KFChessClientApp implements GameController.GameEventListener {
     }
 
     @Override
-    public void onPlayerSelected(PlayerSelected cmd) {
+    public void onPlayerSelected(PlayerSelectedDTO cmd) {
         if (gameModel == null) return;
 
         gameModel.handleSelection(cmd.getPlayerId(), cmd.getSelection());
@@ -238,5 +238,6 @@ public class KFChessClientApp implements GameController.GameEventListener {
                 throw new RuntimeException(e);
             }
         }, "App-Starter").start();
+        
     }
 }

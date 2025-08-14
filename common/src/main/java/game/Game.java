@@ -12,6 +12,7 @@ import events.listeners.JumpsLogger;
 import events.listeners.MovesLogger;
 import interfaces.ICommand;
 import interfaces.IBoard;
+import interfaces.IGame;
 import interfaces.IPlayer;
 import pieces.Position;
 import utils.LogUtils;
@@ -25,7 +26,7 @@ import java.util.Queue;
  * Main game logic and state management.
  * Handles command execution, player turns, and win condition.
  */
-public class Game implements interfaces.IGame {
+public class Game implements IGame {
     private final IPlayer[] players;
     /** Queue of commands to be executed. */
     private final Queue<ICommand> commandQueue;
