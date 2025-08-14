@@ -1,5 +1,8 @@
 package board;
 
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
 import interfaces.*;
 import moves.Data;
 import moves.Move;
@@ -67,14 +70,18 @@ public class Board implements IBoard {
     /**
      * Checks if there is a piece at the specified row and column.
      */
-    @Override
-    public boolean hasPiece(int row, int col) {
+    private boolean hasPiece(int row, int col) {
         return isInBounds(row, col) && boardGrid[row][col] != null;
     }
 
     @Override
+    public boolean hasPiece(Position pos){
+        return hasPiece(pos.getRow(), pos.getCol());
+    }
+
+    @Override
     public boolean hasPieceOrIsTarget(Position pos){
-        return hasPiece(pos.getRow(), pos.getCol()) || isTarget[pos.getRow()][pos.getCol()] != -1;
+        return hasPiece(pos) || isTarget[pos.getRow()][pos.getCol()] != -1;
     }
 
     /**
@@ -163,6 +170,10 @@ public class Board implements IBoard {
 
                     if(piece.getType() == EPieceType.P && (targetRow == 0 || targetRow == boardConfig.gridDimension.getX()-1))
                         player.replacePToQ(piece, new Position(targetRow, targetCol), boardConfig);
+
+                    if(piece.getCurrentStateName() == EState.MOVE)
+                        EventPublisher.getInstance().publish(EGameEvent.PIECE_END_MOVED, new GameEvent(EGameEvent.PIECE_END_MOVED, null));
+
                 }
 
                 piece.update();
@@ -232,7 +243,7 @@ public class Board implements IBoard {
         Position current = from.add(dRow, dCol);
 
         while (!current.equals(to)) {
-            if (hasPieceOrIsTarget(current))
+            if (hasPiece(current))
                 return false;
             current = current.add(dRow, dCol);
         }

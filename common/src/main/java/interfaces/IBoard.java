@@ -17,13 +17,7 @@ public interface IBoard extends Serializable {
      */
     void placePiece(IPiece piece);
 
-    /**
-     * Checks if there is a piece at the specified row and column.
-     * @param row The row index
-     * @param col The column index
-     * @return true if a piece exists, false otherwise
-     */
-    boolean hasPiece(int row, int col);
+    boolean hasPiece(Position pos);
 
     boolean hasPieceOrIsTarget(Position pos);
 

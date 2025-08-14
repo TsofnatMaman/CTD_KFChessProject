@@ -1,4 +1,4 @@
-package view;
+package endpoint.view;
 
 import events.EGameEvent;
 import events.EventPublisher;
@@ -10,6 +10,7 @@ import interfaces.IPiece;
 import interfaces.IPlayerCursor;
 import pieces.Position;
 import utils.LogUtils;
+import viewUtils.BoardRenderer;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -61,6 +62,7 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
             }
         });
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
     }
 
     private void loadBoardImage() {
@@ -169,5 +171,7 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     @Override
     public void onEvent(GameEvent event) {
         repaint();
+        if(event.type() == EGameEvent.PIECE_END_MOVED && selected != null)
+            legalMoves = board.getLegalMoves(selected);
     }
 }

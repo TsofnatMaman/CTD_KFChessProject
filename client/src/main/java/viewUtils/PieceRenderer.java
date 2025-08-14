@@ -1,4 +1,4 @@
-package view;
+package viewUtils;
 
 import constants.GameConstants;
 import interfaces.IPiece;

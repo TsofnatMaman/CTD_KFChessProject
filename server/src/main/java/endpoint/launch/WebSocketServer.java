@@ -1,4 +1,4 @@
-package endpoint;
+package endpoint.launch;
 
 import org.glassfish.tyrus.server.Server;
 import constants.ServerConfig;

@@ -1,4 +1,4 @@
-package view;
+package viewUtils;
 
 import events.EGameEvent;
 import events.EventPublisher;
@@ -46,7 +46,7 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
 
         // MovesLogger.subscribe(this, player.getId()); --> onEvent: addMove(((ActionData)event.data).message);
 
-        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_MOVED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_START_MOVED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_STARTED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);

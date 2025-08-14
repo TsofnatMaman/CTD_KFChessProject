@@ -30,7 +30,7 @@ public class SoundManager {
             }
 
         } catch (Exception e) {
-            LogUtils.logDebug("Error playing sound " + fileName + ": " + e.getMessage());
+            LogUtils.logDebug("Error playing endpoint.sound " + fileName + ": " + e.getMessage());
         }
     }
 }

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.GameDTO;
 import dto.PlayerSelectedDTO;
-import endpoint.ChessClientEndpoint;
+import endpoint.launch.ChessClientEndpoint;
 import utils.LogUtils;
 
 import java.util.ArrayList;

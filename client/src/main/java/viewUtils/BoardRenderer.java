@@ -1,4 +1,4 @@
-package view;
+package viewUtils;
 
 import interfaces.IBoard;
 import interfaces.IPiece;

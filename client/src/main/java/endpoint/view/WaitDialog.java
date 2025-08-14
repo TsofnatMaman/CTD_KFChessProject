@@ -1,4 +1,4 @@
-package endpoint;
+package endpoint.view;
 
 import javax.swing.*;
 import java.awt.*;

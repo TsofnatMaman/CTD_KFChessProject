@@ -1,4 +1,4 @@
-package endpoint;
+package endpoint.launch;
 
 import board.BoardConfig;
 import board.Dimension;

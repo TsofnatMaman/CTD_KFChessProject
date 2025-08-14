@@ -2,7 +2,9 @@ package events;
 
 public enum EGameEvent {
     // Extracted event names to CommandNames
-    PIECE_MOVED("pieceMoved"),
+    PIECE_START_MOVED("pieceStartMoved"),
+    PIECE_END_MOVED("pieceEndMoved"),
+    ILLEGAL_CMD("illegalCmd"),
     PIECE_JUMP("pieceJump"),
     PIECE_CAPTURED("pieceCaptured"),
     GAME_STARTED("gameStarted"),

@@ -5,7 +5,7 @@ import events.*;
 public class MovesLogger implements IEventListener {
 
     public MovesLogger(){
-        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_MOVED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_START_MOVED, this);
     }
 
     @Override

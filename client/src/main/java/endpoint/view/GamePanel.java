@@ -1,9 +1,9 @@
-package view;
+package endpoint.view;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.Message;
 import dto.PlayerSelectedDTO;
-import endpoint.ChessClientEndpoint;
+import endpoint.launch.ChessClientEndpoint;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
@@ -13,6 +13,7 @@ import interfaces.IPlayerCursor;
 import pieces.Position;
 import player.PlayerCursor;
 import utils.LogUtils;
+import viewUtils.PlayerInfoPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;

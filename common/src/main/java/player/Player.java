@@ -105,7 +105,7 @@ public class Player implements IPlayer {
                 return Optional.empty();
             }
 
-            if (board.hasPiece(selected.getRow(), selected.getCol())
+            if (board.hasPiece(selected)
                     && piece.getCurrentStateName().isCanAction()) {
                 setPendingFrom(selected);
             } else {

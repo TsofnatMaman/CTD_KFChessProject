@@ -1,15 +1,16 @@
-package endpoint;
+package endpoint.launch;
 
 import constants.ServerConfig;
 import controller.GameController;
 import dto.GameDTO;
 import dto.PlayerDTO;
 import dto.PlayerSelectedDTO;
+import endpoint.view.GamePanel;
+import endpoint.view.WaitDialog;
 import game.Game;
 import interfaces.IPlayer;
 import sound.EventListener;
 import interfaces.IGame;
-import view.GamePanel;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

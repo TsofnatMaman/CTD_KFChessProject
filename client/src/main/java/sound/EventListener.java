@@ -10,7 +10,7 @@ public class EventListener implements IEventListener {
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);
-        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_MOVED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_START_MOVED, this);
     }
 
     @Override
