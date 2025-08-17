@@ -1,6 +1,5 @@
 package pieces;
 
-import board.BoardConfig;
 import interfaces.IState;
 import interfaces.IPiece;
 import interfaces.EState;
@@ -13,7 +12,6 @@ import java.io.IOException;
 import java.util.List;
 
 public class Piece implements IPiece {
-    private final String id;
     private final EPieceType type;
     private final int playerId;
     private List<Move> moves;
@@ -22,15 +20,16 @@ public class Piece implements IPiece {
     private EState currentStateName;
     private Position position;
     private boolean wasCaptured;
+    private boolean isFirstMove;
 
-    public Piece(String id, EPieceType type, int playerId, PieceTemplate template, EState initialState, Position position) throws IOException {
-        this.id = id;
+    public Piece(EPieceType type, int playerId, PieceTemplate template, EState initialState, Position position) throws IOException {
         this.type = type;
         this.playerId = playerId;
         this.template = template;
         this.currentStateName = initialState;
         this.currentState = template.getState(initialState);
         this.position = position;
+        this.isFirstMove = true;
 
         this.moves = Moves.createMovesList(type, playerId);
     }
@@ -61,11 +60,6 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public String getId() {
-        return id;
-    }
-
-    @Override
     public EPieceType getType() {
         return type;
     }
@@ -77,7 +71,7 @@ public class Piece implements IPiece {
 
     @Override
     public int getPlayer() {
-        return BoardConfig.getPlayerOf(Integer.parseInt(this.getId().split(constants.PieceConstants.POSITION_SEPARATOR)[0]));
+        return playerId;
     }
 
     @Override
@@ -120,6 +114,7 @@ public class Piece implements IPiece {
     @Override
     public void move(Position to) {
         IState state = template.getState(EState.MOVE);
+        setFirstMove(false);
         if (state != null) {
             currentStateName = EState.MOVE;
             currentState = state;
@@ -192,14 +187,12 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return id.equals(((Piece)obj).id);
+    public boolean isFirstMove() {
+        return isFirstMove;
     }
 
     @Override
-    public Position getIdAsPosition(){
-        String[] pos = getId().split(constants.PieceConstants.POSITION_SEPARATOR);
-        return new Position(Integer.parseInt(pos[0]), Integer.parseInt(pos[1]));
+    public void setFirstMove(boolean firstMove) {
+        isFirstMove = firstMove;
     }
-
 }

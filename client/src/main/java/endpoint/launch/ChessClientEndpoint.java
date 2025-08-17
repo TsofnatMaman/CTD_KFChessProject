@@ -52,7 +52,6 @@ public class ChessClientEndpoint implements Closeable {
 
     @OnMessage
     public void onMessage(String message) {
-        System.out.println(message);
         messageQueue.add(message);
         processMessage(message);
     }

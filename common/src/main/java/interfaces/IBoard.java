@@ -51,13 +51,6 @@ public interface IBoard extends Serializable {
     int getPlayerOf(Position pos);
 
     /**
-     * Returns the player index for a given piece.
-     * @param piece The piece object
-     * @return The player index
-     */
-    int getPlayerOf(IPiece piece);
-
-    /**
      * Moves a piece from one position to another.
      * @param from The starting position
      * @param to The target position

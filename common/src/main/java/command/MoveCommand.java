@@ -28,14 +28,14 @@ public class MoveCommand implements ICommand {
             String mes = "Illegal move from " + from + " to " + to;
             EventPublisher.getInstance()
                     .publish(EGameEvent.ILLEGAL_CMD,
-                            new GameEvent(EGameEvent.ILLEGAL_CMD ,new ActionData(board.getPlayerOf(board.getPiece(from)), mes)));
+                            new GameEvent(EGameEvent.ILLEGAL_CMD ,new ActionData(board.getPiece(from).getPlayer(), mes)));
             LogUtils.logDebug(mes);
             return;
         }
         String mes = ConvertPiecePositionToName.getName(from) + " --> " + ConvertPiecePositionToName.getName(to);
         EventPublisher.getInstance()
                 .publish(EGameEvent.PIECE_START_MOVED,
-                        new GameEvent(EGameEvent.PIECE_START_MOVED, new ActionData(board.getPlayerOf(board.getPiece(from)), mes)));
+                        new GameEvent(EGameEvent.PIECE_START_MOVED, new ActionData(board.getPiece(from).getPlayer(), mes)));
         LogUtils.logDebug(mes);
         board.move(from, to);
     }

@@ -46,8 +46,7 @@ public class Board implements IBoard {
     private void initializeFromPlayers(){
         for (IPlayer p : players) {
             for (IPiece piece : p.getPieces()) {
-                Position pos = piece.getIdAsPosition();
-                boardGrid[pos.getRow()][pos.getCol()] = piece;
+                boardGrid[piece.getPos().getRow()][piece.getPos().getCol()] = piece;
             }
         }
     }
@@ -116,14 +115,6 @@ public class Board implements IBoard {
     @Override
     public int getPlayerOf(Position pos){
         return getPlayerOf(pos.getRow());
-    }
-
-    /**
-     * Returns the player index for a given piece.
-     */
-    @Override
-    public int getPlayerOf(IPiece piece){
-        return getPlayerOf(piece.getIdAsPosition().getRow());
     }
 
     /**

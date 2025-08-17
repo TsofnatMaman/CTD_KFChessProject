@@ -101,7 +101,7 @@ public class Player implements IPlayer {
 
         if (previous == null) {
             IPiece piece = board.getPiece(selected);
-            if (piece == null || board.getPlayerOf(piece) != id) {
+            if (piece == null || piece.getPlayer() != id) {
                 return Optional.empty();
             }
 
@@ -143,10 +143,7 @@ public class Player implements IPlayer {
         score -= piece.getType().getScore();
 
         // Build new queen piece at the target position
-        int rowId = BoardConfig.rowsOfPlayer.get(id).get(0);
-        String newId = rowId + PieceConstants.POSITION_SEPARATOR + targetPos.getCol();
         IPiece queen = PiecesFactory.createPieceByCode(
-                newId,
                 EPieceType.Q,
                 id,
                 targetPos,

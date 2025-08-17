@@ -8,4 +8,5 @@ import java.awt.Color;
 public class PlayerConstants {
     public static final Color[] PLAYER_COLORS = new Color[]{Color.RED, Color.BLUE}; // extracted from Player.java
     public static final Color[] PIECES_COLOR = new Color[]{Color.BLACK, Color.WHITE};
+    public static final String[] COLORS_NAME = new String[]{"Black", "White"};
 }

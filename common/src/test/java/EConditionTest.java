@@ -38,7 +38,6 @@ public class EConditionTest {
         IPiece piece = mock(IPiece.class);
         Position pos = new Position(3, 4);
         when(piece.getPos()).thenReturn(pos);
-        when(piece.getId()).thenReturn("3,4");
 
         Data data = new Data(mock(IBoard.class), piece, new Position(4, 4));
         assertTrue(ECondition.FIRST_TIME.isCanMove(data));
@@ -49,7 +48,6 @@ public class EConditionTest {
         IPiece piece = mock(IPiece.class);
         Position pos = new Position(3, 4);
         when(piece.getPos()).thenReturn(pos);
-        when(piece.getId()).thenReturn("2,2");
 
         Data data = new Data(mock(IBoard.class), piece, new Position(4, 4));
         assertFalse(ECondition.FIRST_TIME.isCanMove(data));

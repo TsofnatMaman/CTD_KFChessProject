@@ -137,7 +137,7 @@ public class GamePanel extends JPanel implements IEventListener {
 
     @Override
     public void onEvent(GameEvent event) {
-        JOptionPane.showMessageDialog(this, "Game Over. Winner: Player " + model.win().getName() +": "+ PlayerConstants.PIECES_COLOR[model.win().getId()].toString());
+        JOptionPane.showMessageDialog(this, "Game Over. Winner: Player " + model.win().getName() +": "+ PlayerConstants.COLORS_NAME[model.win().getId()]);
     }
 
     public BoardPanel getBoardPanel() { return boardPanel; }

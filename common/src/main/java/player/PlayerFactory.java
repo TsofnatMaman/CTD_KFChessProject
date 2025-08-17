@@ -52,7 +52,6 @@ public class PlayerFactory {
 
                 Position pos = new Position(row, col);
                 IPiece piece = PiecesFactory.createPieceByCode(
-                        pos.getRow() + PieceConstants.POSITION_SEPARATOR + pos.getCol(), // id string
                         type,
                         id,
                         pos,

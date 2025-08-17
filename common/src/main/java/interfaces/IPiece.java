@@ -20,12 +20,6 @@ public interface IPiece extends Serializable {
     int getPlayer();
 
     /**
-     * Gets the unique ID of the piece.
-     * @return The piece ID
-     */
-    String getId();
-
-    /**
      * Gets the type of the piece.
      * @return The piece type
      */
@@ -110,5 +104,7 @@ public interface IPiece extends Serializable {
 
     Position getPos();
 
-    Position getIdAsPosition();
+    boolean isFirstMove();
+
+    void setFirstMove(boolean firstMove);
 }

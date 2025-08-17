@@ -94,7 +94,7 @@ public class ChessServerEndpoint {
     }
 
     private void handlePlayerSelected(JsonNode data, int playerId) throws IOException {
-        System.out.println(data);
+        logInfo(data.toString());
         if (game == null) return;
 
         PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);

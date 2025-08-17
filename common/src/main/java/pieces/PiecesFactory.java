@@ -35,7 +35,7 @@ public class PiecesFactory {
      * @param config Board configuration
      * @return Piece instance or null if failed
      */
-    public static Piece createPieceByCode(String id, EPieceType code, int playerId, Position pos, BoardConfig config) {
+    public static Piece createPieceByCode(EPieceType code, int playerId, Position pos, BoardConfig config) {
         double TILE_SIZE = config.tileSize;
 
         Map<EState, IState> states = new HashMap<>();
@@ -100,18 +100,13 @@ public class PiecesFactory {
                     : states.keySet().iterator().next();
 
             // Create and return piece with template
-            return new Piece(id, code, playerId, template, initialState, pos);
+            return new Piece(code, playerId, template, initialState, pos);
 
         } catch (Exception e) {
             String mes = "Exception in createPieceByCode: " + e.getMessage();
             LogUtils.logDebug(mes);
             throw new RuntimeException(mes, e);
         }
-    }
-
-    public static Piece createPieceByCode(EPieceType code, int playerId, Position pos, BoardConfig config) {
-        String generatedId = pos.getRow() + constants.PieceConstants.POSITION_SEPARATOR + pos.getCol();
-        return createPieceByCode(generatedId, code, playerId, pos, config);
     }
 
 }

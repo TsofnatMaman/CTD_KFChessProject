@@ -12,7 +12,7 @@ public enum ECondition {
     NON_CAPTURE(d -> d.board.getPiece(d.to) == null),
     
     /** Validates that the piece hasn't moved from its starting position */
-    FIRST_TIME(d -> d.pieceFrom.getId().equals(d.pieceFrom.getPos().toString())),
+    FIRST_TIME(d -> d.pieceFrom.isFirstMove()),
     
     /** Validates that the target square contains a piece that can be captured */
     CAPTURE(d -> d.board.getPiece(d.to) != null);
