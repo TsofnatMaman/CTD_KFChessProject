@@ -1,6 +1,7 @@
 package pieces;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Position implements Serializable {
     private int r;
@@ -79,5 +80,10 @@ public class Position implements Serializable {
     public static Position fromString(String s){
         String[] rowCol = s.split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator
         return new Position(Integer.parseInt(rowCol[0].trim()), Integer.parseInt(rowCol[1].trim()));
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(r, c);
     }
 }

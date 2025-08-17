@@ -67,8 +67,8 @@ public class PlayerCursor implements IPlayerCursor {
      */
     @Override
     public void draw(Graphics g, int panelWidth, int panelHeight) {
-        int squareWidth = panelWidth / ROWS;
-        int squareHeight = panelHeight / COLS;
+        int squareWidth = panelWidth / COLS;
+        int squareHeight = panelHeight / ROWS;
 
         int x = pos.getCol() * squareWidth;
         int y = pos.getRow() * squareHeight;

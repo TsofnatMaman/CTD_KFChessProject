@@ -1,6 +1,7 @@
 package game;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
@@ -30,9 +31,9 @@ public class LoadPieces {
         String csvResourcePath = utils.ConfigLoader.getConfig("piece.csv.path", "/board/board.csv"); // extracted to config.properties
 
         try (InputStream is = LoadPieces.class.getResourceAsStream(csvResourcePath)) {
-            assert is != null;
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+            if (is == null) throw new FileNotFoundException(csvResourcePath);
 
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
                 String line;
                 int row = 0;
 
