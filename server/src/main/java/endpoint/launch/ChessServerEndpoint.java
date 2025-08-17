@@ -2,17 +2,17 @@ package endpoint.launch;
 
 import board.BoardConfig;
 import board.Dimension;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constants.Messages;
 import constants.ServerConfig;
-import dto.GameDTO;
-import dto.Message;
-import dto.PlayerDTO;
-import dto.PlayerSelectedDTO;
+import constants.GameConstants;
+import dto.*;
 import game.Game;
 import interfaces.IGame;
 import interfaces.IPlayer;
+import player.PlayerFactory;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -26,18 +26,17 @@ import java.util.logging.Logger;
 public class ChessServerEndpoint {
 
     private static final Logger LOGGER = Logger.getLogger(ChessServerEndpoint.class.getName());
-
     private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
     private static final ObjectMapper mapper = new ObjectMapper();
-
     private static volatile IGame game = null;
 
-    private static final int MAX_PLAYERS = constants.GameConstants.MAX_PLAYERS;
-
+    private static final int MAX_PLAYERS = GameConstants.MAX_PLAYERS;
     private static final List<String> playersName = Collections.synchronizedList(new ArrayList<>(List.of(
             Messages.get(Messages.Key.PLAYER_1_NAME),
             Messages.get(Messages.Key.PLAYER_2_NAME)
     )));
+
+    // ---------------------- Connection Handling ----------------------
 
     @OnOpen
     public synchronized void onOpen(Session session) throws IOException {
@@ -49,142 +48,107 @@ public class ChessServerEndpoint {
         }
 
         sessionPlayerIds.put(session, playerId);
-
-        LOGGER.info(() -> Messages.get(Messages.Key.CLIENT_CONNECTED_LOG)
-                + session.getId()
-                + Messages.get(Messages.Key.ASSIGNED_PLAYERID_LOG)
-                + playerId
-        );
+        logInfo("Client connected: %s, assigned playerId: %d", session.getId(), playerId);
 
         if (sessionPlayerIds.size() < MAX_PLAYERS) {
-            Message<String> waitMsg = new Message<>(
-                    constants.CommandNames.WAIT,
-                    Messages.get(Messages.Key.WAIT_MESSAGE)
-            );
-            sendMessage(session, waitMsg);
+            sendMessage(session, new Message<>(EventType.WAIT,
+                    Messages.get(Messages.Key.WAIT_MESSAGE)));
         }
-    }
-
-    @OnMessage
-    public void onMessage(String message, Session session) {
-        LOGGER.info(() -> Messages.get(Messages.Key.RECEIVED_MESSAGE_LOG)
-                + session.getId() + ": " + message);
-
-        Integer playerId = sessionPlayerIds.get(session);
-        if (playerId == null) {
-            LOGGER.severe(Messages.get(Messages.Key.UNKNOWN_SESSION_ERROR));
-            return;
-        }
-
-        try {
-            Message<JsonNode> genericMsg = mapper.readValue(message, mapper.getTypeFactory()
-                    .constructParametricType(Message.class, JsonNode.class));
-
-            String type = genericMsg.getType();
-            JsonNode dataNode = genericMsg.getData();
-
-            switch (type) {
-                case constants.CommandNames.PLAYER_SELECTED:
-                    if (game == null) {
-                        LOGGER.warning("Game not initialized yet; ignoring selection from player " + playerId);
-                        return;
-                    }
-
-                    PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
-
-                    if (cmd.getPlayerId() != playerId) {
-                        LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
-                        return;
-                    }
-
-                    game.handleSelection(cmd.getPlayerId(), cmd.getSelection());
-
-                    broadcastMessage(new Message<>(constants.CommandNames.PLAYER_SELECTED, cmd));
-                    break;
-
-                case constants.CommandNames.SET_NAME:
-                    String name = dataNode.asText("");
-                    playersName.set(playerId, name);
-                    LOGGER.info(Messages.get(Messages.Key.SET_NAME_LOG, playerId, name));
-
-                    initializeGameIfReady();
-                    break;
-
-                default:
-                    LOGGER.severe(Messages.get(Messages.Key.UNKNOWN_MESSAGE_TYPE_ERROR, type));
-            }
-
-        } catch (Exception e) {
-            LOGGER.log(Level.SEVERE,
-                    Messages.get(Messages.Key.PROCESS_MESSAGE_ERROR, e.getMessage()),
-                    e);
-        }
-    }
-
-    private void initializeGameIfReady() {
-        synchronized (ChessServerEndpoint.class) {
-            if (sessionPlayerIds.size() == MAX_PLAYERS && game == null) {
-                BoardConfig boardConfig = new BoardConfig(
-                        new Dimension(constants.GameConstants.BOARD_SIZE),
-                        new Dimension(constants.GameConstants.SQUARE_SIZE * constants.GameConstants.BOARD_SIZE)
-                );
-
-                IPlayer[] players = player.PlayerFactory.createPlayers(
-                        new String[]{playersName.get(0), playersName.get(1)},
-                        boardConfig
-                );
-
-                game = new Game(boardConfig, players);
-                game.run();
-
-                GameDTO initialGameState = createInitialGameDTO();
-
-                for (Map.Entry<Session, Integer> entry : sessionPlayerIds.entrySet()) {
-                    Session s = entry.getKey();
-                    int id = entry.getValue();
-
-                    sendMessage(s, new Message<>(constants.CommandNames.GAME_INIT, initialGameState));
-                    sendMessage(s, new Message<>(constants.CommandNames.PLAYER_ID, id));
-                }
-            }
-        }
-    }
-
-    private void sendMessage(Session session, Message<?> message) {
-        if (session != null && session.isOpen()) {
-            try {
-                String json = mapper.writeValueAsString(message);
-                session.getBasicRemote().sendText(json);
-            } catch (IOException e) {
-                LOGGER.log(Level.WARNING, "Failed to send message to session " + session.getId(), e);
-            }
-        } else {
-            LOGGER.warning("Cannot send message; session is null or closed.");
-        }
-    }
-
-    private void broadcastMessage(Message<?> message) {
-        sessionPlayerIds.keySet().forEach(s -> sendMessage(s, message));
     }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
         sessionPlayerIds.remove(session);
-        LOGGER.info(() -> Messages.get(Messages.Key.CLIENT_DISCONNECTED_LOG)
-                + session.getId()
-                + Messages.get(Messages.Key.REASON_LOG)
-                + reason
-        );
+        logInfo("Client disconnected: %s, reason: %s", session.getId(), reason);
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
         LOGGER.log(Level.SEVERE,
-                Messages.get(Messages.Key.SESSION_ERROR_LOG, session != null ? session.getId() : "unknown", throwable.getMessage()),
-                throwable);
+                String.format("Session error for %s: %s", session != null ? session.getId() : "unknown",
+                        throwable.getMessage()), throwable);
     }
 
-    private static GameDTO createInitialGameDTO() {
+    // ---------------------- Message Handling ----------------------
+
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        System.out.println(message);
+        Integer playerId = sessionPlayerIds.get(session);
+        if (playerId == null) return;
+
+        try {
+            Message<JsonNode> genericMsg = mapper.readValue(message, new TypeReference<>() {});
+            handleMessageByType(genericMsg, session, playerId);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Failed to process message", e);
+        }
+    }
+
+    private void handleMessageByType(Message<JsonNode> msg, Session session, int playerId) throws IOException {
+        switch (msg.getType()) {
+            case PLAYER_SELECTED -> handlePlayerSelected(msg.getData(), playerId);
+            case SET_NAME -> handleSetName(msg.getData(), playerId, session);
+            default -> LOGGER.warning("Unknown message type: " + msg.getType());
+        }
+    }
+
+    private void handlePlayerSelected(JsonNode data, int playerId) throws IOException {
+        System.out.println(data);
+        if (game == null) return;
+
+        PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);
+        if (cmd.getPlayerId() != playerId) {
+            LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
+            return;
+        }
+
+        game.handleSelection(cmd.getPlayerId(), cmd.getSelection());
+        broadcastMessage(new Message<>(EventType.PLAYER_SELECTED, cmd));
+    }
+
+    private void handleSetName(JsonNode data, int playerId, Session session) {
+        String name = data.asText("");
+        playersName.set(playerId, name);
+        logInfo("Set name for player %d: %s", playerId, name);
+
+        initializeGameIfReady();
+    }
+
+    // ---------------------- Game Initialization ----------------------
+
+    private void initializeGameIfReady() {
+        synchronized (ChessServerEndpoint.class) {
+            if (sessionPlayerIds.size() < MAX_PLAYERS || game != null) return;
+            createGame();
+            sendInitialGameStateToAll();
+        }
+    }
+
+    private void createGame() {
+        BoardConfig boardConfig = new BoardConfig(
+                new Dimension(GameConstants.BOARD_SIZE),
+                new Dimension(GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE)
+        );
+
+        IPlayer[] players = PlayerFactory.createPlayers(
+                new String[]{playersName.get(0), playersName.get(1)},
+                boardConfig
+        );
+
+        game = new Game(boardConfig, players);
+        game.run();
+    }
+
+    private void sendInitialGameStateToAll() {
+        GameDTO initialGameState = createInitialGameDTO();
+        sessionPlayerIds.forEach((s, id) -> {
+            sendMessage(s, new Message<>(EventType.GAME_INIT, initialGameState));
+            sendMessage(s, new Message<>(EventType.PLAYER_ID, id));
+        });
+    }
+
+    private GameDTO createInitialGameDTO() {
         GameDTO gameDTO = new GameDTO();
         gameDTO.setBoardConfig(game.getBoard().getBoardConfig());
         gameDTO.setStartTimeNano(game.getStartTimeNano());
@@ -192,5 +156,26 @@ public class ChessServerEndpoint {
                 .map(PlayerDTO::from)
                 .toArray(PlayerDTO[]::new));
         return gameDTO;
+    }
+
+    // ---------------------- Messaging Helpers ----------------------
+
+    private void sendMessage(Session session, Message<?> message) {
+        if (session == null || !session.isOpen()) return;
+        try {
+            session.getBasicRemote().sendText(mapper.writeValueAsString(message));
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Failed to send message to session " + session.getId(), e);
+        }
+    }
+
+    private void broadcastMessage(Message<?> message) {
+        sessionPlayerIds.keySet().forEach(s -> sendMessage(s, message));
+    }
+
+    // ---------------------- Logging Helper ----------------------
+
+    private void logInfo(String template, Object... args) {
+        LOGGER.info(() -> String.format(template, args));
     }
 }

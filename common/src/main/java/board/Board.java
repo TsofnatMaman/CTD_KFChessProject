@@ -147,7 +147,8 @@ public class Board implements IBoard {
      */
     public void updateAll() {
         for (IPlayer player : players) {
-            for (IPiece piece : player.getPieces()) {
+            for (int i=0; i<player.getPieces().size(); i++) {
+                IPiece piece = player.getPieces().get(i);
                 if (piece.isCaptured()) continue;
 
                 if (piece.getCurrentState().isActionFinished()) {
@@ -160,6 +161,7 @@ public class Board implements IBoard {
                             players[target.getPlayer()].markPieceCaptured(target);
                         else
                             players[piece.getPlayer()].markPieceCaptured(piece);
+                        EventPublisher.getInstance().publish(EGameEvent.PIECE_CAPTURED, new GameEvent(EGameEvent.PIECE_CAPTURED, null));
                     }
 
                     int row = piece.getCurrentState().getTargetRow();
@@ -168,8 +170,9 @@ public class Board implements IBoard {
                     boardGrid[row][col] = piece;
                     isTarget[row][col] = -1;
 
-                    if(piece.getType() == EPieceType.P && (targetRow == 0 || targetRow == boardConfig.gridDimension.getX()-1))
-                        player.replacePToQ(piece, new Position(targetRow, targetCol), boardConfig);
+                    if(piece.getType() == EPieceType.P && (targetRow == 0 || targetRow == boardConfig.gridDimension.getX()-1)) {
+                        boardGrid[row][col] = player.replacePToQ(piece, new Position(targetRow, targetCol), boardConfig);
+                    }
 
                     if(piece.getCurrentStateName() == EState.MOVE)
                         EventPublisher.getInstance().publish(EGameEvent.PIECE_END_MOVED, new GameEvent(EGameEvent.PIECE_END_MOVED, null));

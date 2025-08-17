@@ -25,34 +25,36 @@ import java.util.List;
 import java.util.function.Consumer;
 
 /**
- * Panel for displaying the game board and handling player input.
- * Updated to support state updates from external sources (e.g., WebSocket).
+ * Pure UI panel: displays board, pieces, cursor, selection and legal moves.
+ * Receives all updates from external sources (controller).
  */
 public class BoardPanel extends JPanel implements IBoardView, IEventListener {
+
     private BufferedImage boardImage;
     private final IBoard board;
-    private final int playerId;
-
     private final IPlayerCursor cursor;
-
-    private Consumer<Void> onPlayerAction;
 
     private Position selected = null;
     private List<Position> legalMoves = Collections.emptyList();
+    private final Color selectColor;
+    private final int playerId;
 
+    private Consumer<Position> onPlayerAction; // returns selected cursor position
 
-    private final Color SELECT_COLOR; //new Color(255, 0, 0, 128);   // semi-transparent red
-
-    public BoardPanel(IBoard board, int playerId, IPlayerCursor pc) {
+    public BoardPanel(IBoard board, int playerId, IPlayerCursor cursor) {
         this.board = board;
-        this.cursor = pc;
+        this.cursor = cursor;
         this.playerId = playerId;
-        Color base = cursor.getColor();
-        SELECT_COLOR = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
 
-        setPreferredSize(new Dimension(constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE,
-                                      constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE)); // extracted board size
+        Color base = cursor.getColor();
+        selectColor = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
+
+        setPreferredSize(new Dimension(
+                constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE,
+                constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE
+        ));
         setFocusable(true);
+
         loadBoardImage();
 
         addKeyListener(new KeyAdapter() {
@@ -61,8 +63,10 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                 handleKey(e);
             }
         });
+
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
-        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
+
     }
 
     private void loadBoardImage() {
@@ -71,20 +75,15 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
             if (imageUrl != null) {
                 boardImage = ImageIO.read(imageUrl);
             } else {
-                System.err.println("Image not found in resources!");
-                LogUtils.logDebug("Image not found in resources!");
+                LogUtils.logDebug("Board image not found in resources!");
             }
         } catch (IOException e) {
-            String mes = "Exception loading board image: " + e.getMessage();
-            LogUtils.logDebug(mes);
-            throw new RuntimeException(mes);
+            LogUtils.logDebug("Exception loading board image: " + e.getMessage());
         }
     }
 
-    public void handleKey(KeyEvent e) {
-        int key = e.getKeyCode();
-
-        switch (key) {
+    private void handleKey(KeyEvent e) {
+        switch (e.getKeyCode()) {
             case KeyEvent.VK_UP -> cursor.moveUp();
             case KeyEvent.VK_DOWN -> cursor.moveDown();
             case KeyEvent.VK_LEFT -> cursor.moveLeft();
@@ -93,39 +92,26 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                 Position pos = cursor.getPosition();
                 if (selected == null) {
                     IPiece p = board.getPiece(pos);
-                    if (p == null || p.getPlayer() != playerId || p.isCaptured() || !p.getCurrentStateName().isCanAction()) {
-                        System.out.println("can not choose piece");
+                    if (p == null || p.isCaptured() || board.getPlayerOf(p) != playerId || !p.getCurrentStateName().isCanAction()) {
+                        LogUtils.logDebug("can not choose piece");
                     } else {
-                        selected = pos;
+                        selected = pos.copy();
                         legalMoves = board.getLegalMoves(pos);
                     }
                 } else {
                     selected = null;
                     legalMoves = Collections.emptyList();
                 }
-                if (onPlayerAction != null) onPlayerAction.accept(null);
+                if (onPlayerAction != null) onPlayerAction.accept(pos);
                 repaint();
             }
         }
-
         repaint();
     }
 
-    // SETTERS for external updates (e.g., from server)
-    public void setSelectedForPlayer(int playerId, Position selected) {
-        this.selected = selected;
-        repaint();
-    }
-
-    public void setLegalMovesForPlayer(int playerId, List<Position> moves) {
-        legalMoves = moves;
-        repaint();
-    }
-
-    public void setOnPlayerAction(Consumer<Void> handler) {
+    public void setOnPlayerAction(Consumer<Position> handler) {
         this.onPlayerAction = handler;
     }
-
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -138,21 +124,17 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        if (board != null)
-            BoardRenderer.draw(g, board, getWidth(), getHeight());
+        BoardRenderer.draw(g, board, getWidth(), getHeight());
+        cursor.draw(g, getWidth(), getHeight());
 
-        if (cursor != null) cursor.draw(g, getWidth(), getHeight());
-
-        Graphics2D g2 = (Graphics2D) g;
-        int cellW = getWidth() / constants.GameConstants.BOARD_COLS; // extracted board size
-        int cellH = getHeight() / constants.GameConstants.BOARD_ROWS; // extracted board size
-
-        // --- Player 1 selection and legal moves ---
         if (selected != null) {
-            g2.setColor(SELECT_COLOR);
+            Graphics2D g2 = (Graphics2D) g;
+            int cellW = getWidth() / constants.GameConstants.BOARD_COLS;
+            int cellH = getHeight() / constants.GameConstants.BOARD_ROWS;
+
+            g2.setColor(selectColor);
             g2.fillRect(selected.getCol() * cellW, selected.getRow() * cellH, cellW, cellH);
 
-            g2.setColor(SELECT_COLOR);
             for (Position move : legalMoves) {
                 int x = move.getCol() * cellW + cellW / 4;
                 int y = move.getRow() * cellH + cellH / 4;
@@ -161,17 +143,10 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                 g2.fillOval(x, y, w, h);
             }
         }
-
-    }
-
-    public IPlayerCursor getPlayerCursor() {
-        return cursor;
     }
 
     @Override
     public void onEvent(GameEvent event) {
         repaint();
-        if(event.type() == EGameEvent.PIECE_END_MOVED && selected != null)
-            legalMoves = board.getLegalMoves(selected);
     }
 }

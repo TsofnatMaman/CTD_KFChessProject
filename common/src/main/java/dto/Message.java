@@ -6,7 +6,7 @@ package dto;
  * @param <T> The type of the data payload
  */
 public class Message<T> {
-    private String type;
+    private EventType type;
     private T data;
 
     /**
@@ -19,16 +19,16 @@ public class Message<T> {
      * @param type The message type
      * @param data The message payload
      */
-    public Message(String type, T data) {
+    public Message(EventType type, T data) {
         this.type = type;
         this.data = data;
     }
 
-    public String getType() {
+    public EventType getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(EventType type) {
         this.type = type;
     }
 
@@ -38,5 +38,13 @@ public class Message<T> {
 
     public void setData(T data) {
         this.data = data;
+    }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "type=" + type +
+                ", data=" + data +
+                '}';
     }
 }

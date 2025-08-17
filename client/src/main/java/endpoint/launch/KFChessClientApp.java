@@ -2,14 +2,15 @@ package endpoint.launch;
 
 import constants.ServerConfig;
 import controller.GameController;
+import dto.EventType;
 import dto.GameDTO;
 import dto.PlayerDTO;
 import dto.PlayerSelectedDTO;
+import endpoint.view.AskUserName;
 import endpoint.view.GamePanel;
 import endpoint.view.WaitDialog;
 import game.Game;
 import interfaces.IPlayer;
-import sound.EventListener;
 import interfaces.IGame;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -21,12 +22,13 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import controller.GameController.GameEventListener;
 
 /**
  * Main client application class.
  * Handles connection, user input, game UI initialization, and shutdown.
  */
-public class KFChessClientApp implements GameController.GameEventListener {
+public class KFChessClientApp implements GameEventListener {
 
     private static final Logger logger = Logger.getLogger(KFChessClientApp.class.getName());
 
@@ -52,7 +54,7 @@ public class KFChessClientApp implements GameController.GameEventListener {
     }
 
     private void initUIAndConnect() throws Exception {
-        String username = askUsername();
+        String username = AskUserName.askUsername();
         if (username == null) { // User cancelled input
             shutdown();
             System.exit(0);
@@ -63,10 +65,9 @@ public class KFChessClientApp implements GameController.GameEventListener {
                 ServerConfig.HOST,
                 ServerConfig.PORT,
                 ServerConfig.WS_PATH,
-                ServerConfig.SERVER_ENDPOINT
-        );
+                ServerConfig.SERVER_ENDPOINT);
         client = new ChessClientEndpoint(new URI(wsUrl));
-        client.sendCommand(constants.CommandNames.SET_NAME, username);
+        client.sendCommand(EventType.SET_NAME, username);
 
         waitDialog = new WaitDialog();
         waitDialog.setOnCloseAction(() -> {
@@ -81,66 +82,26 @@ public class KFChessClientApp implements GameController.GameEventListener {
         boolean gotId = playerIdLatch.await(60, TimeUnit.SECONDS);
         if (!gotId) {
             logger.severe(utils.ConfigLoader.getMessage("error.no.playerId", "Did not receive playerId in time."));
-            SwingUtilities.invokeLater(() ->
-                    waitDialog.showOrUpdate(utils.ConfigLoader.getMessage(
-                            "error.no.playerId",
-                            "Error: Did not receive player ID from server."
-                    ))
-            );
+            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(utils.ConfigLoader.getMessage(
+                    "error.no.playerId",
+                    "Error: Did not receive player ID from server.")));
             shutdown();
             throw new RuntimeException("Failed to receive playerId from server");
         }
 
         if (!gameStarted) {
-            SwingUtilities.invokeLater(() ->
-                    waitDialog.showOrUpdate(utils.ConfigLoader.getMessage(
-                            "waiting.game.start",
-                            "Waiting for the game to start..."
-                    ))
-            );
+            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(utils.ConfigLoader.getMessage(
+                    "waiting.game.start",
+                    "Waiting for the game to start...")));
         }
-    }
-
-    /**
-     * Ask the user for their name, or null if cancelled.
-     */
-    private String askUsername() throws Exception {
-        final String[] result = new String[1];
-        final boolean[] cancelled = {false};
-
-        Runnable prompt = () -> {
-            String input = (String) JOptionPane.showInputDialog(
-                    null,
-                    utils.ConfigLoader.getMessage("enter.name", "Enter your name:"),
-                    utils.ConfigLoader.getMessage("welcome.title", "Welcome to KFCHESS"),
-                    JOptionPane.PLAIN_MESSAGE,
-                    null,
-                    null,
-                    null
-            );
-            if (input == null) { // Cancel or close
-                cancelled[0] = true;
-                return;
-            }
-            result[0] = input.trim().isEmpty()
-                    ? utils.ConfigLoader.getMessage("anonymous.name", "Anonymous")
-                    : input.trim();
-        };
-
-        if (SwingUtilities.isEventDispatchThread()) {
-            prompt.run();
-        } else {
-            SwingUtilities.invokeAndWait(prompt);
-        }
-
-        return cancelled[0] ? null : result[0];
     }
 
     // Implementation of GameController.GameEventListener methods:
 
     @Override
     public void onWaitMessage(String message) {
-        if (gameStarted) return;
+        if (gameStarted)
+            return;
         SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(message));
     }
 
@@ -160,11 +121,9 @@ public class KFChessClientApp implements GameController.GameEventListener {
             return;
         }
 
-        new EventListener();
-
         if (playerId == -1) {
             logger.warning("GameInit received before PlayerId. Saving gameDTO until PlayerId arrives...");
-            pendingGameDTO = gameDTO;  // שמור את gameDTO עד שיגיע playerId
+            pendingGameDTO = gameDTO; // שמור את gameDTO עד שיגיע playerId
         } else {
             SwingUtilities.invokeLater(() -> initializeGameUI(gameDTO));
         }
@@ -172,7 +131,8 @@ public class KFChessClientApp implements GameController.GameEventListener {
 
     @Override
     public void onPlayerSelected(PlayerSelectedDTO cmd) {
-        if (gameModel == null) return;
+        if (gameModel == null)
+            return;
 
         gameModel.handleSelection(cmd.getPlayerId(), cmd.getSelection());
         SwingUtilities.invokeLater(() -> {
@@ -185,7 +145,8 @@ public class KFChessClientApp implements GameController.GameEventListener {
     @Override
     public void onPlayerId(int id) {
         playerId = id;
-        logger.info(utils.ConfigLoader.getMessage("client.connected.log", "Received playerId: ") + playerId);
+        logger.info("Received playerId: " + playerId);
+
         playerIdLatch.countDown();
 
         if (pendingGameDTO != null) {
@@ -201,7 +162,8 @@ public class KFChessClientApp implements GameController.GameEventListener {
     }
 
     private void initializeGameUI(GameDTO gameDTO) {
-        JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1) + " - " + gameModel.getPlayerById(playerId).getName());
+        JFrame frame = new JFrame(
+                "KFCHESS - Player " + (playerId + 1) + " - " + gameModel.getPlayerById(playerId).getName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         gamePanel = new GamePanel(gameModel, playerId, client, new ObjectMapper());
@@ -239,6 +201,6 @@ public class KFChessClientApp implements GameController.GameEventListener {
                 throw new RuntimeException(e);
             }
         }, "App-Starter").start();
-        
+
     }
 }

@@ -2,6 +2,8 @@ package endpoint.launch;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import dto.EventType;
 import utils.LogUtils;
 
 import javax.websocket.*;
@@ -17,15 +19,16 @@ public class ChessClientEndpoint implements Closeable {
     private Session session;
     private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
     private volatile int playerId = -1;
-    private final ObjectMapper mapper = new ObjectMapper();
 
+    private final ObjectMapper mapper = new ObjectMapper();
     private final URI endpointURI;
+
     private final ScheduledExecutorService reconnectExecutor = Executors.newSingleThreadScheduledExecutor();
     private final AtomicBoolean connected = new AtomicBoolean(false);
     private final AtomicBoolean closing = new AtomicBoolean(false);
-
-    // Simple backoff state
     private int reconnectAttempts = 0;
+
+    // ---------------------- Constructor ----------------------
 
     public ChessClientEndpoint(URI endpointURI) throws Exception {
         this.endpointURI = endpointURI;
@@ -37,62 +40,84 @@ public class ChessClientEndpoint implements Closeable {
         container.connectToServer(this, endpointURI);
     }
 
+    // ---------------------- WebSocket Callbacks ----------------------
+
     @OnOpen
     public void onOpen(Session session) {
         this.session = session;
         connected.set(true);
         reconnectAttempts = 0;
-        System.out.println(utils.ConfigLoader.getMessage("client.connected.log", "Connected to server"));
+        log("Connected to server");
     }
 
     @OnMessage
     public void onMessage(String message) {
+        System.out.println(message);
         messageQueue.add(message);
-
-        try {
-            JsonNode root = mapper.readTree(message);
-            String type = root.path("type").asText("");
-            if (constants.CommandNames.PLAYER_ID.equals(type)) {
-                playerId = root.path("data").asInt(-1);
-                LogUtils.logDebug(utils.ConfigLoader.getMessage("client.connected.log", "Updated playerId to ") + playerId);
-            }
-        } catch (Exception e) {
-            LogUtils.logDebug("Failed to parse incoming message"+ e);
-        }
+        processMessage(message);
     }
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
         connected.set(false);
-        System.out.println(utils.ConfigLoader.getMessage("client.disconnected.log", "Connection closed: ") + reason);
-        if (!closing.get()) {
-            scheduleReconnect();
-        }
+        log("Connection closed: " + reason);
+        if (!closing.get()) scheduleReconnect();
     }
 
     @OnError
-    public void onError(Session session, Throwable thr) {
-        LogUtils.logDebug("WebSocket encountered error"+ thr);
-        // let onClose handle reconnect if needed
+    public void onError(Session session, Throwable throwable) {
+        LogUtils.logDebug("WebSocket error: " + throwable.getMessage());
+        // let onClose handle reconnect
     }
+
+    // ---------------------- Message Processing ----------------------
+
+    private void processMessage(String message) {
+        try {
+            JsonNode root = mapper.readTree(message);
+            String type = root.path("type").asText("");
+            JsonNode data = root.path("data");
+
+            EventType eventType;
+            try {
+                eventType = EventType.valueOf(type);
+            } catch (IllegalArgumentException e) {
+                eventType = EventType.UNKNOWN;
+            }
+
+            switch (eventType) {
+                case PLAYER_ID -> updatePlayerId(data.asInt(-1));
+                default -> LogUtils.logDebug("Unknown message type: " + type);
+            }
+
+
+        } catch (Exception e) {
+            LogUtils.logDebug("Failed to parse incoming message: " + e);
+        }
+    }
+
+    private void updatePlayerId(int id) {
+        playerId = id;
+        log("Updated playerId to " + playerId);
+    }
+
+    // ---------------------- Reconnect ----------------------
 
     private void scheduleReconnect() {
         reconnectAttempts++;
-        long delay = Math.min(60, (1 << Math.min(reconnectAttempts, 6))) ; // exponential backoff capped
+        long delay = Math.min(60, 1 << Math.min(reconnectAttempts, 6)); // exponential backoff
         reconnectExecutor.schedule(() -> {
+            if (closing.get()) return;
             try {
-                if (closing.get()) return;
                 connect();
             } catch (Exception e) {
-                LogUtils.logDebug("Reconnect attempt failed"+ e);
+                log("Reconnect attempt failed: " + e);
                 scheduleReconnect();
             }
         }, delay, TimeUnit.SECONDS);
     }
 
-    public int getPlayerId() {
-        return playerId;
-    }
+    // ---------------------- Sending Messages ----------------------
 
     public void sendText(String message) {
         if (session != null && session.isOpen()) {
@@ -102,13 +127,14 @@ public class ChessClientEndpoint implements Closeable {
         }
     }
 
-    // Helper for structured JSON message
-    public void sendCommand(String type, String data) throws Exception {
-        com.fasterxml.jackson.databind.node.ObjectNode msg = mapper.createObjectNode();
-        msg.put("type", type);
+    public void sendCommand(EventType type, String data) throws Exception {
+        ObjectNode msg = mapper.createObjectNode();
+        msg.put("type", type.toString());
         msg.put("data", data);
         sendText(mapper.writeValueAsString(msg));
     }
+
+    // ---------------------- Receiving Messages ----------------------
 
     public String waitForNextMessage() throws InterruptedException {
         return messageQueue.take();
@@ -118,6 +144,12 @@ public class ChessClientEndpoint implements Closeable {
         return messageQueue.poll(timeout, unit);
     }
 
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    // ---------------------- Close / Shutdown ----------------------
+
     @Override
     public void close() {
         closing.set(true);
@@ -126,9 +158,15 @@ public class ChessClientEndpoint implements Closeable {
             try {
                 session.close();
             } catch (IOException e) {
-                LogUtils.logDebug("Error closing WebSocket session"+e.getMessage());
+                log("Error closing WebSocket session: " + e.getMessage());
             }
         }
         reconnectExecutor.shutdownNow();
+    }
+
+    // ---------------------- Helper Logging ----------------------
+
+    private void log(String msg) {
+        System.out.println("[ChessClientEndpoint] " + msg);
     }
 }

@@ -2,22 +2,22 @@ package controller;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.EventType;
 import dto.GameDTO;
 import dto.PlayerSelectedDTO;
 import endpoint.launch.ChessClientEndpoint;
 import utils.LogUtils;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
 
 public class GameController implements Runnable {
 
-
     private final ChessClientEndpoint client;
     private final ObjectMapper mapper;
-
-    private final List<GameEventListener> listeners = new ArrayList<>();
+    private final List<GameEventListener> listeners = new CopyOnWriteArrayList<>();
 
     private volatile boolean running = true;
     private Thread listenerThread;
@@ -44,23 +44,20 @@ public class GameController implements Runnable {
             try {
                 listenerThread.join(2000);
             } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
             }
             LogUtils.logDebug("GameController stopped listening thread");
         }
     }
 
     public void addListener(GameEventListener listener) {
-        synchronized (listeners) {
-            listeners.add(listener);
-            LogUtils.logDebug("Added listener: " + listener);
-        }
+        listeners.add(listener);
+        LogUtils.logDebug("Added listener: " + listener);
     }
 
     public void removeListener(GameEventListener listener) {
-        synchronized (listeners) {
-            listeners.remove(listener);
-            LogUtils.logDebug("Removed listener: " + listener);
-        }
+        listeners.remove(listener);
+        LogUtils.logDebug("Removed listener: " + listener);
     }
 
     @Override
@@ -68,117 +65,69 @@ public class GameController implements Runnable {
         LogUtils.logDebug("GameController run() loop started");
         while (running) {
             try {
-                String message = client.pollNextMessage(1, TimeUnit.SECONDS);
+                String message = client.pollNextMessage(500, TimeUnit.MILLISECONDS);
                 if (message == null) continue;
 
                 LogUtils.logDebug("Received message: " + message);
 
                 JsonNode root = mapper.readTree(message);
-                String type = root.path("type").asText("");
+                String typeStr = root.path("type").asText("");
                 JsonNode dataNode = root.path("data");
 
-                switch (type) {
-                    case constants.CommandNames.WAIT -> {
-                        LogUtils.logDebug("Dispatching WAIT message");
-                        fireWaitMessage(dataNode.asText(""));
-                    }
-                    case constants.CommandNames.GAME_INIT -> {
-                        LogUtils.logDebug("Dispatching GAME_INIT message");
-                        GameDTO gameDTO = mapper.treeToValue(dataNode, GameDTO.class);
-                        fireGameInit(gameDTO);
-                    }
-                    case constants.CommandNames.PLAYER_SELECTED -> {
-                        LogUtils.logDebug("Dispatching PLAYER_SELECTED message");
-                        PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
-                        firePlayerSelected(cmd);
-                    }
-                    case constants.CommandNames.PLAYER_ID -> {
-                        int playerId = dataNode.asInt(-1);
-                        LogUtils.logDebug("Dispatching PLAYER_ID message: " + playerId);
-                        firePlayerId(playerId);
-                    }
-                    default -> {
-                        LogUtils.logDebug("Unknown message type: " + type);
-                        fireUnknownMessage(type);
-                    }
+                EventType type;
+                try {
+                    type = EventType.valueOf(typeStr);
+                } catch (IllegalArgumentException e) {
+                    type = EventType.UNKNOWN;
                 }
+
+                switch (type) {
+                    case WAIT -> fireEvent(l -> l.onWaitMessage(dataNode.asText("")));
+                    case GAME_INIT -> {
+                        GameDTO gameDTO = mapper.treeToValue(dataNode, GameDTO.class);
+                        fireEvent(l -> l.onGameInit(gameDTO));
+                    }
+                    case PLAYER_SELECTED -> {
+                        PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
+                        fireEvent(l -> l.onPlayerSelected(cmd));
+                    }
+                    case PLAYER_ID -> {
+                        int playerId = dataNode.asInt(-1);
+                        fireEvent(l -> l.onPlayerId(playerId));
+                    }
+                    default -> fireEvent(l -> l.onUnknownMessage(typeStr));
+                }
+
             } catch (InterruptedException e) {
                 LogUtils.logDebug("GameController thread interrupted, stopping...");
+                Thread.currentThread().interrupt();
                 running = false;
             } catch (Exception e) {
-                LogUtils.logDebug("Error in GameController loop"+ e);
+                LogUtils.logDebug("Error in GameController loop: " + e);
             }
         }
         LogUtils.logDebug("GameController run() loop ended");
     }
 
-    // Event firing methods:
-
-    private void fireWaitMessage(String message) {
-        synchronized (listeners) {
-            for (GameEventListener l : listeners) {
-                try {
-                    l.onWaitMessage(message);
-                } catch (Exception e) {
-                    LogUtils.logDebug("Listener error in onWaitMessage"+ e);
-                }
-            }
-        }
-    }
-
-    private void fireGameInit(GameDTO gameDTO) {
-        synchronized (listeners) {
-            for (GameEventListener l : listeners) {
-                try {
-                    l.onGameInit(gameDTO);
-                } catch (Exception e) {
-                    LogUtils.logDebug("Listener error in onGameInit"+ e);
-                }
-            }
-        }
-    }
-
-    private void firePlayerSelected(PlayerSelectedDTO cmd) {
-        synchronized (listeners) {
-            for (GameEventListener l : listeners) {
-                try {
-                    l.onPlayerSelected(cmd);
-                } catch (Exception e) {
-                    LogUtils.logDebug("Listener error in onPlayerSelected"+ e);
-                }
-            }
-        }
-    }
-
-    private void firePlayerId(int playerId) {
-        synchronized (listeners) {
-            for (GameEventListener l : listeners) {
-                try {
-                    l.onPlayerId(playerId);
-                } catch (Exception e) {
-                    LogUtils.logDebug("Listener error in onPlayerId"+ e);
-                }
-            }
-        }
-    }
-
-    private void fireUnknownMessage(String type) {
-        synchronized (listeners) {
-            for (GameEventListener l : listeners) {
-                try {
-                    l.onUnknownMessage(type);
-                } catch (Exception e) {
-                    LogUtils.logDebug("Listener error in onUnknownMessage"+ e);
-                }
+    private void fireEvent(Consumer<GameEventListener> action) {
+        for (GameEventListener l : listeners) {
+            try {
+                action.accept(l);
+            } catch (Exception e) {
+                LogUtils.logDebug("Listener error: " + e);
             }
         }
     }
 
     public interface GameEventListener {
         void onWaitMessage(String message);
+
         void onGameInit(GameDTO gameDTO);
+
         void onPlayerSelected(PlayerSelectedDTO cmd);
+
         void onPlayerId(int playerId);
+
         void onUnknownMessage(String type);
     }
 }

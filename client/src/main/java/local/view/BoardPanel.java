@@ -98,7 +98,7 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                     if (p == null || p.isCaptured() || board.getPlayerOf(p) != 0 || !p.getCurrentStateName().isCanAction()) {
                         LogUtils.logDebug("can not choose piece");
                     } else {
-                        selected1 = pos;
+                        selected1 = pos.copy();
                         legalMoves1 = board.getLegalMoves(pos);
                     }
                 } else {
@@ -121,7 +121,7 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                         System.err.println("can not choose piece");
                         LogUtils.logDebug("can not choose piece");
                     } else {
-                        selected2 = pos;
+                        selected2 = pos.copy();
                         legalMoves2 = board.getLegalMoves(pos);
                     }
                 } else {

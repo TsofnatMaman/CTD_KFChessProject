@@ -1,5 +1,6 @@
 package viewUtils;
 
+import constants.PlayerConstants;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
@@ -29,6 +30,11 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
         setPreferredSize(new Dimension(200, 0));
 
         JLabel nameLabel = new JLabel(player.getName());
+        nameLabel.setOpaque(true); // חשוב כדי שהצבע יראה גם כרקע
+        nameLabel.setBackground(PlayerConstants.PIECES_COLOR[player.getId()]);
+        nameLabel.setForeground(PlayerConstants.PLAYER_COLORS[player.getId()]); // אפשר לבחור צבע טקסט מנוגד
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER); // יפה יותר למרכז
+
         scoreLabel = new JLabel("Score: "+player.getScore());
 
         movesArea = new JTextArea(10, 15);
@@ -37,7 +43,7 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
         movesArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(movesArea);
 
-        JPanel topPanel = new JPanel(new GridLayout(2,1));
+        JPanel topPanel = new JPanel(new GridLayout(2, 1));
         topPanel.add(nameLabel);
         topPanel.add(scoreLabel);
 

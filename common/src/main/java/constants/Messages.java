@@ -24,9 +24,8 @@ public final class Messages {
         SESSION_ERROR_LOG("session.error.log", "Error on session %s: %s"),
         UNKNOWN_MESSAGE_TYPE_ERROR("unknown.message.type.error", "Unknown message type: %s"),
         PROCESS_MESSAGE_ERROR("process.message.error", "Failed to process message: %s"),
-        PLAYER_1_NAME("player.1.name", "player 1"),
-        PLAYER_2_NAME("player.2.name", "player 2"),
-        PLAYER_ID_UPDATED("player.id.updated", "Updated playerId to %d");
+        PLAYER_1_NAME("player.1.name", "player Black"),
+        PLAYER_2_NAME("player.2.name", "player White");
 
         private final String key;
         private final String defaultValue;
