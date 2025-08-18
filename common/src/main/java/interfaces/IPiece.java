@@ -26,18 +26,6 @@ public interface IPiece extends Serializable {
     EPieceType getType();
 
     /**
-     * Sets the state of the piece.
-     * @param newStateName The new state
-     */
-    void setState(EState newStateName);
-
-    /**
-     * Gets the current state object.
-     * @return The current state
-     */
-    IState getCurrentState();
-
-    /**
      * Updates the piece's state.
      */
     void update();
@@ -77,12 +65,6 @@ public interface IPiece extends Serializable {
     int getCol();
 
     /**
-     * Gets the current state name.
-     * @return The current state name
-     */
-    EState getCurrentStateName();
-
-    /**
      * Gets the current pixel position of the piece.
      * @return The pixel position
      */
@@ -100,11 +82,15 @@ public interface IPiece extends Serializable {
      * Returns true if the piece can move over other pieces.
      * @return true if can move over, false otherwise
      */
-    boolean isCanCapturable();
+    boolean canCapturable();
 
     Position getPos();
 
     boolean isFirstMove();
 
     void setFirstMove(boolean firstMove);
+
+    IState getCurrentState();
+
+    boolean canAction();
 }

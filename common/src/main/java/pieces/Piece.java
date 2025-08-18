@@ -2,49 +2,32 @@ package pieces;
 
 import interfaces.IState;
 import interfaces.IPiece;
-import interfaces.EState;
 import moves.Move;
 import moves.Moves;
-import utils.LogUtils;
+import state.StateMachine;
 
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 public class Piece implements IPiece {
     private final EPieceType type;
     private final int playerId;
     private List<Move> moves;
-    private final PieceTemplate template;
-    private IState currentState;
-    private EState currentStateName;
+    private final StateMachine fsm;
     private Position position;
     private boolean wasCaptured;
     private boolean isFirstMove;
 
-    public Piece(EPieceType type, int playerId, PieceTemplate template, EState initialState, Position position) throws IOException {
+    public Piece(EPieceType type, int playerId, StateMachine sm, Position position) throws IOException {
         this.type = type;
         this.playerId = playerId;
-        this.template = template;
-        this.currentStateName = initialState;
-        this.currentState = template.getState(initialState);
         this.position = position;
         this.isFirstMove = true;
+        this.fsm = sm;
 
         this.moves = Moves.createMovesList(type, playerId);
-    }
-
-    public PieceTemplate getTemplate() {
-        return template;
-    }
-
-    @Override
-    public IState getCurrentState() {
-        return currentState;
-    }
-
-    public void setCurrentState(IState newState) {
-        this.currentState = newState;
     }
 
     public Position getPosition() {
@@ -65,75 +48,29 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public EState getCurrentStateName() {
-        return currentStateName;
-    }
-
-    @Override
     public int getPlayer() {
         return playerId;
     }
 
     @Override
-    public void setState(EState newStateName) {
-        IState state = template.getState(newStateName);
-        if (state != null && !newStateName.equals(currentStateName)) {
-            currentStateName = newStateName;
-            currentState = state;
-
-            // Update state.startPos before reset
-            currentState.reset(newStateName, position, position);
-        } else if (state == null) {
-            System.err.println("State '" + newStateName + "' not found!");
-            LogUtils.logDebug("State '" + newStateName + "' not found!");
-        }
-    }
-
-    @Override
     public void update() {
-        currentState.update();
+        Optional<EPieceEvent> event = fsm.update();
 
-        if (currentState.isActionFinished()) {
+        if (event.isPresent() && event.get() == EPieceEvent.DONE) {
             // Update logical position only after the action is finished
-            setPosition(new Position(currentState.getTargetRow(), currentState.getTargetCol()));
-
-            EState nextState = currentState.getPhysics().getNextStateWhenFinished();
-
-            setState(nextState);
-            return; // Stop to prevent transitioning state twice in one update
-        }
-
-        // Automatic transition if animation is finished
-        if (currentState.getGraphics() != null && currentState.getGraphics().isAnimationFinished()) {
-            EState nextState = currentState.getPhysics().getNextStateWhenFinished();
-            setState(nextState);
-
+            setPosition(fsm.getCurrentState().getPhysics().getTargetPos());//TODO:maybe copy
         }
     }
 
     @Override
     public void move(Position to) {
-        IState state = template.getState(EState.MOVE);
+        fsm.onEvent(EPieceEvent.MOVE, position, to);
         setFirstMove(false);
-        if (state != null) {
-            currentStateName = EState.MOVE;
-            currentState = state;
-            currentState.reset(EState.MOVE, position, to);
-        } else {
-            LogUtils.logDebug("Missing 'move' state!");
-        }
     }
 
     @Override
     public void jump() {
-        IState state = template.getState(EState.JUMP);
-        if (state != null) {
-            currentStateName = EState.JUMP;
-            currentState = state;
-            currentState.reset(EState.JUMP,position, position);
-        } else {
-            LogUtils.logDebug("Missing 'jump' state!");
-        }
+        fsm.onEvent(EPieceEvent.JUMP);
     }
 
     @Override
@@ -158,7 +95,7 @@ public class Piece implements IPiece {
 
     @Override
     public Point2D.Double getCurrentPixelPosition() {
-        return currentState.getCurrentPosition();
+        return fsm.getCurrentState().getCurrentPosition();
     }
 
     @Override
@@ -172,8 +109,8 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public boolean isCanCapturable(){
-        return currentStateName.isCanCapturable();
+    public boolean canCapturable(){
+        return fsm.getCurrentState().getName().isCanCapturable();
     }
 
     @Override
@@ -194,5 +131,15 @@ public class Piece implements IPiece {
     @Override
     public void setFirstMove(boolean firstMove) {
         isFirstMove = firstMove;
+    }
+
+    @Override
+    public IState getCurrentState(){
+        return fsm.getCurrentState();
+    }
+
+    @Override
+    public boolean canAction(){
+        return fsm.getCurrentState().getName().isCanAction();
     }
 }

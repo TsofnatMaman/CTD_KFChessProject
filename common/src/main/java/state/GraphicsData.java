@@ -1,6 +1,8 @@
 package state;
 
-import interfaces.EState;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import interfaces.IGraphicsData;
 import pieces.Position;
 
@@ -9,13 +11,19 @@ import java.awt.image.BufferedImage;
 /**
  * Handles graphics data for piece animation.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GraphicsData implements IGraphicsData {
-    private final BufferedImage[] frames;
-    private final int totalFrames;
+    @JsonIgnore
+    private BufferedImage[] frames;
+    private int totalFrames;
     private int currentFrame;
-    private final double framesPerSec;
-    private final boolean isLoop;
+    @JsonProperty("frames_per_sec")
+    private double framesPerSec;
+    @JsonProperty("is_loop")
+    private boolean isLoop;
     private long lastFrameTimeNanos;
+
+    public GraphicsData(){}
 
     /**
      * Constructs GraphicsData for piece animation.
@@ -119,5 +127,10 @@ public class GraphicsData implements IGraphicsData {
     @Override
     public int getCurrentFrameIdx(){
         return currentFrame;
+    }
+
+    @Override
+    public void setFrames(BufferedImage[] frames) {
+        this.frames = frames;
     }
 }

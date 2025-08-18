@@ -1,0 +1,7 @@
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle
+short_rest,done,idle

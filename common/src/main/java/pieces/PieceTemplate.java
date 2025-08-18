@@ -1,6 +1,6 @@
 package pieces;
 
-import interfaces.EState;
+import state.EState;
 import interfaces.IState;
 import java.io.Serializable;
 import java.util.Map;

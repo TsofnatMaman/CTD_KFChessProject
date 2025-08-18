@@ -5,13 +5,10 @@ import graphics.GraphicsLoader;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import interfaces.EState;
+import state.*;
 import interfaces.IGraphicsData;
 import interfaces.IPhysicsData;
 import interfaces.IState;
-import state.GraphicsData;
-import state.PhysicsData;
-import state.State;
 import utils.LogUtils;
 
 import java.awt.image.BufferedImage;
@@ -64,26 +61,21 @@ public class PiecesFactory {
 
                 JsonNode root = mapper.readTree(is);
                 JsonNode physicsNode = root.path("physics");
-                double speed = physicsNode.path("speed_m_per_sec").asDouble(0.0);
-                EState nextState = EState.getValueOf(physicsNode.path("next_state_when_finished").asText(stateName.toString()));
 
-                IPhysicsData physics = new PhysicsData(speed, nextState);
+                IPhysicsData physics = mapper.treeToValue(physicsNode, PhysicsData.class);
 
                 JsonNode graphicsNode = root.path("graphics");
-                int fps = graphicsNode.path("frames_per_sec")
-                        .asInt(Integer.parseInt(utils.ConfigLoader.getConfig("piece.sprite.frames_per_sec", "1")));
-                boolean isLoop = graphicsNode.path("is_loop")
-                        .asBoolean(Boolean.parseBoolean(utils.ConfigLoader.getConfig("piece.sprite.is_loop", "true")));
+                IGraphicsData graphicsData = mapper.treeToValue(graphicsNode, GraphicsData.class);
 
                 BufferedImage[] sprites = GraphicsLoader.loadAllSprites(code, playerId, stateName);
                 if (sprites.length == 0) {
-                    System.err.println("No sprites for state: " + stateName);
                     LogUtils.logDebug("No sprites for state: " + stateName);
                     continue;
                 }
 
-                IGraphicsData graphics = new GraphicsData(sprites, fps, isLoop);
-                IState state = new State(stateName, pos, pos, TILE_SIZE, physics, graphics);
+                graphicsData.setFrames(sprites);
+
+                IState state = new State(stateName, pos, pos, TILE_SIZE, physics, graphicsData);
                 states.put(stateName, state);
             }
 
@@ -99,8 +91,11 @@ public class PiecesFactory {
             EState initialState = states.containsKey(EState.LONG_REST) ? EState.LONG_REST
                     : states.keySet().iterator().next();
 
+
+            StateMachine sm = new StateMachine(states, new TransitionTable(basePath+"transitions.csv"), initialState);
+
             // Create and return piece with template
-            return new Piece(code, playerId, template, initialState, pos);
+            return new Piece(code, playerId, sm, pos);
 
         } catch (Exception e) {
             String mes = "Exception in createPieceByCode: " + e.getMessage();

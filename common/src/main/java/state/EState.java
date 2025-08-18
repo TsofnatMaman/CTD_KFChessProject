@@ -1,4 +1,4 @@
-package interfaces;
+package state;
 
 /**
  * Enum representing possible states for a piece.

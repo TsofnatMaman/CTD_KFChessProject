@@ -1,15 +1,17 @@
 package state;
 
-import interfaces.EState;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import interfaces.IPhysicsData;
 import pieces.Position;
 
 /**
  * Handles physics data for piece movement.
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PhysicsData implements IPhysicsData {
+    @JsonProperty("speed_m_per_sec")
     private double speedMetersPerSec;
-    private EState nextStateWhenFinished;
 
     private double currentX, currentY;
     private Position startPos;
@@ -18,14 +20,13 @@ public class PhysicsData implements IPhysicsData {
 
     private long startTimeNanos;
 
+    public PhysicsData(){}
     /**
      * Constructs PhysicsData for piece movement.
      * @param speedMetersPerSec The speed in meters per second
-     * @param nextStateWhenFinished The next state when movement is finished
      */
-    public PhysicsData(double speedMetersPerSec, EState nextStateWhenFinished) {
+    public PhysicsData(double speedMetersPerSec) {
         this.speedMetersPerSec = speedMetersPerSec;
-        this.nextStateWhenFinished = nextStateWhenFinished;
     }
 
     /**
@@ -44,24 +45,6 @@ public class PhysicsData implements IPhysicsData {
     @Override
     public void setSpeedMetersPerSec(double speedMetersPerSec) {
         this.speedMetersPerSec = speedMetersPerSec;
-    }
-
-    /**
-     * Gets the next state when movement is finished.
-     * @return The next state
-     */
-    @Override
-    public EState getNextStateWhenFinished() {
-        return nextStateWhenFinished;
-    }
-
-    /**
-     * Sets the next state when movement is finished.
-     * @param nextStateWhenFinished The next state
-     */
-    @Override
-    public void setNextStateWhenFinished(EState nextStateWhenFinished) {
-        this.nextStateWhenFinished = nextStateWhenFinished;
     }
 
     /**
@@ -149,5 +132,15 @@ public class PhysicsData implements IPhysicsData {
     @Override
     public double getCurrentY() {
         return currentY;
+    }
+
+    @Override
+    public Position getStartPos() {
+        return startPos;
+    }
+
+    @Override
+    public Position getTargetPos() {
+        return targetPos;
     }
 }

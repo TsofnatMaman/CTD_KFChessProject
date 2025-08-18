@@ -106,7 +106,7 @@ public class Player implements IPlayer {
             }
 
             if (board.hasPiece(selected)
-                    && piece.getCurrentStateName().isCanAction()) {
+                    && piece.canAction()) {
                 setPendingFrom(selected);
             } else {
                 LogUtils.logDebug("Cannot choose piece at " + selected + " for player " + id);

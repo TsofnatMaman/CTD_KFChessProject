@@ -143,31 +143,23 @@ public class Board implements IBoard {
                 if (piece.isCaptured()) continue;
 
                 if (piece.getCurrentState().isActionFinished()) {
-                    int targetRow = piece.getCurrentState().getTargetRow();
-                    int targetCol = piece.getCurrentState().getTargetCol();
-                    IPiece target = boardGrid[targetRow][targetCol];
+                    Position targetPos = piece.getCurrentState().getPhysics().getTargetPos();
+                    IPiece target = boardGrid[targetPos.getRow()][targetPos.getCol()];
 
                     if (target != null && target != piece && !target.isCaptured()) {
-                        if (target.isCanCapturable())
+                        if (target.canCapturable())
                             players[target.getPlayer()].markPieceCaptured(target);
                         else
                             players[piece.getPlayer()].markPieceCaptured(piece);
                         EventPublisher.getInstance().publish(EGameEvent.PIECE_CAPTURED, new GameEvent(EGameEvent.PIECE_CAPTURED, null));
                     }
 
-                    int row = piece.getCurrentState().getTargetRow();
-                    int col = piece.getCurrentState().getTargetCol();
+                    boardGrid[targetPos.getRow()][targetPos.getCol()] = piece;
+                    isTarget[targetPos.getRow()][targetPos.getCol()] = -1;
 
-                    boardGrid[row][col] = piece;
-                    isTarget[row][col] = -1;
-
-                    if(piece.getType() == EPieceType.P && (targetRow == 0 || targetRow == boardConfig.gridDimension.getX()-1)) {
-                        boardGrid[row][col] = player.replacePToQ(piece, new Position(targetRow, targetCol), boardConfig);
+                    if(piece.getType() == EPieceType.P && (targetPos.getRow() == 0 || targetPos.getRow() == boardConfig.gridDimension.getX()-1)) {
+                        boardGrid[targetPos.getRow()][targetPos.getCol()] = player.replacePToQ(piece, targetPos.copy(), boardConfig);
                     }
-
-                    if(piece.getCurrentStateName() == EState.MOVE)
-                        EventPublisher.getInstance().publish(EGameEvent.PIECE_END_MOVED, new GameEvent(EGameEvent.PIECE_END_MOVED, null));
-
                 }
 
                 piece.update();
@@ -200,7 +192,7 @@ public class Board implements IBoard {
             return false;
 
         // Check resting states first
-        if (!fromPiece.getCurrentStateName().isCanAction())
+        if (!fromPiece.canAction())
             return false;
 
         // Check if the move is in the legal move list
@@ -250,7 +242,7 @@ public class Board implements IBoard {
      */
     @Override
     public boolean isJumpLegal(IPiece p) {
-        return p.getCurrentStateName().isCanAction();
+        return p.canAction();
     }
 
     /**

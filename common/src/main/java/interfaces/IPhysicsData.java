@@ -1,6 +1,7 @@
 package interfaces;
 
 import pieces.Position;
+import state.EState;
 
 /**
  * Interface for physics data operations for piece movement.
@@ -17,18 +18,6 @@ public interface IPhysicsData {
      * @param speedMetersPerSec Speed value
      */
     void setSpeedMetersPerSec(double speedMetersPerSec);
-
-    /**
-     * Gets the next state when movement is finished.
-     * @return The next state
-     */
-    EState getNextStateWhenFinished();
-
-    /**
-     * Sets the next state when movement is finished.
-     * @param nextStateWhenFinished The next state
-     */
-    void setNextStateWhenFinished(EState nextStateWhenFinished);
 
     /**
      * Resets the physics data for a new movement.
@@ -62,4 +51,8 @@ public interface IPhysicsData {
      * @return The Y position
      */
     double getCurrentY();
+
+    Position getStartPos();
+
+    Position getTargetPos();
 }

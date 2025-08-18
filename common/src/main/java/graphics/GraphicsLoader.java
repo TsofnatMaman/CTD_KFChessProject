@@ -1,6 +1,6 @@
 package graphics;
 
-import interfaces.EState;
+import state.EState;
 
 import javax.imageio.ImageIO;
 import java.awt.Image;

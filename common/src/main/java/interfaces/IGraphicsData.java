@@ -1,6 +1,7 @@
 package interfaces;
 
 import pieces.Position;
+import state.EState;
 
 import java.awt.image.BufferedImage;
 
@@ -58,4 +59,6 @@ public interface IGraphicsData {
     BufferedImage getCurrentFrame();
 
     int getCurrentFrameIdx();
+
+    void setFrames(BufferedImage[] frames);
 }
