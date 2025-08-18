@@ -46,8 +46,6 @@ public interface IGame {
 
     long getStartTimeNano();
 
-    long getElapsedTimeNano();
-
     IPlayer[] getPlayers();
 
     boolean isRunning();

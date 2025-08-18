@@ -1,5 +1,6 @@
 package state;
 
+import board.BoardConfig;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import interfaces.IPhysicsData;
@@ -12,15 +13,17 @@ import pieces.Position;
 public class PhysicsData implements IPhysicsData {
     @JsonProperty("speed_m_per_sec")
     private double speedMetersPerSec;
+    @JsonProperty("action_time")
+    private double actionTime;
 
     private double currentX, currentY;
     private Position startPos;
     private Position targetPos;
-    private double tileSize;
+    private BoardConfig bc;
 
     private long startTimeNanos;
 
-    public PhysicsData(){}
+    public PhysicsData(){actionTime = -1;}
     /**
      * Constructs PhysicsData for piece movement.
      * @param speedMetersPerSec The speed in meters per second
@@ -52,17 +55,16 @@ public class PhysicsData implements IPhysicsData {
      * @param state The state of the piece
      * @param startPos The starting position
      * @param to The target position
-     * @param tileSize The size of a tile
      * @param startTimeNanos The start time in nanoseconds
      */
     @Override
-    public void reset(EState state, Position startPos, Position to, double tileSize, long startTimeNanos) {
-        this.currentX = startPos.getCol() * tileSize;
-        this.currentY = startPos.getRow() * tileSize;
+    public void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos) {
+        this.currentX = startPos.getCol() * ((double) bc.physicsDimension.getX() / bc.gridDimension.getX());
+        this.currentY = startPos.getRow() * ((double) bc.physicsDimension.getY() / bc.gridDimension.getY());
 
         this.startPos = startPos;
         this.targetPos = to;
-        this.tileSize = tileSize;
+        this.bc = bc;
         this.startTimeNanos = startTimeNanos;
     }
 
@@ -70,20 +72,19 @@ public class PhysicsData implements IPhysicsData {
      * Updates the physics data for the piece.
      */
     @Override
-    public void update() {
-        updatePosition();
+    public void update(long now) {
+        updatePosition(now);
     }
 
     /**
      * Updates the current position based on elapsed time and speed.
      */
-    private void updatePosition() {
+    private void updatePosition(long now) {
         double speed = getSpeedMetersPerSec();
-        long now = System.nanoTime();
         double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
 
-        double dx = targetPos.dx(startPos) * tileSize;
-        double dy = targetPos.dy(startPos) * tileSize;
+        double dx = targetPos.dx(startPos) * ((double) bc.physicsDimension.getX() / bc.gridDimension.getX());
+        double dy = targetPos.dy(startPos) * ((double) bc.physicsDimension.getY() / bc.gridDimension.getY());
 
         double totalDistance = Math.sqrt(dx * dx + dy * dy);
 
@@ -92,8 +93,8 @@ public class PhysicsData implements IPhysicsData {
         double distanceSoFar = Math.min(speed * elapsedSec, totalDistance);
         double t = distanceSoFar / totalDistance;
 
-        currentX = (startPos.getCol() * tileSize) + dx * t;
-        currentY = (startPos.getRow() * tileSize) + dy * t;
+        currentX = (startPos.getCol() * ((double) bc.physicsDimension.getX() / bc.gridDimension.getX())) + dx * t;
+        currentY = (startPos.getRow() * ((double) bc.physicsDimension.getY() / bc.gridDimension.getY())) + dy * t;
     }
 
     /**
@@ -101,19 +102,21 @@ public class PhysicsData implements IPhysicsData {
      * @return true if movement is finished, false otherwise
      */
     @Override
-    public boolean isMovementFinished() {
-        if (targetPos == null)
-            return false;
-        double speed = getSpeedMetersPerSec();
-        long now = System.nanoTime();
-        double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
+    public boolean isActionFinished() {
+        if (actionTime != -1){
+            long elapsedNanos = System.nanoTime() - startTimeNanos;
+            return elapsedNanos >= (long)(actionTime * 1_000_000_000L);
+        }
 
-        double dx = targetPos.dx(startPos) * tileSize;
-        double dy = targetPos.dy(startPos) * tileSize;
+        if(speedMetersPerSec == 0)
+            return false;
+
+        double elapsedSec = (System.nanoTime() - startTimeNanos) / 1_000_000_000.0;
+        double dx = targetPos.dx(startPos) * ((double) bc.physicsDimension.getX() / bc.gridDimension.getX());
+        double dy = targetPos.dy(startPos) * ((double) bc.physicsDimension.getY() / bc.gridDimension.getY());
         double totalDistance = Math.sqrt(dx * dx + dy * dy);
 
-        double distanceSoFar = speed * elapsedSec;
-        return distanceSoFar >= totalDistance;
+        return speedMetersPerSec * elapsedSec >= totalDistance;
     }
 
     /**

@@ -3,7 +3,6 @@ package player;
 import board.BoardConfig;
 import command.JumpCommand;
 import command.MoveCommand;
-import constants.PieceConstants;
 import interfaces.ICommand;
 import interfaces.IBoard;
 import interfaces.IPiece;
@@ -70,13 +69,11 @@ public class Player implements IPlayer {
         return name;
     }
 
-    @Override
-    public Position getPendingFrom() {
+    private Position getPendingFrom() {
         return pending == null ? null : pending.copy(); // defensive copy
     }
 
-    @Override
-    public void setPendingFrom(Position pending) {
+    private void setPendingFrom(Position pending) {
         this.pending = pending == null ? null : pending.copy();
     }
 

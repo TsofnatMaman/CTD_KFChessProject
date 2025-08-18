@@ -22,18 +22,9 @@ public class Position implements Serializable {
         return r;
     }
 
-    public void setRow(int r) {
-        this.r = r;
-    }
-
     public int getCol() {
         return c;
     }
-
-    public void setCol(int c) {
-        this.c = c;
-    }
-
 
     public int dx(Position other){
         return c - other.c;
@@ -75,11 +66,6 @@ public class Position implements Serializable {
 
     public Position copy(){
         return new Position(getRow(), getCol());
-    }
-
-    public static Position fromString(String s){
-        String[] rowCol = s.split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator
-        return new Position(Integer.parseInt(rowCol[0].trim()), Integer.parseInt(rowCol[1].trim()));
     }
 
     @Override

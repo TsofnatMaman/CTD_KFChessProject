@@ -81,24 +81,6 @@ public class PlayerCursor implements IPlayerCursor {
     }
 
     /**
-     * Gets the current row of the cursor.
-     * @return The row index
-     */
-    @Override
-    public int getRow() {
-        return pos.getRow();
-    }
-
-    /**
-     * Gets the current column of the cursor.
-     * @return The column index
-     */
-    @Override
-    public int getCol() {
-        return pos.getCol();
-    }
-
-    /**
      * Gets the current position of the cursor.
      * @return The position object
      */

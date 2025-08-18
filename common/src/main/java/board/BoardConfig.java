@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.stream.IntStream;
 
 /**
  * Configuration for the game board, including dimensions and tile size.
@@ -12,6 +13,7 @@ import java.util.List;
 public class BoardConfig implements Serializable {
     public final Dimension gridDimension;
     public final Dimension panelDimension;
+    public final Dimension physicsDimension;
 
     /** Size of a single tile in pixels. */
     public final double tileSize;
@@ -24,10 +26,12 @@ public class BoardConfig implements Serializable {
     @JsonCreator
     public BoardConfig(
             @JsonProperty("gridDimension") Dimension gridDimension,
-            @JsonProperty("panelDimension") Dimension panelDimension
+            @JsonProperty("panelDimension") Dimension panelDimension,
+            @JsonProperty("physicsDimension") Dimension physicsDimension
     ) {
         this.gridDimension = gridDimension;
         this.panelDimension = panelDimension;
+        this.physicsDimension = physicsDimension;
 
         double tileW = (double) panelDimension.getY() / gridDimension.getY();
         double tileH = (double) panelDimension.getX() / gridDimension.getX();
@@ -35,10 +39,9 @@ public class BoardConfig implements Serializable {
     }
 
     public static int getPlayerOf(int row) {
-        if (rowsOfPlayer.get(0).contains(row))
-            return 0;
-        else
-            return 1;
+        return IntStream.range(0, rowsOfPlayer.size())
+                .filter(i -> rowsOfPlayer.get(i).contains(row))
+                .findFirst().getAsInt();
     }
 
     public boolean isInBounds(int r, int c) {

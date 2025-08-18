@@ -11,23 +11,9 @@ import java.util.List;
  */
 public interface IBoard extends Serializable {
 
-    /**
-     * Places a piece on the board.
-     * @param piece The piece to place
-     */
-    void placePiece(IPiece piece);
-
     boolean hasPiece(Position pos);
 
     boolean hasPieceOrIsTarget(Position pos);
-
-    /**
-     * Gets the piece at the specified row and column.
-     * @param row The row index
-     * @param col The column index
-     * @return The piece or null
-     */
-    IPiece getPiece(int row, int col);
 
     /**
      * Gets the piece at the specified position.
@@ -35,13 +21,6 @@ public interface IBoard extends Serializable {
      * @return The piece or null
      */
     IPiece getPiece(Position pos);
-
-    /**
-     * Returns the player index for a given row.
-     * @param row The row index
-     * @return The player index
-     */
-    int getPlayerOf(int row);
 
     /**
      * Returns the player index for a given position.
@@ -63,14 +42,6 @@ public interface IBoard extends Serializable {
     void updateAll();
 
     /**
-     * Checks if the specified row and column are within board bounds.
-     * @param r The row index
-     * @param c The column index
-     * @return true if in bounds, false otherwise
-     */
-    boolean isInBounds(int r, int c);
-
-    /**
      * Checks if the specified position is within board bounds.
      * @param p The position object
      * @return true if in bounds, false otherwise
@@ -84,14 +55,6 @@ public interface IBoard extends Serializable {
      * @return true if legal, false otherwise
      */
     boolean isMoveLegal(Position from, Position to);
-
-    /**
-     * Checks if the path between two positions is clear for movement.
-     * @param from The starting position
-     * @param to The target position
-     * @return true if path is clear, false otherwise
-     */
-    boolean isPathClear(Position from, Position to);
 
     /**
      * Checks if a jump action is legal for the given piece.

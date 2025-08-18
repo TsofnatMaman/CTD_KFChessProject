@@ -1,5 +1,6 @@
 package interfaces;
 
+import board.BoardConfig;
 import pieces.Position;
 import state.EState;
 
@@ -24,21 +25,16 @@ public interface IPhysicsData {
      * @param state The state
      * @param startPos The starting position
      * @param to The target position
-     * @param tileSize The size of a tile
      * @param startTimeNanos The start time in nanoseconds
      */
-    void reset(EState state, Position startPos, Position to, double tileSize, long startTimeNanos);
+    void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos);
 
     /**
      * Updates the physics data for the piece.
      */
-    void update();
+    void update(long now);
 
-    /**
-     * Checks if the movement is finished.
-     * @return true if finished, false otherwise
-     */
-    boolean isMovementFinished();
+    boolean isActionFinished();
 
     /**
      * Gets the current X position in pixels.

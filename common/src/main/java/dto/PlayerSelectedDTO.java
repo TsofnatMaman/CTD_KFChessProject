@@ -28,20 +28,10 @@ public class PlayerSelectedDTO {
      * @return the player ID
      */
     public int getPlayerId() { return playerId; }
-    /**
-     * Sets the player ID.
-     * @param playerId the player ID
-     */
-    public void setPlayerId(int playerId) { this.playerId = playerId; }
 
     /**
      * Gets the selected position.
      * @return the selected position
      */
     public Position getSelection() { return selection; }
-    /**
-     * Sets the selected position.
-     * @param selection the selected position
-     */
-    public void setSelection(Position selection) { this.selection = selection; }
 }

@@ -10,7 +10,7 @@ public class PlayerFactoryTest {
 
     @Test
     void testCreatePlayers_returnsTwoPlayersWithCorrectIds() {
-        BoardConfig config = new BoardConfig(new Dimension(8), new Dimension(640));
+        BoardConfig config = new BoardConfig(new Dimension(8), new Dimension(1,1), new Dimension(640));
         String[] names = {"Alice", "Bob"};
 
         IPlayer[] players = PlayerFactory.createPlayers(names, config);

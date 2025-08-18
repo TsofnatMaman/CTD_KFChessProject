@@ -9,7 +9,6 @@ import state.StateMachine;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
-import java.util.Optional;
 
 public class Piece implements IPiece {
     private final EPieceType type;
@@ -34,7 +33,7 @@ public class Piece implements IPiece {
         return position;
     }
 
-    public void setPosition(Position position) {
+    private void setPosition(Position position) {
         this.position = position;
     }
 
@@ -53,13 +52,12 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public void update() {
-        Optional<EPieceEvent> event = fsm.update();
-
-        if (event.isPresent() && event.get() == EPieceEvent.DONE) {
+    public void update(long now) {
+        if (fsm.getCurrentState().isActionFinished()) {
             // Update logical position only after the action is finished
             setPosition(fsm.getCurrentState().getPhysics().getTargetPos());//TODO:maybe copy
         }
+        fsm.update(now);
     }
 
     @Override
@@ -81,16 +79,6 @@ public class Piece implements IPiece {
     @Override
     public void markCaptured() {
         this.wasCaptured = true;
-    }
-
-    @Override
-    public int getRow() {
-        return position.getRow();
-    }
-
-    @Override
-    public int getCol() {
-        return position.getCol();
     }
 
     @Override

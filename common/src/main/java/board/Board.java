@@ -18,7 +18,7 @@ import java.util.List;
 public class Board implements IBoard {
     /** 2D array representing the board grid with pieces. */
     private final IPiece[][] boardGrid;
-    private int[][]isTarget;
+    private final int[][]isTarget;
     /** Array of players in the game. */
     public final IPlayer[] players;
     /** Board configuration object. */
@@ -52,21 +52,6 @@ public class Board implements IBoard {
     }
 
     /**
-     * Places a piece on the board at its logical position.
-     * @param piece The piece to place
-     */
-    @Override
-    public void placePiece(IPiece piece) {
-        int row = piece.getRow();
-        int col = piece.getCol();
-        if (isInBounds(row, col)) {
-            boardGrid[row][col] = piece;
-        } else {
-            throw new IllegalArgumentException("Invalid position row=" + row + ", col=" + col);
-        }
-    }
-
-    /**
      * Checks if there is a piece at the specified row and column.
      */
     private boolean hasPiece(int row, int col) {
@@ -86,8 +71,7 @@ public class Board implements IBoard {
     /**
      * Gets the piece at the specified row and column.
      */
-    @Override
-    public IPiece getPiece(int row, int col) {
+    private IPiece getPiece(int row, int col) {
         if (!isInBounds(row, col))
             return null;
         return boardGrid[row][col];
@@ -101,11 +85,7 @@ public class Board implements IBoard {
         return getPiece(pos.getRow(), pos.getCol());
     }
 
-    /**
-     * Returns the player index for a given row.
-     */
-    @Override
-    public int getPlayerOf(int row) {
+    private int getPlayerOf(int row) {
         return BoardConfig.getPlayerOf(row);
     }
 
@@ -137,6 +117,7 @@ public class Board implements IBoard {
      * and handles captures before and after movement.
      */
     public void updateAll() {
+        long now = System.nanoTime();
         for (IPlayer player : players) {
             for (int i=0; i<player.getPieces().size(); i++) {
                 IPiece piece = player.getPieces().get(i);
@@ -162,7 +143,7 @@ public class Board implements IBoard {
                     }
                 }
 
-                piece.update();
+                piece.update(now);
             }
         }
     }
@@ -170,8 +151,7 @@ public class Board implements IBoard {
     /**
      * Checks if the specified row and column are within board bounds.
      */
-    @Override
-    public boolean isInBounds(int r, int c) {
+    private boolean isInBounds(int r, int c) {
         return boardConfig.isInBounds(r,c);
     }
 
@@ -221,8 +201,7 @@ public class Board implements IBoard {
     /**
      * Checks if the path between two positions is clear for movement.
      */
-    @Override
-    public boolean isPathClear(Position from, Position to) {
+    private boolean isPathClear(Position from, Position to) {
         int dRow = Integer.signum(to.dy(from));
         int dCol = Integer.signum(to.dx(from));
 

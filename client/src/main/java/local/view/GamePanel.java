@@ -19,19 +19,18 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * Full game panel with board in center, players on sides, and background.
  */
 public class GamePanel extends JPanel implements IEventListener {
     private final BoardPanel boardPanel;
-    private final PlayerInfoPanel player1Panel;
-    private final PlayerInfoPanel player2Panel;
     private final IGame model;
     private Image backgroundImage;
 
-    private JLabel timerLabel;
-    private Timer timerForUI;
+    private final JLabel timerLabel;
+    private final Timer timerForUI;
 
     public GamePanel(IGame model){
         this.model = model;
@@ -42,14 +41,14 @@ public class GamePanel extends JPanel implements IEventListener {
 
         // Load background image
         try {
-            backgroundImage = ImageIO.read(getClass().getClassLoader().getResource("background/background.jpg"));
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("background/background.jpg")));
         } catch (IOException | IllegalArgumentException e) {
             LogUtils.logDebug("Could not load background image: " + e.getMessage());
         }
 
         // Players info panels
-        player1Panel = new PlayerInfoPanel(model.getPlayerById(0));
-        player2Panel = new PlayerInfoPanel(model.getPlayerById(1));
+        PlayerInfoPanel player1Panel = new PlayerInfoPanel(model.getPlayerById(0));
+        PlayerInfoPanel player2Panel = new PlayerInfoPanel(model.getPlayerById(1));
 
         Color semiTransparent = new Color(255, 255, 255, 180);
         player1Panel.setBackground(semiTransparent);
@@ -74,7 +73,7 @@ public class GamePanel extends JPanel implements IEventListener {
             }
         });
 
-        SwingUtilities.invokeLater(() -> boardPanel.requestFocusInWindow());
+        SwingUtilities.invokeLater(boardPanel::requestFocusInWindow);
 
         // Layout
         add(player1Panel, BorderLayout.WEST);

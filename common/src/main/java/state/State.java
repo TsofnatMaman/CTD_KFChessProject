@@ -1,5 +1,6 @@
 package state;
 
+import board.BoardConfig;
 import interfaces.*;
 import pieces.EPieceEvent;
 import pieces.Position;
@@ -17,25 +18,17 @@ public class State implements IState {
 
     private Position startPos;
     private Position targetPos;
-    private final double TILE_SIZE;
+    private final BoardConfig bc;
 
-    /**
-     * Constructs a State object representing a piece's state.
-     * @param name The state name (EState)
-     * @param startPos The starting position
-     * @param targetPos The target position
-     * @param tileSize The size of a tile
-     * @param physics The physics data
-     * @param graphics The graphics data
-     */
+
     public State(EState name, Position startPos, Position targetPos,
-                 double tileSize, IPhysicsData physics, IGraphicsData graphics) {
+                 BoardConfig bc, IPhysicsData physics, IGraphicsData graphics) {
         this.name = name;
         this.startPos = startPos;
         this.targetPos = targetPos;
         this.physics = physics;
         this.graphics = graphics;
-        this.TILE_SIZE = tileSize;
+        this.bc = bc;
     }
 
     /**
@@ -52,17 +45,17 @@ public class State implements IState {
 
         long startTimeNanos = System.nanoTime();
 
-        if (graphics != null) graphics.reset(name, startPos);
-        if (physics != null) physics.reset(name, startPos, targetPos, TILE_SIZE, startTimeNanos);
+        if (graphics != null) graphics.reset();
+        if (physics != null) physics.reset(name, startPos, targetPos, bc, startTimeNanos);
     }
 
     /**
      * Updates the physics and graphics for the current state.
      */
     @Override
-    public Optional<EPieceEvent> update() {
-        if (graphics != null) graphics.update();
-        if (physics != null) physics.update();
+    public Optional<EPieceEvent> update(long now) {
+        if (graphics != null) graphics.update(now);
+        if (physics != null) physics.update(now);
 
         if (isActionFinished()) {
             startPos = targetPos;
@@ -78,23 +71,7 @@ public class State implements IState {
      */
     @Override
     public boolean isActionFinished() {
-        switch (name) {
-            case MOVE:
-                return physics.isMovementFinished();
-            case JUMP:
-                return graphics != null && graphics.isAnimationFinished();
-            case SHORT_REST:
-            case LONG_REST:
-                return graphics != null && graphics.isAnimationFinished();
-            default:
-                // By default, check physics if available, otherwise graphics
-                if (physics != null)
-                    return physics.isMovementFinished();
-                else if (graphics != null)
-                    return graphics.isAnimationFinished();
-                else
-                    return true;
-        }
+        return physics.isActionFinished();
     }
 
     /**

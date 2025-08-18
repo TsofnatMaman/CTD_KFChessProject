@@ -10,23 +10,12 @@ import java.awt.image.BufferedImage;
  */
 public interface IGraphicsData {
 
-    /**
-     * Resets the animation to the first frame.
-     * @param state The new state
-     * @param to The target position
-     */
-    void reset(EState state, Position to);
+    void reset();
 
     /**
      * Updates the animation frame based on elapsed time.
      */
-    void update();
-
-    /**
-     * Checks if the animation has finished (for non-looping states).
-     * @return true if finished, false otherwise
-     */
-    boolean isAnimationFinished();
+    void update(long now);
 
     /**
      * Gets the current frame number.
@@ -47,12 +36,6 @@ public interface IGraphicsData {
     double getFramesPerSec();
 
     /**
-     * Returns true if the animation is looping.
-     * @return true if looping, false otherwise
-     */
-    boolean isLoop();
-
-    /**
      * Gets the current frame image.
      * @return The current frame as BufferedImage
      */
@@ -61,4 +44,6 @@ public interface IGraphicsData {
     int getCurrentFrameIdx();
 
     void setFrames(BufferedImage[] frames);
+
+    void setTotalFrames(int totalFrames);
 }

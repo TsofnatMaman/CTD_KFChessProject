@@ -1,0 +1,9 @@
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+idle_after_first_move,move,move
+idle_after_first_move,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle_after_first_move
+short_rest,done,idle_after_first_move

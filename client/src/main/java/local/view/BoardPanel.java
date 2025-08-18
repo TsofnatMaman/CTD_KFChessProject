@@ -118,7 +118,6 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
                 if (selected2 == null) {
                     IPiece p = board.getPiece(pos);
                     if (p == null || p.isCaptured() || p.getPlayer() != 1 || !p.canAction()) {
-                        System.err.println("can not choose piece");
                         LogUtils.logDebug("can not choose piece");
                     } else {
                         selected2 = pos.copy();

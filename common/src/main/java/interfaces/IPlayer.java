@@ -27,18 +27,6 @@ public interface IPlayer extends Serializable {
     String getName();
 
     /**
-     * Gets the pending position for selection.
-     * @return The pending position
-     */
-    Position getPendingFrom();
-
-    /**
-     * Sets the pending position for selection.
-     * @param pending The pending position
-     */
-    void setPendingFrom(Position pending);
-
-    /**
      * Returns true if the player has failed (e.g., lost their king).
      * @return true if failed, false otherwise
      */

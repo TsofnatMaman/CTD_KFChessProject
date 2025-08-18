@@ -128,6 +128,7 @@ public class ChessServerEndpoint {
     private void createGame() {
         BoardConfig boardConfig = new BoardConfig(
                 new Dimension(GameConstants.BOARD_SIZE),
+                new Dimension(1,1),
                 new Dimension(GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE)
         );
 

@@ -19,34 +19,28 @@ public class GraphicsData implements IGraphicsData {
     private int currentFrame;
     @JsonProperty("frames_per_sec")
     private double framesPerSec;
-    @JsonProperty("is_loop")
-    private boolean isLoop;
     private long lastFrameTimeNanos;
 
-    public GraphicsData(){}
+    public GraphicsData(){
+        currentFrame=0;
+        this.lastFrameTimeNanos = System.nanoTime();
+    }
 
     /**
      * Constructs GraphicsData for piece animation.
      * @param frames Array of animation frames
      * @param framesPerSec Number of frames per second
-     * @param isLoop Whether the animation should loop
      */
-    public GraphicsData(BufferedImage[] frames, double framesPerSec, boolean isLoop) {
+    public GraphicsData(BufferedImage[] frames, double framesPerSec) {
         this.frames = frames;
         this.totalFrames = frames.length;
         this.framesPerSec = framesPerSec;
-        this.isLoop = isLoop;
         this.currentFrame = 0;
         this.lastFrameTimeNanos = System.nanoTime();
     }
 
-    /**
-     * Resets the animation to the first frame.
-     * @param state The new state
-     * @param to The target position
-     */
     @Override
-    public void reset(EState state, Position to) {
+    public void reset() {
         // Reset only when switching to a new state
         this.currentFrame = 0;
         this.lastFrameTimeNanos = System.nanoTime();
@@ -56,27 +50,13 @@ public class GraphicsData implements IGraphicsData {
      * Updates the animation frame based on elapsed time.
      */
     @Override
-    public void update() {
-        long now = System.nanoTime();
+    public void update(long now) {
         double elapsedSec = (now - lastFrameTimeNanos) / 1_000_000_000.0;
 
         if (elapsedSec >= 1.0 / framesPerSec) {
-            currentFrame++;
+            currentFrame = (currentFrame+1)%totalFrames;
             lastFrameTimeNanos = now;
-
-            if (currentFrame >= totalFrames) {
-                currentFrame = isLoop ? 0 : totalFrames - 1;
-            }
         }
-    }
-
-    /**
-     * Checks if the animation has finished (for non-looping states).
-     * @return true if finished, false otherwise
-     */
-    @Override
-    public boolean isAnimationFinished() {
-        return !isLoop && currentFrame >= totalFrames - 1;
     }
 
     /**
@@ -107,15 +87,6 @@ public class GraphicsData implements IGraphicsData {
     }
 
     /**
-     * Returns true if the animation is looping.
-     * @return true if looping, false otherwise
-     */
-    @Override
-    public boolean isLoop() {
-        return isLoop;
-    }
-
-    /**
      * Gets the current frame image.
      * @return The current frame as BufferedImage
      */
@@ -132,5 +103,10 @@ public class GraphicsData implements IGraphicsData {
     @Override
     public void setFrames(BufferedImage[] frames) {
         this.frames = frames;
+    }
+
+    @Override
+    public void setTotalFrames(int totalFrames) {
+        this.totalFrames = totalFrames;
     }
 }

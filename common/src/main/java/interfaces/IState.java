@@ -25,7 +25,7 @@ public interface IState extends Serializable {
     /**
      * Updates the physics and graphics for the current state.
      */
-    Optional<EPieceEvent> update();
+    Optional<EPieceEvent> update(long now);
 
     /**
      * Checks if the current action is finished.

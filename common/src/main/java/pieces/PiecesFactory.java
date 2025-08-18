@@ -33,8 +33,6 @@ public class PiecesFactory {
      * @return Piece instance or null if failed
      */
     public static Piece createPieceByCode(EPieceType code, int playerId, Position pos, BoardConfig config) {
-        double TILE_SIZE = config.tileSize;
-
         Map<EState, IState> states = new HashMap<>();
         String basePath = "/pieces/" + code.getVal() + "/states/";
 
@@ -74,8 +72,9 @@ public class PiecesFactory {
                 }
 
                 graphicsData.setFrames(sprites);
+                graphicsData.setTotalFrames(sprites.length);
 
-                IState state = new State(stateName, pos, pos, TILE_SIZE, physics, graphicsData);
+                IState state = new State(stateName, pos, pos, config, physics, graphicsData);
                 states.put(stateName, state);
             }
 
@@ -84,15 +83,12 @@ public class PiecesFactory {
                 return null;
             }
 
-            // Create template from loaded states
-            PieceTemplate template = new PieceTemplate(code, states);
-
             // Decide initial state: prefer LONG_REST if present, else first key
             EState initialState = states.containsKey(EState.LONG_REST) ? EState.LONG_REST
                     : states.keySet().iterator().next();
 
 
-            StateMachine sm = new StateMachine(states, new TransitionTable(basePath+"transitions.csv"), initialState);
+            StateMachine sm = new StateMachine(states, new TransitionTable(basePath+"transitions.csv"), initialState, pos);
 
             // Create and return piece with template
             return new Piece(code, playerId, sm, pos);

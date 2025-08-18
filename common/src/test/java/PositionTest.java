@@ -18,6 +18,6 @@ public class PositionTest {
     void testToString_and_Equals() {
         Position pos = new Position(2, 5);
         assertEquals("2,5", pos.toString());
-        assertEquals(pos, new Position(2, 5));
+        assertEquals(new Position(2, 5), pos);
     }
 }

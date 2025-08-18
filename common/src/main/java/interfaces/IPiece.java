@@ -28,7 +28,7 @@ public interface IPiece extends Serializable {
     /**
      * Updates the piece's state.
      */
-    void update();
+    void update(long now);
 
     /**
      * Moves the piece to a new position.
@@ -51,18 +51,6 @@ public interface IPiece extends Serializable {
      * Marks the piece as captured.
      */
     void markCaptured();
-
-    /**
-     * Gets the current row of the piece.
-     * @return The row index
-     */
-    int getRow();
-
-    /**
-     * Gets the current column of the piece.
-     * @return The column index
-     */
-    int getCol();
 
     /**
      * Gets the current pixel position of the piece.

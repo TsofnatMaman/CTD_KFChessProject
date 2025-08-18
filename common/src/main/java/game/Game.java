@@ -164,22 +164,6 @@ public class Game implements IGame {
         return startTimeNano;
     }
 
-    /**
-     * Returns elapsed time in nanoseconds since run() was invoked.
-     */
-    @Override
-    public long getElapsedTimeNano() {
-        if (!running) return 0;
-        return System.nanoTime() - startTimeNano;
-    }
-
-    /**
-     * Convenience helper if callers expect milliseconds.
-     */
-    public long getElapsedTimeMillis() {
-        return getElapsedTimeNano() / 1_000_000;
-    }
-
     @Override
     public IPlayer[] getPlayers() {
         return players;

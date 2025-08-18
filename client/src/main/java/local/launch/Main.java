@@ -16,7 +16,7 @@ public class Main {
             JFrame frame = new JFrame("KFChess");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            BoardConfig boardConfig = new BoardConfig(new Dimension(8),new Dimension(64*8));
+            BoardConfig boardConfig = new BoardConfig(new Dimension(8), new Dimension(1,1),new Dimension(64*8));
 
             IPlayer[] players = PlayerFactory.createPlayers(new String[]{"player 1", "player 2"}, boardConfig);
 

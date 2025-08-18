@@ -55,13 +55,4 @@ public class LoadPieces {
             throw new RuntimeException(e.getMessage());
         }
     }
-
-    /**
-     * Returns the static matrix of piece codes for the board.
-     *
-     * @return 2D array of piece codes
-     */
-    public static String[][] getBoardMatrix() {
-        return board;
-    }
 }

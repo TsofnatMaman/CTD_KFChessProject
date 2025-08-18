@@ -1,7 +1,6 @@
 package player;
 
 import board.BoardConfig;
-import constants.PieceConstants;
 import interfaces.IPiece;
 import interfaces.IPlayer;
 import pieces.EPieceType;

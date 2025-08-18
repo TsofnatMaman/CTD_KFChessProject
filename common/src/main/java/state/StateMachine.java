@@ -11,14 +11,15 @@ import java.util.Map;
 import java.util.Optional;
 
 public class StateMachine {
-    private Map<EState, IState> mapState;
-    private TransitionTable transitionTable;
+    private final Map<EState, IState> mapState;
+    private final TransitionTable transitionTable;
     private IState currentState;
 
-    public StateMachine(Map<EState, IState> mapState, TransitionTable transitions, EState initState){
+    public StateMachine(Map<EState, IState> mapState, TransitionTable transitions, EState initState, Position initPos){
         this.transitionTable = transitions;
-        this.currentState = mapState.get(initState);
         this.mapState = mapState;
+        this.currentState = mapState.get(initState);
+        this.currentState.reset(initPos, initPos);
     }
 
     public void onEvent(EPieceEvent event, Position from, Position to){
@@ -26,24 +27,21 @@ public class StateMachine {
             EventPublisher.getInstance().publish(EGameEvent.PIECE_END_MOVED, new GameEvent(EGameEvent.PIECE_END_MOVED, null));
 
         EState next = transitionTable.next(currentState.getName(), event);
-        if(next != currentState.getName()) {
-            currentState = mapState.get(next);
-            currentState.reset(from, to);
-        }
+
+        currentState = mapState.get(next);//TODO:maybe if next != current
+        currentState.reset(from, to);
     }
 
     public void onEvent(EPieceEvent event){
-        onEvent(event, currentState.getPhysics().getStartPos(), currentState.getPhysics().getStartPos());
+        onEvent(event, currentState.getPhysics().getTargetPos(), currentState.getPhysics().getTargetPos());
     }
 
-    public Optional<EPieceEvent> update(){
+    public void update(long now){
         if(currentState.isActionFinished())
             onEvent(EPieceEvent.DONE);
 
-        Optional<EPieceEvent> event = currentState.update();
-        event.ifPresent(ePieceEvent -> onEvent(ePieceEvent, currentState.getPhysics().getStartPos(), currentState.getPhysics().getTargetPos()));
-
-        return event;
+        Optional<EPieceEvent> event = currentState.update(now);
+        event.ifPresent(this::onEvent);
     }
 
     public IState getCurrentState() {

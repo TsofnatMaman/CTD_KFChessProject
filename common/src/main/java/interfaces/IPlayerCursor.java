@@ -38,20 +38,6 @@ public interface IPlayerCursor {
     void draw(Graphics g, int panelWidth, int panelHeight);
 
     /**
-     * Gets the current row of the cursor.
-     *
-     * @return The row index
-     */
-    int getRow();
-
-    /**
-     * Gets the current column of the cursor.
-     *
-     * @return The column index
-     */
-    int getCol();
-
-    /**
      * Gets the current position of the cursor.
      *
      * @return The position object
