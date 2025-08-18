@@ -125,7 +125,7 @@ public class KFChessClientApp implements GameEventListener {
     public void onPlayerSelected(PlayerSelectedDTO cmd) {
         if (gameModel == null) return;
 
-        gameModel.handleSelection(cmd.getPlayerId(), cmd.getSelection());
+        gameModel.handleSelection(cmd.playerId(), cmd.selection());
         SwingUtilities.invokeLater(() -> {
             if (gamePanel != null && gamePanel.getBoardPanel() != null) {
                 gamePanel.getBoardPanel().repaint();

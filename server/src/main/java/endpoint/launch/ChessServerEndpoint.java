@@ -86,10 +86,10 @@ public class ChessServerEndpoint {
     }
 
     private void handleMessageByType(Message<JsonNode> msg, Session session, int playerId) throws IOException {
-        switch (msg.getType()) {
-            case PLAYER_SELECTED -> handlePlayerSelected(msg.getData(), playerId);
-            case SET_NAME -> handleSetName(msg.getData(), playerId, session);
-            default -> LOGGER.warning("Unknown message type: " + msg.getType());
+        switch (msg.type()) {
+            case PLAYER_SELECTED -> handlePlayerSelected(msg.data(), playerId);
+            case SET_NAME -> handleSetName(msg.data(), playerId, session);
+            default -> LOGGER.warning("Unknown message type: " + msg.data());
         }
     }
 
@@ -98,12 +98,12 @@ public class ChessServerEndpoint {
         if (game == null) return;
 
         PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);
-        if (cmd.getPlayerId() != playerId) {
+        if (cmd.playerId() != playerId) {
             LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
             return;
         }
 
-        game.handleSelection(cmd.getPlayerId(), cmd.getSelection());
+        game.handleSelection(cmd.playerId(), cmd.selection());
         broadcastMessage(new Message<>(EventType.PLAYER_SELECTED, cmd));
     }
 

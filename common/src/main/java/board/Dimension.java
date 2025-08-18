@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 public class Dimension implements Serializable {
     private final int x;
@@ -28,5 +29,25 @@ public class Dimension implements Serializable {
 
     public int getX() {
         return x;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Dimension dimension = (Dimension) o;
+        return getX() == dimension.getX() && getY() == dimension.getY();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getX(), getY());
+    }
+
+    @Override
+    public String toString() {
+        return "Dimension{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }

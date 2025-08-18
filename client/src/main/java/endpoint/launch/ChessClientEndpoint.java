@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import dto.EventType;
+import dto.Message;
 import utils.LogUtils;
 
 import javax.websocket.*;
@@ -126,10 +127,8 @@ public class ChessClientEndpoint implements Closeable {
         }
     }
 
-    public void sendCommand(EventType type, String data) throws Exception {
-        ObjectNode msg = mapper.createObjectNode();
-        msg.put("type", type.toString());
-        msg.put("data", data);
+    public <T> void sendCommand(EventType type, T data) throws Exception {
+        Message<T> msg = new Message<>(type, data);
         sendText(mapper.writeValueAsString(msg));
     }
 

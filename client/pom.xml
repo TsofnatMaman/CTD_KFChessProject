@@ -44,7 +44,7 @@
                 <artifactId>exec-maven-plugin</artifactId>
                 <version>3.1.0</version>
                 <configuration>
-                    <mainClass>endpoint.launch.launch.KFChessClientApp</mainClass>
+                    <mainClass>endpoint.launch.KFChessClientApp</mainClass>
                 </configuration>
             </plugin>
         </plugins>
