@@ -4,64 +4,64 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Position implements Serializable {
-    private int r;
-    private int c;
+    private int row;
+    private int col;
 
     // Empty constructor required for Jackson
     public Position() {}
 
     // Standard constructor
     public Position(int r, int c){
-        this.r = r;
-        this.c = c;
+        this.row = r;
+        this.col = c;
     }
 
     // Public getters and setters
 
     public int getRow() {
-        return r;
+        return row;
     }
 
     public int getCol() {
-        return c;
+        return col;
     }
 
     public int dx(Position other){
-        return c - other.c;
+        return col - other.col;
     }
 
     public int dy(Position other){
-        return r - other.r;
+        return row - other.row;
     }
 
     @Override
     public boolean equals(Object obj){
-        return obj instanceof Position && ((Position)obj).r == r && ((Position)obj).c == c;
+        return obj instanceof Position && ((Position)obj).row == row && ((Position)obj).col == col;
     }
 
     public Position add(int x, int y){
-        return new Position(r + x, c + y);
+        return new Position(row + x, col + y);
     }
 
     @Override
     public String toString() {
-    return r + constants.PieceConstants.POSITION_SEPARATOR + c; // Use separator from PieceConstants
+    return row + constants.PieceConstants.POSITION_SEPARATOR + col; // Use separator from PieceConstants
     }
 
     public void reduceOneRow(){
-        r--;
+        row--;
     }
 
     public void reduceOneCol(){
-        c--;
+        col--;
     }
 
     public void addOneRow(){
-        r++;
+        row++;
     }
 
     public void addOneCol(){
-        c++;
+        col++;
     }
 
     public Position copy(){
@@ -70,6 +70,6 @@ public class Position implements Serializable {
 
     @Override
     public int hashCode() {
-        return Objects.hash(r, c);
+        return Objects.hash(row, col);
     }
 }

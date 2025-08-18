@@ -3,6 +3,7 @@ package board;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
+import events.listeners.ActionData;
 import interfaces.*;
 import moves.Data;
 import moves.Move;
@@ -150,7 +151,7 @@ public class Board implements IBoard {
                             players[target.getPlayer()].markPieceCaptured(target);
                         else
                             players[piece.getPlayer()].markPieceCaptured(piece);
-                        EventPublisher.getInstance().publish(EGameEvent.PIECE_CAPTURED, new GameEvent(EGameEvent.PIECE_CAPTURED, null));
+                        EventPublisher.getInstance().publish(EGameEvent.PIECE_CAPTURED, new GameEvent(EGameEvent.PIECE_CAPTURED, new ActionData(piece.getPlayer(),null)));
                     }
 
                     boardGrid[targetPos.getRow()][targetPos.getCol()] = piece;

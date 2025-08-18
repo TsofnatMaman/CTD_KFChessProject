@@ -119,6 +119,15 @@ public class GamePanel extends JPanel implements IEventListener {
     @Override
     public void onEvent(GameEvent event) {
         timerForUI.stop();
-        JOptionPane.showMessageDialog(this, "Game Over. Winner: Player " + model.win().getName());
+
+        JOptionPane pane = new JOptionPane(
+                "Game Over. Winner: Player " + model.win().getName(),
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        // יוצרים JDialog לא מודאלי
+        JDialog dialog = pane.createDialog(this, "Game Over");
+        dialog.setModal(false); // חשוב – לא מודאלי
+        dialog.setVisible(true);
     }
 }
