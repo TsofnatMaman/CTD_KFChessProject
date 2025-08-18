@@ -13,15 +13,30 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Represents the game board and manages piece placement and movement.
+ * Represents the chess game board and manages piece placement, movement, and game logic.
+ * This class provides methods for checking legal moves, updating the board state,
+ * handling captures, and interacting with players and pieces.
  */
 public class Board implements IBoard {
-    /** 2D array representing the board grid with pieces. */
+    /**
+     * 2D array representing the board grid with pieces.
+     * Each cell contains a reference to an IPiece or null if empty.
+     */
     private final IPiece[][] boardGrid;
-    private final int[][]isTarget;
-    /** Array of players in the game. */
+
+    /**
+     * 2D array indicating which player is targeting each cell. -1 means no target.
+     */
+    private final int[][] isTarget;
+
+    /**
+     * Array of players in the game.
+     */
     public final IPlayer[] players;
-    /** Board configuration object. */
+
+    /**
+     * Board configuration object.
+     */
     public final BoardConfig boardConfig;
 
     /**
@@ -39,10 +54,13 @@ public class Board implements IBoard {
             Arrays.fill(row, -1);
         }
         this.players = players;
-
         initializeFromPlayers();
     }
 
+    /**
+     * Initializes the board grid with the pieces from each player.
+     * Each piece is placed on the board according to its position.
+     */
     private void initializeFromPlayers(){
         for (IPlayer p : players) {
             for (IPiece piece : p.getPieces()) {

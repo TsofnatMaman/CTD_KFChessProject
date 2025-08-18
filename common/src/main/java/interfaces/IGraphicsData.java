@@ -1,8 +1,5 @@
 package interfaces;
 
-import pieces.Position;
-import state.EState;
-
 import java.awt.image.BufferedImage;
 
 /**

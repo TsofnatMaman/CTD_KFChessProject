@@ -15,7 +15,7 @@ public class TransitionTable {
         try (InputStream is = getClass().getResourceAsStream(csvResourcePath)) {
             try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
-                // שורה ראשונה היא כותרת, מדלגים עליה
+                // The first line is a header, skip it
                 String line = br.readLine();
 
                 while ((line = br.readLine()) != null) {

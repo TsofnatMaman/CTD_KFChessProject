@@ -28,7 +28,7 @@ public class StateMachine {
 
         EState next = transitionTable.next(currentState.getName(), event);
 
-        currentState = mapState.get(next);//TODO:maybe if next != current
+        currentState = mapState.get(next);
         currentState.reset(from, to);
     }
 

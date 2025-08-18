@@ -30,10 +30,10 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
         setPreferredSize(new Dimension(200, 0));
 
         JLabel nameLabel = new JLabel(player.getName());
-        nameLabel.setOpaque(true); // חשוב כדי שהצבע יראה גם כרקע
+        nameLabel.setOpaque(true); // Important so the color is also shown as background
         nameLabel.setBackground(PlayerConstants.PIECES_COLOR[player.getId()]);
-        nameLabel.setForeground(PlayerConstants.PLAYER_COLORS[player.getId()]); // אפשר לבחור צבע טקסט מנוגד
-        nameLabel.setHorizontalAlignment(SwingConstants.CENTER); // יפה יותר למרכז
+        nameLabel.setForeground(PlayerConstants.PLAYER_COLORS[player.getId()]); // You can choose a contrasting text color
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Looks better centered
 
         scoreLabel = new JLabel("Score: "+player.getScore());
 

@@ -9,7 +9,9 @@ import java.awt.geom.Point2D;
 import java.util.Optional;
 
 /**
- * Represents the state of a piece, including physics and graphics.
+ * Represents the state of a chess piece, including its physics and graphics data.
+ * This class manages the state transitions, updates, and provides access to the
+ * current physics and graphics information for a piece.
  */
 public class State implements IState {
     private final EState name;
@@ -21,6 +23,16 @@ public class State implements IState {
     private final BoardConfig bc;
 
 
+    /**
+     * Constructs a new State for a chess piece.
+     *
+     * @param name      The state name (enum)
+     * @param startPos  The starting position
+     * @param targetPos The target position
+     * @param bc        The board configuration
+     * @param physics   The physics data object
+     * @param graphics  The graphics data object
+     */
     public State(EState name, Position startPos, Position targetPos,
                  BoardConfig bc, IPhysicsData physics, IGraphicsData graphics) {
         this.name = name;
@@ -32,41 +44,42 @@ public class State implements IState {
     }
 
     /**
-     * Resets the state to a new action, updating physics and graphics.
+     * Resets the state to a new action, updating physics and graphics data.
+     *
      * @param from The starting position
-     * @param to The target position
+     * @param to   The target position
      */
     @Override
     public void reset(Position from, Position to) {
         if (from != null && to != null) {
-            this.startPos = from;//TODO:maybe copy
+            this.startPos = from;
             this.targetPos = to;
         }
-
         long startTimeNanos = System.nanoTime();
-
         if (graphics != null) graphics.reset();
         if (physics != null) physics.reset(name, startPos, targetPos, bc, startTimeNanos);
     }
 
     /**
      * Updates the physics and graphics for the current state.
+     *
+     * @param now The current time in nanoseconds
+     * @return An Optional containing EPieceEvent.DONE if the action is finished, otherwise empty
      */
     @Override
     public Optional<EPieceEvent> update(long now) {
         if (graphics != null) graphics.update(now);
         if (physics != null) physics.update(now);
-
         if (isActionFinished()) {
             startPos = targetPos;
             return Optional.of(EPieceEvent.DONE);
         }
-
         return Optional.empty();
     }
 
     /**
      * Checks if the current action (move, jump, rest) is finished.
+     *
      * @return true if finished, false otherwise
      */
     @Override
@@ -76,6 +89,7 @@ public class State implements IState {
 
     /**
      * Gets the current position in pixels.
+     *
      * @return The current position as Point2D.Double
      */
     @Override
@@ -85,6 +99,7 @@ public class State implements IState {
 
     /**
      * Gets the physics data for the state.
+     *
      * @return The physics data
      */
     @Override
@@ -94,6 +109,7 @@ public class State implements IState {
 
     /**
      * Gets the graphics data for the state.
+     *
      * @return The graphics data
      */
     @Override
@@ -101,6 +117,11 @@ public class State implements IState {
         return graphics;
     }
 
+    /**
+     * Gets the name of the state.
+     *
+     * @return The state name (EState)
+     */
     @Override
     public EState getName() {
         return name;

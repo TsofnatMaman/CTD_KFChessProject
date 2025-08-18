@@ -27,19 +27,19 @@ public class PlayerFactory {
      */
     public static IPlayer createPlayer(int id, String name, BoardConfig bc) {
         if (id < 0) throw new IllegalArgumentException("Player id must be >= 0");
-        // Defensive guard in case more colors are added later
+    // Defensive: guard in case more colors are added later
         Color[] palette = constants.PlayerConstants.PLAYER_COLORS;
         Color color = id < palette.length ? palette[id] : Color.WHITE;
 
         List<interfaces.IPiece> pieces = new ArrayList<>();
 
-        // For each starting row assigned to this player, instantiate pieces from LoadPieces.board
+    // For each starting row assigned to this player, instantiate pieces from LoadPieces.board
         for (int row : BoardConfig.rowsOfPlayer.get(id)) {
             for (int col = 0; col < constants.GameConstants.BOARD_COLS; col++) {
                 String pieceCodeStr = game.LoadPieces.board[row][col];
                 if (pieceCodeStr == null || pieceCodeStr.isEmpty()) continue;
 
-                // The original code used the first char as the piece type, e.g. "B" from "BB"
+                // Use the first character as the piece type, e.g. "B" from "BB"
                 String codeChar = String.valueOf(pieceCodeStr.charAt(0));
                 EPieceType type;
                 try {

@@ -10,7 +10,7 @@ public class Position implements Serializable {
     // Empty constructor required for Jackson
     public Position() {}
 
-    // Regular constructor
+    // Standard constructor
     public Position(int r, int c){
         this.r = r;
         this.c = c;
@@ -45,7 +45,7 @@ public class Position implements Serializable {
 
     @Override
     public String toString() {
-        return r + constants.PieceConstants.POSITION_SEPARATOR + c; // extracted separator
+    return r + constants.PieceConstants.POSITION_SEPARATOR + c; // Use separator from PieceConstants
     }
 
     public void reduceOneRow(){
