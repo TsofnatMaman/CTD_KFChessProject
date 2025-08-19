@@ -27,7 +27,6 @@ public class KFChessClientApp implements GameEventListener {
     private GameController controller;
 
     private volatile int playerId = -1;
-    private final ObjectMapper mapper = new ObjectMapper();
 
     private final CountDownLatch playerIdLatch = new CountDownLatch(1);
     private boolean gameStarted = false;
@@ -70,7 +69,7 @@ public class KFChessClientApp implements GameEventListener {
             System.exit(0);
         });
 
-        controller = new GameController(client, mapper);
+        controller = new GameController(client, new ObjectMapper());
         controller.addListener(this);
         controller.startListening();
 

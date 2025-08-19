@@ -1,0 +1,6774 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+client/pom.xml
+client/src/main/java/controller/ClientState.java
+client/src/main/java/controller/GameController.java
+client/src/main/java/controller/IGameUI.java
+client/src/main/java/endpoint/launch/ChessClientEndpoint.java
+client/src/main/java/endpoint/launch/KFChessClientApp.java
+client/src/main/java/endpoint/view/AskUserName.java
+client/src/main/java/endpoint/view/BoardPanel.java
+client/src/main/java/endpoint/view/GamePanel.java
+client/src/main/java/endpoint/view/WaitDialog.java
+client/src/main/java/local/launch/Main.java
+client/src/main/java/local/view/BoardPanel.java
+client/src/main/java/local/view/GamePanel.java
+client/src/main/java/sound/EventSoundListener.java
+client/src/main/java/sound/SoundManager.java
+client/src/main/java/viewUtils/BoardRenderer.java
+client/src/main/java/viewUtils/PieceRenderer.java
+client/src/main/java/viewUtils/PlayerInfoPanel.java
+common/pom.xml
+common/src/main/java/board/Board.java
+common/src/main/java/board/BoardConfig.java
+common/src/main/java/board/BoardRulesEngine.java
+common/src/main/java/command/JumpCommand.java
+common/src/main/java/command/MoveCommand.java
+common/src/main/java/constants/GameConstants.java
+common/src/main/java/constants/Messages.java
+common/src/main/java/constants/PieceConstants.java
+common/src/main/java/constants/PlayerConstants.java
+common/src/main/java/constants/ServerConfig.java
+common/src/main/java/dto/EventType.java
+common/src/main/java/dto/GameDTO.java
+common/src/main/java/dto/Message.java
+common/src/main/java/dto/PieceView.java
+common/src/main/java/dto/PlayerDTO.java
+common/src/main/java/dto/PlayerSelectedDTO.java
+common/src/main/java/events/EGameEvent.java
+common/src/main/java/events/EventPublisher.java
+common/src/main/java/events/GameEvent.java
+common/src/main/java/events/IEventListener.java
+common/src/main/java/events/listeners/ActionData.java
+common/src/main/java/events/listeners/CapturedLogger.java
+common/src/main/java/events/listeners/GameEndLogger.java
+common/src/main/java/events/listeners/JumpsLogger.java
+common/src/main/java/events/listeners/MovesLogger.java
+common/src/main/java/game/Game.java
+common/src/main/java/game/IBoardView.java
+common/src/main/java/game/LoadPieces.java
+common/src/main/java/graphics/GraphicsLoader.java
+common/src/main/java/interfaces/IBoard.java
+common/src/main/java/interfaces/ICommand.java
+common/src/main/java/interfaces/IGame.java
+common/src/main/java/interfaces/IGraphicsData.java
+common/src/main/java/interfaces/IPhysicsData.java
+common/src/main/java/interfaces/IPiece.java
+common/src/main/java/interfaces/IPlayer.java
+common/src/main/java/interfaces/IPlayerCursor.java
+common/src/main/java/interfaces/IState.java
+common/src/main/java/moves/Data.java
+common/src/main/java/moves/ECondition.java
+common/src/main/java/moves/Move.java
+common/src/main/java/moves/Moves.java
+common/src/main/java/pieces/EPieceEvent.java
+common/src/main/java/pieces/EPieceType.java
+common/src/main/java/pieces/Piece.java
+common/src/main/java/pieces/PiecesFactory.java
+common/src/main/java/pieces/Position.java
+common/src/main/java/player/Player.java
+common/src/main/java/player/PlayerCursor.java
+common/src/main/java/player/PlayerFactory.java
+common/src/main/java/state/EState.java
+common/src/main/java/state/GraphicsData.java
+common/src/main/java/state/PhysicsData.java
+common/src/main/java/state/State.java
+common/src/main/java/state/StateMachine.java
+common/src/main/java/state/TransitionTable.java
+common/src/main/java/utils/ConfigLoader.java
+common/src/main/java/utils/LogUtils.java
+common/src/main/java/utils/Utils.java
+common/src/main/resources/board/board.csv
+common/src/main/resources/config.properties
+common/src/main/resources/messages.properties
+common/src/main/resources/pieces/B/moves0.txt
+common/src/main/resources/pieces/B/moves1.txt
+common/src/main/resources/pieces/B/states/idle/config.json
+common/src/main/resources/pieces/B/states/jump/config.json
+common/src/main/resources/pieces/B/states/long_rest/config.json
+common/src/main/resources/pieces/B/states/move/config.json
+common/src/main/resources/pieces/B/states/short_rest/config.json
+common/src/main/resources/pieces/B/states/transitions.csv
+common/src/main/resources/pieces/K/moves0.txt
+common/src/main/resources/pieces/K/moves1.txt
+common/src/main/resources/pieces/K/states/idle/config.json
+common/src/main/resources/pieces/K/states/jump/config.json
+common/src/main/resources/pieces/K/states/long_rest/config.json
+common/src/main/resources/pieces/K/states/move/config.json
+common/src/main/resources/pieces/K/states/short_rest/config.json
+common/src/main/resources/pieces/K/states/transitions.csv
+common/src/main/resources/pieces/N/moves0.txt
+common/src/main/resources/pieces/N/moves1.txt
+common/src/main/resources/pieces/N/states/idle/config.json
+common/src/main/resources/pieces/N/states/jump/config.json
+common/src/main/resources/pieces/N/states/long_rest/config.json
+common/src/main/resources/pieces/N/states/move/config.json
+common/src/main/resources/pieces/N/states/short_rest/config.json
+common/src/main/resources/pieces/N/states/transitions.csv
+common/src/main/resources/pieces/P/moves0.txt
+common/src/main/resources/pieces/P/moves1.txt
+common/src/main/resources/pieces/P/states/idle/config.json
+common/src/main/resources/pieces/P/states/jump/config.json
+common/src/main/resources/pieces/P/states/long_rest/config.json
+common/src/main/resources/pieces/P/states/move/config.json
+common/src/main/resources/pieces/P/states/short_rest/config.json
+common/src/main/resources/pieces/P/states/transitions.csv
+common/src/main/resources/pieces/P/states/transitions2.csv
+common/src/main/resources/pieces/Q/moves0.txt
+common/src/main/resources/pieces/Q/moves1.txt
+common/src/main/resources/pieces/Q/states/idle/config.json
+common/src/main/resources/pieces/Q/states/jump/config.json
+common/src/main/resources/pieces/Q/states/long_rest/config.json
+common/src/main/resources/pieces/Q/states/move/config.json
+common/src/main/resources/pieces/Q/states/short_rest/config.json
+common/src/main/resources/pieces/Q/states/transitions.csv
+common/src/main/resources/pieces/R/moves0.txt
+common/src/main/resources/pieces/R/moves1.txt
+common/src/main/resources/pieces/R/states/idle/config.json
+common/src/main/resources/pieces/R/states/jump/config.json
+common/src/main/resources/pieces/R/states/long_rest/config.json
+common/src/main/resources/pieces/R/states/move/config.json
+common/src/main/resources/pieces/R/states/short_rest/config.json
+common/src/main/resources/pieces/R/states/transitions.csv
+common/src/main/resources/pieces/replaceJsonConfig.ps1
+common/src/test/java/BoardRulesEngineTest.java
+common/src/test/java/ConfigLoaderTest.java
+common/src/test/java/EConditionTest.java
+common/src/test/java/PlayerFactoryTest.java
+common/src/test/java/PositionTest.java
+pom.xml
+server/pom.xml
+server/src/main/java/endpoint/launch/ChessServerEndpoint.java
+server/src/main/java/endpoint/launch/WebSocketServer.java
+src/main/java/org/example/Main.java
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path="client/src/main/java/controller/ClientState.java">
+package controller;
+
+public enum ClientState {
+    WAIT_SELECTING_PIECE,
+    WAIT_SELECTING_TARGET,
+}
+</file>
+
+<file path="client/src/main/java/controller/IGameUI.java">
+package controller;
+
+import endpoint.view.BoardPanel;
+import interfaces.IPlayer;
+
+public interface IGameUI{
+    void onGameUpdate();
+    void onWin(IPlayer winner);
+    void updateTimerLabel(String text);
+
+    BoardPanel getBoardPanel();
+}
+</file>
+
+<file path="client/src/main/java/endpoint/view/AskUserName.java">
+package endpoint.view;
+
+import javax.swing.*;
+
+public class AskUserName {
+    /**
+     * Ask the user for their name, or null if cancelled.
+     */
+    public static String askUsername() throws Exception {
+        final String[] result = new String[1];
+        final boolean[] cancelled = {false};
+
+        Runnable prompt = () -> {
+            String input = (String) JOptionPane.showInputDialog(
+                    null,
+                    utils.ConfigLoader.getMessage("enter.name", "Enter your name:"),
+                    utils.ConfigLoader.getMessage("welcome.title", "Welcome to KFCHESS"),
+                    JOptionPane.PLAIN_MESSAGE,
+                    null,
+                    null,
+                    null
+            );
+            if (input == null) { // Cancel or close
+                cancelled[0] = true;
+                return;
+            }
+            result[0] = input.trim().isEmpty()
+                    ? utils.ConfigLoader.getMessage("anonymous.name", "Anonymous")
+                    : input.trim();
+        };
+
+        if (SwingUtilities.isEventDispatchThread()) {
+            prompt.run();
+        } else {
+            SwingUtilities.invokeAndWait(prompt);
+        }
+
+        return cancelled[0] ? null : result[0];
+    }
+}
+</file>
+
+<file path="client/src/main/java/endpoint/view/WaitDialog.java">
+package endpoint.view;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class WaitDialog {
+
+    private JDialog dialog;
+    private JLabel label;
+    private JProgressBar progressBar;
+    private Runnable onCloseAction;
+
+    public void setOnCloseAction(Runnable onCloseAction) {
+        this.onCloseAction = onCloseAction;
+    }
+
+    public synchronized void showOrUpdate(String message) {
+        if (SwingUtilities.isEventDispatchThread()) {
+            internalShowOrUpdate(message);
+        } else {
+            SwingUtilities.invokeLater(() -> internalShowOrUpdate(message));
+        }
+    }
+
+    private void internalShowOrUpdate(String message) {
+        if (dialog == null) {
+            label = new JLabel(wrapHtml(escapeHtml(message)), SwingConstants.CENTER);
+            progressBar = new JProgressBar();
+            progressBar.setIndeterminate(true);
+
+            dialog = new JDialog((Frame) null, "Waiting for opponent", false);
+            dialog.setLayout(new BorderLayout(10, 10));
+
+            JPanel content = new JPanel(new BorderLayout(5, 5));
+            content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            content.add(label, BorderLayout.CENTER);
+            content.add(progressBar, BorderLayout.SOUTH);
+
+            dialog.getContentPane().add(content, BorderLayout.CENTER);
+            dialog.setSize(360, 140);
+            dialog.setResizable(false);
+            dialog.setLocationRelativeTo(null);
+            dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+
+            dialog.addWindowListener(new java.awt.event.WindowAdapter() {
+                @Override
+                public void windowClosing(java.awt.event.WindowEvent e) {
+                    if (onCloseAction != null) {
+                        onCloseAction.run();
+                    }
+                }
+            });
+
+            dialog.setVisible(true);
+        } else {
+            label.setText(wrapHtml(escapeHtml(message)));
+            if (!dialog.isVisible()) {
+                dialog.setVisible(true);
+            }
+        }
+    }
+
+    public synchronized void close() {
+        if (SwingUtilities.isEventDispatchThread()) {
+            internalClose();
+        } else {
+            SwingUtilities.invokeLater(this::internalClose);
+        }
+    }
+
+    private void internalClose() {
+        if (dialog != null) {
+            dialog.dispose();
+            dialog = null;
+            label = null;
+            progressBar = null;
+        }
+    }
+
+    private static String wrapHtml(String s) {
+        return "<html><div style='text-align:center;'>" + s + "</div></html>";
+    }
+
+    private static String escapeHtml(String s) {
+        if (s == null) return "";
+        return s.replace("&", "&amp;")
+                .replace("<", "&lt;")
+                .replace(">", "&gt;")
+                .replace("\n", "<br/>");
+    }
+}
+</file>
+
+<file path="client/src/main/java/sound/EventSoundListener.java">
+package sound;
+
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.IEventListener;
+
+public class EventSoundListener implements IEventListener {
+    public EventSoundListener(){
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_START_MOVED, this);
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        SoundManager.playSound(event.type().getVal()+".wav");
+    }
+}
+</file>
+
+<file path="common/src/main/java/board/BoardRulesEngine.java">
+package board;
+
+import interfaces.IBoard;
+import interfaces.IPiece;
+import pieces.Position;
+
+public class BoardRulesEngine {
+    public static boolean isMoveLegal(IBoard board, Position from, Position to) {
+        return board.isInBounds(from) && board.isInBounds(to) && board.isMoveLegal(from, to);
+    }
+
+    public static boolean isJumpLegal(IBoard board, IPiece piece) {
+        return board.isJumpLegal(piece);
+    }
+}
+</file>
+
+<file path="common/src/main/java/constants/ServerConfig.java">
+package constants;
+
+import utils.ConfigLoader;
+
+public final class ServerConfig {
+
+    public static final String SERVER_ENDPOINT = "/game"; // extracted for ServerEndpoint annotation
+    public static final String HOST = ConfigLoader.getConfig("server.host", "localhost");
+    public static final int PORT = Integer.parseInt(ConfigLoader.getConfig("server.port", "8025"));
+    public static final String WS_PATH = ConfigLoader.getConfig("server.ws.path", "/ws");
+    public static final String WS_GAME_ENDPOINT = ConfigLoader.getConfig("server.endpoint.game", "/game");
+
+    private ServerConfig() {}
+}
+</file>
+
+<file path="common/src/main/java/dto/EventType.java">
+package dto;
+public enum EventType {
+    WAIT, GAME_INIT, PLAYER_SELECTED, PLAYER_ID, SET_NAME, UNKNOWN
+}
+</file>
+
+<file path="common/src/main/java/dto/PieceView.java">
+package dto;
+
+import board.BoardConfig;
+import interfaces.IBoard;
+import interfaces.IPiece;
+import interfaces.IPlayer;
+import pieces.EPieceType;
+
+import java.awt.image.BufferedImage;
+import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
+
+public record PieceView(BufferedImage frame,
+        double x,
+        double y){
+
+    public static PieceView from(IPiece piece, BoardConfig bc) {
+        var physics = piece.getCurrentState().getPhysics();
+        return new PieceView(
+                piece.getCurrentState().getGraphics().getCurrentFrame(),
+                (physics.getCurrentX() / bc.physicsDimension().getWidth())* bc.panelDimension().getWidth(), (physics.getCurrentY() / bc.physicsDimension().getHeight())* bc.panelDimension().getHeight()
+        );
+    }
+
+    public static List<PieceView> toPieceViews(IBoard board) {
+        return Arrays.stream(board.getPlayers())
+                .flatMap((IPlayer player) -> player.getPieces().stream())
+                .filter(piece -> !piece.isCaptured())
+                .map(p->PieceView.from(p,board.getBoardConfig()))
+                .collect(Collectors.toList());
+    }
+
+}
+</file>
+
+<file path="common/src/main/java/events/IEventListener.java">
+package events;
+
+public interface IEventListener {
+    void onEvent(GameEvent event);
+}
+</file>
+
+<file path="common/src/main/java/events/listeners/CapturedLogger.java">
+package events.listeners;
+
+import events.*;
+
+public class CapturedLogger implements IEventListener {
+
+    public CapturedLogger(){
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+
+    }
+}
+</file>
+
+<file path="common/src/main/java/events/listeners/GameEndLogger.java">
+package events.listeners;
+
+import events.*;
+
+public class GameEndLogger implements IEventListener {
+
+    public GameEndLogger(){
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+
+    }
+}
+</file>
+
+<file path="common/src/main/java/events/listeners/JumpsLogger.java">
+package events.listeners;
+
+import events.*;
+
+public class JumpsLogger implements IEventListener {
+
+    public JumpsLogger(){
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+
+    }
+}
+</file>
+
+<file path="common/src/main/java/game/IBoardView.java">
+package game;
+
+public interface IBoardView {
+    void repaint();
+}
+</file>
+
+<file path="common/src/main/java/interfaces/ICommand.java">
+package interfaces;
+
+/**
+ * Interface for command pattern actions in the game.
+ */
+public interface ICommand {
+    /**
+     * Executes the command action.
+     */
+    void execute();
+}
+</file>
+
+<file path="common/src/main/java/moves/Data.java">
+package moves;
+
+import interfaces.IBoard;
+import interfaces.IPiece;
+import pieces.Position;
+
+/**
+ * Container class for move validation data.
+ * Holds the board state, moving piece, and target position
+ * for validating move conditions.
+ */
+public class Data {
+    /** The game board reference */
+    public final IBoard board;
+    /** The piece being moved */
+    public final IPiece pieceFrom;
+    /** The target position for the move */
+    public final Position to;
+
+    /**
+     * Constructs a new Data object for move validation.
+     * 
+     * @param board The current game board
+     * @param fromPiece The piece that is attempting to move
+     * @param to The target position for the move
+     */
+    public Data(IBoard board, IPiece fromPiece, Position to) {
+        this.board = board;
+        this.pieceFrom = fromPiece;
+        this.to = to;
+    }
+}
+</file>
+
+<file path="common/src/main/java/pieces/EPieceEvent.java">
+package pieces;
+
+public enum EPieceEvent {
+    MOVE, JUMP, DONE
+}
+</file>
+
+<file path="common/src/main/java/state/EState.java">
+package state;
+
+/**
+ * Enum representing possible states for a piece.
+ */
+public enum EState {
+    /** Idle state, can perform actions, cannot move over. */
+    IDLE("idle", true, true),
+    /** Jump state, cannot perform actions, cannot move over. */
+    JUMP("jump", false, false),
+    /** Move state, cannot perform actions, can move over. */
+    MOVE("move", false, false),
+    /** Long rest state, cannot perform actions, can move over. */
+    LONG_REST("long_rest", false, true),
+    /** Short rest state, cannot perform actions, can move over. */
+    SHORT_REST("short_rest", false, true);
+
+    private final String name;
+    private final boolean canAction;
+    private final boolean canCapturable;
+
+    /**
+     * Constructs an EState enum value.
+     * @param name State name
+     * @param canAction Whether the state allows actions
+     * @param canCapturable Whether the state allows moving over
+     */
+    EState(String name, boolean canAction, boolean canCapturable){
+        this.name = name;
+        this.canAction = canAction;
+        this.canCapturable = canCapturable;
+    }
+
+    /**
+     * Returns the name of the state.
+     * @return State name
+     */
+    @Override
+    public String toString() {
+        return name;
+    }
+
+    /**
+     * Returns true if the state allows actions.
+     * @return true if can perform actions
+     */
+    public boolean isCanAction(){
+        return canAction;
+    }
+
+    /**
+     * Returns true if the state allows moving over.
+     * @return true if can move over
+     */
+    public boolean isCanCapturable() {
+        return canCapturable;
+    }
+
+    /**
+     * Gets the EState value from a string (case-insensitive).
+     * @param s State name string
+     * @return EState value
+     */
+    public static EState getValueOf(String s){
+        return EState.valueOf(s.toUpperCase());
+    }
+}
+</file>
+
+<file path="common/src/main/java/utils/Utils.java">
+package utils;
+
+import pieces.Position;
+
+public class Utils {
+
+    /**
+     * Returns the standard chess notation for a given position.
+     * @param pos the position on the board
+     * @return the position as a string (e.g., "A1")
+     */
+    public static String getName(Position pos){
+        // Extracted 'A' to constant
+        // extracted numeric constants and separator
+        return (char)(pos.getRow() + constants.PieceConstants.ROW_LETTER_OFFSET) + "" + (pos.getCol() + constants.PieceConstants.COLUMN_OFFSET);
+    }
+
+    public static String formatElapsedTime(long elapsedMillis) {
+        int seconds = (int) (elapsedMillis / 1000) % 60;
+        int minutes = (int) (elapsedMillis / (1000 * 60));
+        return String.format("%02d:%02d", minutes, seconds);
+    }
+}
+</file>
+
+<file path="common/src/main/resources/board/board.csv">
+RB,NB,BB,KB,QB,BB,NB,RB
+PB,PB,PB,PB,PB,PB,PB,PB
+,,,,,,,
+,,,,,,,
+,,,,,,,
+,,,,,,,
+PW,PW,PW,PW,PW,PW,PW,PW
+RW,NW,BW,KW,QW,BW,NW,RW
+</file>
+
+<file path="common/src/main/resources/messages.properties">
+wait.message=Waiting for second player to join...
+game.full.message=Game is full
+</file>
+
+<file path="common/src/main/resources/pieces/B/moves1.txt">
+1,1
+2,2
+3,3
+4,4
+5,5
+6,6
+7,7
+-1,1
+-2,2
+-3,3
+-4,4
+-5,5
+-6,6
+-7,7
+1,-1
+2,-2
+3,-3
+4,-4
+5,-5
+6,-6
+7,-7
+-1,-1
+-2,-2
+-3,-3
+-4,-4
+-5,-5
+-6,-6
+-7,-7
+</file>
+
+<file path="common/src/main/resources/pieces/B/states/transitions.csv">
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle
+short_rest,done,idle
+</file>
+
+<file path="common/src/main/resources/pieces/K/moves0.txt">
+1,0
+1,1
+0,1
+-1,1
+-1,0
+-1,-1
+0,-1
+1,-1
+</file>
+
+<file path="common/src/main/resources/pieces/K/moves1.txt">
+1,0
+1,1
+0,1
+-1,1
+-1,0
+-1,-1
+0,-1
+1,-1
+</file>
+
+<file path="common/src/main/resources/pieces/K/states/transitions.csv">
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle
+short_rest,done,idle
+</file>
+
+<file path="common/src/main/resources/pieces/N/moves0.txt">
+2,1
+1,2
+-1,2
+-2,1
+-2,-1
+-1,-2
+1,-2
+2,-1
+</file>
+
+<file path="common/src/main/resources/pieces/N/moves1.txt">
+2,1
+1,2
+-1,2
+-2,1
+-2,-1
+-1,-2
+1,-2
+2,-1
+</file>
+
+<file path="common/src/main/resources/pieces/N/states/transitions.csv">
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle
+short_rest,done,idle
+</file>
+
+<file path="common/src/main/resources/pieces/P/moves0.txt">
+1,0:non_capture
+2,0:first_time,non_capture
+1,-1:capture
+1,1:capture
+</file>
+
+<file path="common/src/main/resources/pieces/P/moves1.txt">
+-1,0:non_capture
+-2,0:first_time,non_capture
+-1,-1:capture
+-1,1:capture
+</file>
+
+<file path="common/src/main/resources/pieces/P/states/transitions2.csv">
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+idle_after_first_move,move,move
+idle_after_first_move,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle_after_first_move
+short_rest,done,idle_after_first_move
+</file>
+
+<file path="common/src/main/resources/pieces/Q/moves0.txt">
+1,1
+2,2
+3,3
+4,4
+5,5
+6,6
+7,7
+-1,-1
+-2,-2
+-3,-3
+-4,-4
+-5,-5
+-6,-6
+-7,-7
+1,-1
+2,-2
+3,-3
+4,-4
+5,-5
+6,-6
+7,-7
+-1,1
+-2,2
+-3,3
+-4,4
+-5,5
+-6,6
+-7,7
+1,0
+2,0
+3,0
+4,0
+5,0
+6,0
+7,0
+-1,0
+-2,0
+-3,0
+-4,0
+-5,0
+-6,0
+-7,0
+0,1
+0,2
+0,3
+0,4
+0,5
+0,6
+0,7
+0,-1
+0,-2
+0,-3
+0,-4
+0,-5
+0,-6
+0,-7
+</file>
+
+<file path="common/src/main/resources/pieces/Q/moves1.txt">
+1,1
+2,2
+3,3
+4,4
+5,5
+6,6
+7,7
+-1,-1
+-2,-2
+-3,-3
+-4,-4
+-5,-5
+-6,-6
+-7,-7
+1,-1
+2,-2
+3,-3
+4,-4
+5,-5
+6,-6
+7,-7
+-1,1
+-2,2
+-3,3
+-4,4
+-5,5
+-6,6
+-7,7
+1,0
+2,0
+3,0
+4,0
+5,0
+6,0
+7,0
+-1,0
+-2,0
+-3,0
+-4,0
+-5,0
+-6,0
+-7,0
+0,1
+0,2
+0,3
+0,4
+0,5
+0,6
+0,7
+0,-1
+0,-2
+0,-3
+0,-4
+0,-5
+0,-6
+0,-7
+</file>
+
+<file path="common/src/main/resources/pieces/Q/states/transitions.csv">
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle
+short_rest,done,idle
+</file>
+
+<file path="common/src/main/resources/pieces/R/moves0.txt">
+1,0
+2,0
+3,0
+4,0
+5,0
+6,0
+7,0
+-1,0
+-2,0
+-3,0
+-4,0
+-5,0
+-6,0
+-7,0
+0,1
+0,2
+0,3
+0,4
+0,5
+0,6
+0,7
+0,-1
+0,-2
+0,-3
+0,-4
+0,-5
+0,-6
+0,-7
+</file>
+
+<file path="common/src/main/resources/pieces/R/moves1.txt">
+1,0
+2,0
+3,0
+4,0
+5,0
+6,0
+7,0
+-1,0
+-2,0
+-3,0
+-4,0
+-5,0
+-6,0
+-7,0
+0,1
+0,2
+0,3
+0,4
+0,5
+0,6
+0,7
+0,-1
+0,-2
+0,-3
+0,-4
+0,-5
+0,-6
+0,-7
+</file>
+
+<file path="common/src/main/resources/pieces/R/states/transitions.csv">
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle
+short_rest,done,idle
+</file>
+
+<file path="common/src/main/resources/pieces/replaceJsonConfig.ps1">
+# Base path
+$basePath = "C:\Users\tsofn\Desktop\Tsufit\programming\bootcamp\CTD\project\KFChessClientServerProject\common\src\main\resources\pieces"
+
+# List of states
+$states = @("idle", "jump", "long_rest", "move", "short_rest")
+
+foreach ($state in $states) {
+    $sourceConfig = Join-Path $basePath "B\states\$state\config.json"
+
+    if (-not (Test-Path $sourceConfig)) {
+        Write-Host "Source config not found: $sourceConfig"
+        continue
+    }
+
+    Get-ChildItem -Path $basePath -Recurse -Filter "config.json" |
+        Where-Object { $_.FullName -match "\\$state\\config.json" -and $_.FullName -notmatch "\\B\\" } |
+        ForEach-Object {
+            Write-Host "Replacing $($_.FullName) with $sourceConfig"
+            Copy-Item -Path $sourceConfig -Destination $_.FullName -Force
+        }
+}
+</file>
+
+<file path="common/src/test/java/BoardRulesEngineTest.java">
+import board.BoardRulesEngine;
+import interfaces.IBoard;
+import org.junit.jupiter.api.Test;
+import pieces.Position;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class BoardRulesEngineTest {
+
+    @Test
+    void testIsMoveLegal_validMove_returnsTrue() {
+        IBoard board = mock(IBoard.class);
+        Position from = new Position(1, 1);
+        Position to = new Position(1, 2);
+
+        when(board.isInBounds(from)).thenReturn(true);
+        when(board.isInBounds(to)).thenReturn(true);
+        when(board.isMoveLegal(from, to)).thenReturn(true);
+
+        assertTrue(BoardRulesEngine.isMoveLegal(board, from, to));
+    }
+
+    @Test
+    void testIsMoveLegal_outOfBounds_returnsFalse() {
+        IBoard board = mock(IBoard.class);
+        Position from = new Position(-1, -1);
+        Position to = new Position(10, 10);
+
+        when(board.isInBounds(from)).thenReturn(false);
+        when(board.isInBounds(to)).thenReturn(false);
+
+        assertFalse(BoardRulesEngine.isMoveLegal(board, from, to));
+    }
+}
+</file>
+
+<file path="common/src/test/java/ConfigLoaderTest.java">
+import org.junit.jupiter.api.Test;
+import utils.ConfigLoader;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class ConfigLoaderTest {
+
+    @Test
+    void testGetConfig_existingKey_returnsValue() {
+        String value = ConfigLoader.getConfig("board.rows", "-1");
+        assertNotEquals("-1", value);
+    }
+
+    @Test
+    void testGetConfig_missingKey_returnsDefault() {
+        String value = ConfigLoader.getConfig("non.existing.key", "default");
+        assertEquals("default", value);
+    }
+}
+</file>
+
+<file path="server/src/main/java/endpoint/launch/WebSocketServer.java">
+package endpoint.launch;
+
+import org.glassfish.tyrus.server.Server;
+import constants.ServerConfig;
+
+public class WebSocketServer {
+    public static void main(String[] args) throws Exception {
+        Server ws = new Server(ServerConfig.HOST, ServerConfig.PORT, ServerConfig.WS_PATH, null, ChessServerEndpoint.class);
+        ws.start();
+        System.out.printf("WebSocket server started at ws://%s:%d%s%s%n",
+                ServerConfig.HOST, ServerConfig.PORT, ServerConfig.WS_PATH, ServerConfig.SERVER_ENDPOINT);
+        System.out.println("Press any key to stop...");
+        System.in.read();
+        ws.stop();
+    }
+}
+</file>
+
+<file path="client/src/main/java/viewUtils/BoardRenderer.java">
+package viewUtils;
+
+import board.BoardConfig;
+import dto.PieceView;
+
+import java.awt.*;
+import java.util.List;
+
+/**
+ * Utility class for rendering the board and its pieces.
+ */
+public class BoardRenderer {
+    public static void draw(Graphics g, List<PieceView> pieces, BoardConfig bc) {
+        int squareWidth = (int) (bc.panelDimension().getWidth() / bc.gridDimension().getWidth());
+        int squareHeight = (int) (bc.panelDimension().getHeight() / bc.gridDimension().getHeight());
+
+        for(PieceView p:pieces){
+            PieceRenderer.draw(g, p, squareWidth, squareHeight);
+        }
+    }
+}
+</file>
+
+<file path="client/src/main/java/viewUtils/PieceRenderer.java">
+package viewUtils;
+
+import constants.GameConstants;
+import dto.PieceView;
+import interfaces.IPiece;
+
+import java.awt.*;
+import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+
+/**
+ * Utility class for rendering pieces on the board.
+ */
+public class PieceRenderer {
+    /**
+     * Draws a piece on the board using its current state and animation frame.
+     * @param g Graphics context
+     * @param p The piece to draw
+     * @param squareWidth Width of a board square
+     * @param squareHeight Height of a board square
+     */
+    public static void draw(Graphics g, PieceView p, int squareWidth, int squareHeight) {
+        g.drawImage(p.frame(), (int) p.x(), (int) p.y(), squareWidth, squareHeight, null);
+    }
+
+}
+</file>
+
+<file path="common/pom.xml">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.kfchess</groupId>
+        <artifactId>kfchess-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>common</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-annotations</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+        </dependency>
+        <!-- unit testing -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>5.10.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- mocking -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- for easier Mockito + JUnit5 integration -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
+            <version>5.5.0</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>3.0.0-M8</version>
+                <configuration>
+                    <includes>
+                        <include>**/*Test.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+</file>
+
+<file path="common/src/main/java/constants/Messages.java">
+package constants;
+
+import java.util.MissingResourceException;
+import java.util.ResourceBundle;
+
+public final class Messages {
+
+    private static final String BUNDLE_NAME = "messages"; // resources/messages.properties
+    private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
+
+    private Messages() {}
+
+    public enum Key {
+        CLIENT_CONNECTED_LOG("client.connected.log", "Client connected: "),
+        ASSIGNED_PLAYERID_LOG("assigned.playerId.log", " | assigned playerId: "),
+        WAIT_MESSAGE("wait.message", "Waiting for second player to join..."),
+        GAME_FULL_MESSAGE("game.full.message", "Game is full"),
+        RECEIVED_MESSAGE_LOG("received.message.log", "Received message from "),
+        UNKNOWN_SESSION_ERROR("unknown.session.error", "Unknown session, ignoring message"),
+        PLAYER_ID_MISMATCH_ERROR("player.id.mismatch.error", "Player ID mismatch! Ignoring message from player %d"),
+        SET_NAME_LOG("set.name.log", "Set name for player %d: %s"),
+        CLIENT_DISCONNECTED_LOG("client.disconnected.log", "Client disconnected: "),
+        REASON_LOG("reason.log", " Reason: "),
+        SESSION_ERROR_LOG("session.error.log", "Error on session %s: %s"),
+        UNKNOWN_MESSAGE_TYPE_ERROR("unknown.message.type.error", "Unknown message type: %s"),
+        PROCESS_MESSAGE_ERROR("process.message.error", "Failed to process message: %s"),
+        PLAYER_1_NAME("player.1.name", "player Black"),
+        PLAYER_2_NAME("player.2.name", "player White");
+
+        private final String key;
+        private final String defaultValue;
+
+        Key(String key, String defaultValue) {
+            this.key = key;
+            this.defaultValue = defaultValue;
+        }
+
+        public String key() {
+            return key;
+        }
+
+        public String defaultValue() {
+            return defaultValue;
+        }
+    }
+
+    public static String get(Key key, Object... args) {
+        String pattern;
+        try {
+            pattern = BUNDLE.getString(key.key());
+        } catch (MissingResourceException e) {
+            pattern = key.defaultValue();
+        }
+        if (args != null && args.length > 0) {
+            try {
+                return String.format(pattern, args);
+            } catch (Exception e) {
+                return pattern; // fallback if formatting fails
+            }
+        }
+        return pattern;
+    }
+}
+</file>
+
+<file path="common/src/main/java/dto/GameDTO.java">
+package dto;
+
+import board.BoardConfig;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+public class GameDTO {
+    @JsonProperty("boardConfig")
+    private BoardConfig boardConfig;
+
+    @JsonProperty("players")
+    private PlayerDTO[] players;
+
+    @JsonProperty("yourId")
+    private int yourId;
+
+    @JsonProperty("startTimeNano")
+    private long startTimeNano;
+
+    public GameDTO() {}
+
+    public GameDTO(BoardConfig boardConfig, PlayerDTO[] players, int yourId, long startTimeNano) {
+        this.boardConfig = boardConfig;
+        this.players = players;
+        this.yourId = yourId;
+        this.startTimeNano = startTimeNano;
+    }
+
+    public BoardConfig getBoardConfig() { return boardConfig; }
+    public void setBoardConfig(BoardConfig boardConfig) { this.boardConfig = boardConfig; }
+
+    public PlayerDTO[] getPlayers() { return players; }
+    public void setPlayers(PlayerDTO[] players) { this.players = players; }
+
+    public int getYourId() { return yourId; }
+    public void setYourId(int yourId) { this.yourId = yourId; }
+
+    public long getStartTimeNano() { return startTimeNano; }
+    public void setStartTimeNano(long startTimeNano) { this.startTimeNano = startTimeNano; }
+}
+</file>
+
+<file path="common/src/main/java/events/GameEvent.java">
+package events;
+
+public record GameEvent(EGameEvent type, Object data) {
+}
+</file>
+
+<file path="common/src/main/java/events/listeners/ActionData.java">
+package events.listeners;
+
+public record ActionData(int playerId, String message) {
+}
+</file>
+
+<file path="common/src/main/java/events/listeners/MovesLogger.java">
+package events.listeners;
+
+import events.*;
+
+public class MovesLogger implements IEventListener {
+
+    public MovesLogger(){
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_START_MOVED, this);
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        // publish(event);
+    }
+
+//    static Map<Integer, IEventListener> listeners = new HashMap<>();
+//
+//    public static void subscribe(IEventListener listener, int playerId){
+//        listeners.put(playerId ,listener);
+//    }
+//
+//    private void publish(GameEvent event){
+//        listeners.get(((ActionData)event.data).playerId).onEvent(event);
+//    }
+}
+</file>
+
+<file path="common/src/main/java/interfaces/IPlayerCursor.java">
+package interfaces;
+
+import pieces.Position;
+
+import java.awt.*;
+
+/**
+ * Interface for player cursor operations.
+ */
+public interface IPlayerCursor {
+    /**
+     * Moves the cursor up by one row.
+     */
+    void moveUp();
+
+    /**
+     * Moves the cursor down by one row.
+     */
+    void moveDown();
+
+    /**
+     * Moves the cursor left by one column.
+     */
+    void moveLeft();
+
+    /**
+     * Moves the cursor right by one column.
+     */
+    void moveRight();
+
+    /**
+     * Draws the cursor on the board panel.
+     *
+     * @param g          Graphics context
+     * @param panelWidth Width of the panel
+     * @param panelHeight Height of the panel
+     */
+    void draw(Graphics g, int panelWidth, int panelHeight);
+
+    /**
+     * Gets the current position of the cursor.
+     *
+     * @return The position object
+     */
+    Position getPosition();
+
+    Color getColor();
+}
+</file>
+
+<file path="common/src/main/java/moves/ECondition.java">
+package moves;
+
+import java.util.function.Predicate;
+
+/**
+ * Enum representing different conditions for validating piece moves.
+ * Each condition is associated with a predicate that tests whether
+ * a move is valid under specific circumstances.
+ */
+public enum ECondition {
+    /** Validates that the target square is empty */
+    NON_CAPTURE(d -> d.board.getPiece(d.to) == null),
+    
+    /** Validates that the piece hasn't moved from its starting position */
+    FIRST_TIME(d -> d.pieceFrom.isFirstMove()),
+    
+    /** Validates that the target square contains a piece that can be captured */
+    CAPTURE(d -> d.board.getPiece(d.to) != null);
+
+    
+    /** The predicate used to test the condition */
+    private final Predicate<Data> condition;
+
+    /**
+     * Constructs a condition with the specified validation predicate.
+     * 
+     * @param condition The predicate that defines the move validation logic
+     */
+    ECondition(Predicate<Data> condition) {
+        this.condition = condition;
+    }
+
+    /**
+     * Tests if a move is valid under this condition.
+     * 
+     * @param data The move data to validate
+     * @return true if the move is valid under this condition, false otherwise
+     */
+    public boolean isCanMove(Data data) {
+        return condition.test(data);
+    }
+}
+</file>
+
+<file path="common/src/main/java/moves/Move.java">
+package moves;
+
+import java.util.Objects;
+
+/**
+ * Represents a single move with delta x and delta y.
+ */
+public class Move {
+    int dx;
+    int dy;
+    ECondition[] condition;
+
+    /**
+     * Constructs a move with the given delta x and delta y.
+     * @param dx Delta x (row difference)
+     * @param dy Delta y (column difference)
+     */
+    Move(int dx, int dy, ECondition[] condition) {
+        this.dx = dx;
+        this.dy = dy;
+        this.condition = condition;
+    }
+
+    /**
+     * Gets the delta x of the move.
+     * @return Delta x value
+     */
+    public int getDx() {
+        return dx;
+    }
+
+    /**
+     * Gets the delta y of the move.
+     * @return Delta y value
+     */
+    public int getDy() {
+        return dy;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Move move = (Move) o;
+        return getDx() == move.getDx() && getDy() == move.getDy();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getDx(), getDy());
+    }
+
+    public ECondition[] getCondition() {
+        return condition;
+    }
+}
+</file>
+
+<file path="common/src/main/java/pieces/EPieceType.java">
+package pieces;
+
+/**
+ * Enum representing different chess piece types with their properties.
+ * Each piece type has a letter code, movement capability, and point value.
+ */
+public enum EPieceType {
+    /** Bishop - can only move diagonally (code and score extracted to PieceConstants if needed) */
+    B("B", false, 3),
+    /** King - most important piece, can move one square in any direction (code and score extracted to PieceConstants if needed) */
+    K("K", false, 0),
+    /** Knight - can jump over other pieces (code and score extracted to PieceConstants if needed) */
+    N("N", true, 3),
+    /** Pawn - basic piece that can be promoted (code and score extracted to PieceConstants if needed) */
+    P("P", false, 1),
+    /** Queen - most powerful piece, can move in any direction (code and score extracted to PieceConstants if needed) */
+    Q("Q", false, 9),
+    /** Rook - can move horizontally and vertically (code and score extracted to PieceConstants if needed) */
+    R("R", false, 5);
+
+    /** The letter code representing this piece type */
+    private final String val;
+    /** Whether this piece can jump over other pieces */
+    private final boolean canSkip;
+    /** The point value of this piece type */
+    private final int score;
+
+    /**
+     * Constructs a piece type with its properties.
+     * 
+     * @param val The letter code for this piece type
+     * @param canSkip Whether this piece can jump over others
+     * @param score The point value of this piece
+     */
+    EPieceType(String val, boolean canSkip, int score) {
+        this.val = val;
+        this.canSkip = canSkip;
+        this.score = score;
+    }
+
+    /**
+     * Gets the letter code for this piece type.
+     * @return The piece's letter code
+     */
+    public String getVal() {
+        return val;
+    }
+
+    /**
+     * Checks if this piece type can jump over other pieces.
+     * @return true if the piece can jump over others
+     */
+    public boolean isCanSkip() {
+        return canSkip;
+    }
+
+    /**
+     * Gets the point value of this piece type.
+     * @return The piece's score value
+     */
+    public int getScore() {
+        return score;
+    }
+}
+</file>
+
+<file path="common/src/main/resources/config.properties">
+server.host=localhost
+server.port=8025
+server.ws.path=/ws
+server.endpoint.launch.game=/game
+board.rows=8
+board.cols=8
+log.file=debug.log
+piece.sprite.frames_per_sec=1
+piece.sprite.is_loop=true
+piece.csv.path=/board/board.csv
+</file>
+
+<file path="common/src/main/resources/pieces/B/moves0.txt">
+1,1
+2,2
+3,3
+4,4
+5,5
+6,6
+7,7
+-1,1
+-2,2
+-3,3
+-4,4
+-5,5
+-6,6
+-7,7
+1,-1
+2,-2
+3,-3
+4,-4
+5,-5
+6,-6
+7,-7
+-1,-1
+-2,-2
+-3,-3
+-4,-4
+-5,-5
+-6,-6
+-7,-7
+</file>
+
+<file path="common/src/main/resources/pieces/B/states/idle/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 6
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/B/states/jump/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 3.0,
+    "action_time":2
+  },
+  "graphics": {
+    "frames_per_sec": 3
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/B/states/long_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": 5
+  },
+  "graphics": {
+    "frames_per_sec": 1
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/B/states/move/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 12
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/B/states/short_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50.0,
+    "action_time": 2.5
+  },
+  "graphics": {
+    "frames_per_sec": 2
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/K/states/idle/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 6
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/K/states/jump/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 3.0,
+    "action_time":2
+  },
+  "graphics": {
+    "frames_per_sec": 3
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/K/states/long_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": 5
+  },
+  "graphics": {
+    "frames_per_sec": 1
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/K/states/move/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 12
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/K/states/short_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50.0,
+    "action_time": 2.5
+  },
+  "graphics": {
+    "frames_per_sec": 2
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/N/states/idle/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 6
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/N/states/jump/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 3.0,
+    "action_time":2
+  },
+  "graphics": {
+    "frames_per_sec": 3
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/N/states/long_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": 5
+  },
+  "graphics": {
+    "frames_per_sec": 1
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/N/states/move/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 12
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/N/states/short_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50.0,
+    "action_time": 2.5
+  },
+  "graphics": {
+    "frames_per_sec": 2
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/P/states/idle/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 6
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/P/states/jump/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 3.0,
+    "action_time":2
+  },
+  "graphics": {
+    "frames_per_sec": 3
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/P/states/long_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": 5
+  },
+  "graphics": {
+    "frames_per_sec": 1
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/P/states/move/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 12
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/P/states/short_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50.0,
+    "action_time": 2.5
+  },
+  "graphics": {
+    "frames_per_sec": 2
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/P/states/transitions.csv">
+from_state,event,to_state
+idle,move,move
+idle,jump,jump
+move,done,long_rest
+jump,done,short_rest
+long_rest,done,idle
+short_rest,done,idle
+</file>
+
+<file path="common/src/main/resources/pieces/Q/states/idle/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 6
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/Q/states/jump/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 3.0,
+    "action_time":2
+  },
+  "graphics": {
+    "frames_per_sec": 3
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/Q/states/long_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": 5
+  },
+  "graphics": {
+    "frames_per_sec": 1
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/Q/states/move/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 12
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/Q/states/short_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50.0,
+    "action_time": 2.5
+  },
+  "graphics": {
+    "frames_per_sec": 2
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/R/states/idle/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 6
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/R/states/jump/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 3.0,
+    "action_time":2
+  },
+  "graphics": {
+    "frames_per_sec": 3
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/R/states/long_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 0.0,
+    "action_time": 5
+  },
+  "graphics": {
+    "frames_per_sec": 1
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/R/states/move/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50,
+    "action_time": -1
+  },
+  "graphics": {
+    "frames_per_sec": 12
+  }
+}
+</file>
+
+<file path="common/src/main/resources/pieces/R/states/short_rest/config.json">
+{
+  "physics": {
+    "speed_m_per_sec": 50.0,
+    "action_time": 2.5
+  },
+  "graphics": {
+    "frames_per_sec": 2
+  }
+}
+</file>
+
+<file path="common/src/test/java/EConditionTest.java">
+import interfaces.IBoard;
+import interfaces.IPiece;
+import moves.Data;
+import moves.ECondition;
+import org.junit.jupiter.api.Test;
+import pieces.Position;
+
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
+
+public class EConditionTest {
+
+    @Test
+    void testNonCapture_conditionTrueWhenTargetIsEmpty() {
+        IBoard board = mock(IBoard.class);
+        Position to = new Position(2, 2);
+        when(board.getPiece(to)).thenReturn(null);
+
+        IPiece piece = mock(IPiece.class);
+        Data data = new Data(board, piece, to);
+        assertTrue(ECondition.NON_CAPTURE.isCanMove(data));
+    }
+
+    @Test
+    void testCapture_conditionTrueWhenTargetHasPiece() {
+        IBoard board = mock(IBoard.class);
+        Position to = new Position(2, 2);
+        IPiece target = mock(IPiece.class);
+        when(board.getPiece(to)).thenReturn(target);
+
+        IPiece piece = mock(IPiece.class);
+        Data data = new Data(board, piece, to);
+        assertTrue(ECondition.CAPTURE.isCanMove(data));
+    }
+
+    @Test
+    void testFirstTime_conditionTrueWhenIdMatchesPosition() {
+        IPiece piece = mock(IPiece.class);
+        Position pos = new Position(3, 4);
+        when(piece.getPos()).thenReturn(pos);
+
+        Data data = new Data(mock(IBoard.class), piece, new Position(4, 4));
+        assertTrue(ECondition.FIRST_TIME.isCanMove(data));
+    }
+
+    @Test
+    void testFirstTime_conditionFalseWhenIdDifferentThanPosition() {
+        IPiece piece = mock(IPiece.class);
+        Position pos = new Position(3, 4);
+        when(piece.getPos()).thenReturn(pos);
+
+        Data data = new Data(mock(IBoard.class), piece, new Position(4, 4));
+        assertFalse(ECondition.FIRST_TIME.isCanMove(data));
+    }
+}
+</file>
+
+<file path="common/src/test/java/PositionTest.java">
+import org.junit.jupiter.api.Test;
+import pieces.Position;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PositionTest {
+
+    @Test
+    void testDx_and_Dy_computation() {
+        Position p1 = new Position(1, 1);
+        Position p2 = new Position(3, 4);
+
+        assertEquals(2, p2.dx(p1));
+        assertEquals(3, p2.dy(p1));
+    }
+
+    @Test
+    void testToString_and_Equals() {
+        Position pos = new Position(2, 5);
+        assertEquals("2,5", pos.toString());
+        assertEquals(new Position(2, 5), pos);
+    }
+}
+</file>
+
+<file path="common/src/main/java/constants/GameConstants.java">
+package constants;
+
+/**
+ * Internal game constants (board size, player count, etc.)
+ */
+public class GameConstants {
+    public static final int BOARD_SIZE = 8; // logical board size (for square board)
+    public static final int SQUARE_SIZE = 85; // pixel size per square
+    public static final int BOARD_ROWS = Integer.parseInt(utils.ConfigLoader.getConfig("board.rows", "8")); // extracted from config.properties
+    public static final int BOARD_COLS = Integer.parseInt(utils.ConfigLoader.getConfig("board.cols", "8")); // extracted from config.properties
+    public static final int MAX_PLAYERS = 2; // logical limit
+
+    // UI and game loop timers (ms)
+    public static final int UI_TIMER_MS = 1000; // extracted from GamePanel
+    public static final int GAME_LOOP_MS = 16; // extracted from Game.java
+}
+</file>
+
+<file path="common/src/main/java/constants/PieceConstants.java">
+package constants;
+
+/**
+ * Internal piece-related constants.
+ */
+public class PieceConstants {
+    public static final String PIECE_MOVES_PATH_PREFIX = "pieces/";
+    public static final String PIECE_MOVES_PATH_SUFFIX = "/moves";
+    public static final String PIECE_MOVES_PATH_EXT = ".txt";
+    public static final String COLOR_HEX_FORMAT = "#%02x%02x%02x";
+    public static final String POSITION_SEPARATOR = ",";
+    public static final String CONDITION_SEPARATOR = ":"; // extracted for Moves.java
+    public static final int ROW_LETTER_OFFSET = 'A'; // for ConvertPiecePositionToName
+    public static final int COLUMN_OFFSET = 1; // for ConvertPiecePositionToName and board column offset
+}
+</file>
+
+<file path="common/src/main/java/constants/PlayerConstants.java">
+package constants;
+
+import java.awt.Color;
+
+/**
+ * Internal player-related constants.
+ */
+public class PlayerConstants {
+    public static final Color[] PLAYER_COLORS = new Color[]{Color.RED, Color.BLUE}; // extracted from Player.java
+    public static final Color[] PIECES_COLOR = new Color[]{Color.BLACK, Color.WHITE};
+    public static final String[] COLORS_NAME = new String[]{"Black", "White"};
+}
+</file>
+
+<file path="common/src/main/java/dto/Message.java">
+package dto;
+
+public record Message<T>(EventType type, T data) {}
+</file>
+
+<file path="common/src/main/java/events/EventPublisher.java">
+package events;
+
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+public class EventPublisher {
+    private static final EventPublisher instance = new EventPublisher();
+    private final Map<EGameEvent, List<IEventListener>> listenersMap = new ConcurrentHashMap<>();
+
+    private EventPublisher() {}
+
+    public static EventPublisher getInstance() {
+        return instance;
+    }
+
+    public void subscribe(EGameEvent topic, IEventListener listener) {
+        listenersMap.computeIfAbsent(topic, k -> new CopyOnWriteArrayList<>()).add(listener);
+    }
+
+    public void unsubscribe(EGameEvent topic, IEventListener listener) {
+        List<IEventListener> listeners = listenersMap.get(topic);
+        if (listeners != null) {
+            listeners.remove(listener);
+            if (listeners.isEmpty()) {
+                listenersMap.remove(topic);
+            }
+        }
+    }
+
+    public void publish(EGameEvent topic, GameEvent event) {
+        List<IEventListener> listeners = listenersMap.get(topic);
+        if (listeners != null) {
+            // אפשר לעבור עליהם בבטחה גם בזמן ש־subscribe/unsubscribe מתבצע
+            for (IEventListener listener : listeners) {
+                listener.onEvent(event);
+            }
+        }
+    }
+}
+</file>
+
+<file path="common/src/main/java/interfaces/IGame.java">
+package interfaces;
+
+import pieces.Position;
+
+/**
+ * Interface for game logic and state management.
+ */
+public interface IGame extends Runnable{
+
+    /**
+     * Adds a command to the queue.
+     * @param cmd The command to add
+     */
+    void addCommand(ICommand cmd);
+
+    /**
+     * Executes all commands in the queue.
+     */
+    void update();
+
+    IPlayer getPlayerById(int id);
+
+    /**
+     * Gets the game board.
+     * @return The board instance
+     */
+    IBoard getBoard();
+
+    /**
+     * Handles selection for the given player.
+     * @param player The player making a selection
+     */
+    void handleSelection(IPlayer player, Position selected);
+
+    void handleSelection(int playerId, Position selected);
+
+    /**
+     * Returns the winner: 0 for player 1, 1 for player 2, -1 if no winner yet.
+     * @return The winner's player index, or -1 if no winner
+     */
+    IPlayer win();
+
+    @Override
+    void run();
+
+    void stopGameLoop();
+
+    long getStartTimeNano();
+
+    long getElapsedMillis();
+
+    IPlayer[] getPlayers();
+
+    boolean isRunning();
+
+    void setPlayerName(int playerId, String name);
+}
+</file>
+
+<file path="common/src/main/java/interfaces/IPhysicsData.java">
+package interfaces;
+
+import board.BoardConfig;
+import pieces.Position;
+import state.EState;
+
+/**
+ * Interface for physics data operations for piece movement.
+ */
+public interface IPhysicsData {
+    /**
+     * Gets the speed in meters per second.
+     * @return Speed in meters per second
+     */
+    double getSpeedMetersPerSec();
+
+    /**
+     * Sets the speed in meters per second.
+     * @param speedMetersPerSec Speed value
+     */
+    void setSpeedMetersPerSec(double speedMetersPerSec);
+
+    /**
+     * Resets the physics data for a new movement.
+     * @param state The state
+     * @param startPos The starting position
+     * @param to The target position
+     * @param startTimeNanos The start time in nanoseconds
+     */
+    void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos);
+
+    /**
+     * Updates the physics data for the piece.
+     */
+    void update(long now);
+
+    boolean isActionFinished();
+
+    /**
+     * Gets the current X position in pixels.
+     * @return The X position
+     */
+    double getCurrentX();
+
+    /**
+     * Gets the current Y position in pixels.
+     * @return The Y position
+     */
+    double getCurrentY();
+
+    Position getStartPos();
+
+    Position getTargetPos();
+}
+</file>
+
+<file path="common/src/main/java/state/StateMachine.java">
+package state;
+
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import interfaces.IState;
+import pieces.EPieceEvent;
+import pieces.Position;
+
+import java.util.Map;
+import java.util.Optional;
+
+public class StateMachine {
+    private final Map<EState, IState> mapState;
+    private final TransitionTable transitionTable;
+    private IState currentState;
+
+    public StateMachine(Map<EState, IState> mapState, TransitionTable transitions, EState initState, Position initPos){
+        this.transitionTable = transitions;
+        this.mapState = mapState;
+        this.currentState = mapState.get(initState);
+        this.currentState.reset(initPos, initPos);
+    }
+
+    public void onEvent(EPieceEvent event, Position from, Position to){
+        if(event == EPieceEvent.DONE && currentState.getName() == EState.MOVE)
+            EventPublisher.getInstance().publish(EGameEvent.PIECE_END_MOVED, new GameEvent(EGameEvent.PIECE_END_MOVED, null));
+
+        EState next = transitionTable.next(currentState.getName(), event);
+
+        currentState = mapState.get(next);
+        currentState.reset(from, to);
+    }
+
+    public void onEvent(EPieceEvent event){
+        onEvent(event, currentState.getPhysics().getTargetPos(), currentState.getPhysics().getTargetPos());
+    }
+
+    public void update(long now){
+        if(currentState.isActionFinished())
+            onEvent(EPieceEvent.DONE);
+
+        Optional<EPieceEvent> event = currentState.update(now);
+        event.ifPresent(this::onEvent);
+    }
+
+    public IState getCurrentState() {
+        return currentState;
+    }
+}
+</file>
+
+<file path="common/src/main/java/state/TransitionTable.java">
+package state;
+
+import pieces.EPieceEvent;
+
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.HashMap;
+import java.util.Map;
+
+public class TransitionTable {
+    private final Map<EState, Map<EPieceEvent, EState>> table = new HashMap<>();
+
+    public TransitionTable(String csvResourcePath) {
+        try (InputStream is = getClass().getResourceAsStream(csvResourcePath)) {
+            try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
+
+                // The first line is a header, skip it
+                String line = br.readLine();
+
+                while ((line = br.readLine()) != null) {
+                    String[] parts = line.split(",");
+                    EState from = EState.valueOf(parts[0].trim().toUpperCase());
+                    EPieceEvent event = EPieceEvent.valueOf(parts[1].trim().toUpperCase());
+                    EState to = EState.valueOf(parts[2].trim().toUpperCase());
+
+                    add(from, event, to);
+                }
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to load transition table from " + csvResourcePath, e);
+        }
+    }
+
+    private void add(EState from, EPieceEvent event, EState to) {
+        table.computeIfAbsent(from, k -> new HashMap<>()).put(event, to);
+    }
+
+    public EState next(EState from, EPieceEvent event) {
+        Map<EPieceEvent, EState> map = table.get(from);
+        if (map == null || !map.containsKey(event)) {
+            throw new IllegalStateException("Illegal transition: " + from + " + " + event);
+        }
+        return map.get(event);
+    }
+}
+</file>
+
+<file path="common/src/main/java/utils/ConfigLoader.java">
+package utils;
+
+import java.io.InputStream;
+import java.util.Properties;
+
+/**
+ * Central utility for loading configuration and message properties with safe defaults.
+ * Utility class for loading configuration and message properties from resource files.
+ * Provides access to application configuration and localized messages.
+ */
+public class ConfigLoader {
+    /** Application configuration properties. */
+    private static final Properties config = new Properties();
+    /** Localized message properties. */
+    private static final Properties messages = new Properties();
+
+    static {
+        try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream("config.properties")) {
+            if (in != null) config.load(in);
+        } catch (Exception ignored) {}
+        try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream("messages.properties")) {
+            if (in != null) messages.load(in);
+        } catch (Exception e) {
+            LogUtils.logDebug(e.getMessage());
+        }
+    }
+
+    /**
+     * Gets a config value with fallback default.
+     */
+    public static String getConfig(String key, String defaultValue) {
+        return config.getProperty(key, defaultValue);
+    }
+
+    /**
+     * Gets a message value with fallback default.
+     */
+    public static String getMessage(String key, String defaultValue) {
+        return messages.getProperty(key, defaultValue);
+    }
+}
+</file>
+
+<file path="common/src/test/java/PlayerFactoryTest.java">
+import board.BoardConfig;
+import interfaces.IPlayer;
+import org.junit.jupiter.api.Test;
+import player.PlayerFactory;
+
+import static org.junit.jupiter.api.Assertions.*;
+
+public class PlayerFactoryTest {
+
+    @Test
+    void testCreatePlayers_returnsTwoPlayersWithCorrectIds() {
+        BoardConfig config = new BoardConfig(new Dimension(8), new Dimension(1,1), new Dimension(640));
+        String[] names = {"Alice", "Bob"};
+
+        IPlayer[] players = PlayerFactory.createPlayers(names, config);
+
+        assertEquals(2, players.length);
+        assertEquals(0, players[0].getId());
+        assertEquals(1, players[1].getId());
+        assertEquals("Alice", players[0].getName());
+        assertEquals("Bob", players[1].getName());
+    }
+}
+</file>
+
+<file path=".gitignore">
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+
+### IntelliJ IDEA ###
+.idea/modules.xml
+.idea/jarRepositories.xml
+.idea/compiler.xml
+.idea/libraries/
+*.iws
+*.iml
+*.ipr
+
+### Eclipse ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+build/
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### VS Code ###
+.vscode/
+
+### Mac OS ###
+.DS_Store
+
+
+### stam ###
+/repomix-output.xml
+/TODO.txt
+</file>
+
+<file path="client/pom.xml">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.kfchess</groupId>
+        <artifactId>kfchess-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>client</artifactId>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.websocket</groupId>
+            <artifactId>javax.websocket-api</artifactId>
+            <version>1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus.bundles</groupId>
+            <artifactId>tyrus-standalone-client</artifactId>
+            <version>${tyrus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-client</artifactId>
+            <version>1.17</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kfchess</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <mainClass>endpoint.launch.KFChessClientApp</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+</file>
+
+<file path="client/src/main/java/endpoint/launch/ChessClientEndpoint.java">
+package endpoint.launch;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import dto.EventType;
+import dto.Message;
+import utils.LogUtils;
+
+import javax.websocket.*;
+import java.io.Closeable;
+import java.io.IOException;
+import java.net.URI;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicBoolean;
+
+@ClientEndpoint
+public class ChessClientEndpoint implements Closeable {
+
+    private Session session;
+    private final BlockingQueue<String> messageQueue = new LinkedBlockingQueue<>();
+    private volatile int playerId = -1;
+
+    private final ObjectMapper mapper = new ObjectMapper();
+    private final URI endpointURI;
+
+    private final ScheduledExecutorService reconnectExecutor = Executors.newSingleThreadScheduledExecutor();
+    private final AtomicBoolean connected = new AtomicBoolean(false);
+    private final AtomicBoolean closing = new AtomicBoolean(false);
+    private int reconnectAttempts = 0;
+
+    // ---------------------- Constructor ----------------------
+
+    public ChessClientEndpoint(URI endpointURI) throws Exception {
+        this.endpointURI = endpointURI;
+        connect();
+    }
+
+    private void connect() throws Exception {
+        WebSocketContainer container = ContainerProvider.getWebSocketContainer();
+        container.connectToServer(this, endpointURI);
+    }
+
+    // ---------------------- WebSocket Callbacks ----------------------
+
+    @OnOpen
+    public void onOpen(Session session) {
+        this.session = session;
+        connected.set(true);
+        reconnectAttempts = 0;
+        log("Connected to server");
+    }
+
+    @OnMessage
+    public void onMessage(String message) {
+        messageQueue.add(message);
+        processMessage(message);
+    }
+
+    @OnClose
+    public void onClose(Session session, CloseReason reason) {
+        connected.set(false);
+        log("Connection closed: " + reason);
+        if (!closing.get()) scheduleReconnect();
+    }
+
+    @OnError
+    public void onError(Session session, Throwable throwable) {
+        LogUtils.logDebug("WebSocket error: " + throwable.getMessage());
+        // let onClose handle reconnect
+    }
+
+    // ---------------------- Message Processing ----------------------
+
+    private void processMessage(String message) {
+        try {
+            JsonNode root = mapper.readTree(message);
+            String type = root.path("type").asText("");
+            JsonNode data = root.path("data");
+
+            EventType eventType;
+            try {
+                eventType = EventType.valueOf(type);
+            } catch (IllegalArgumentException e) {
+                eventType = EventType.UNKNOWN;
+            }
+
+            switch (eventType) {
+                case PLAYER_ID -> updatePlayerId(data.asInt(-1));
+                default -> LogUtils.logDebug("Unknown message type: " + type);
+            }
+
+
+        } catch (Exception e) {
+            LogUtils.logDebug("Failed to parse incoming message: " + e);
+        }
+    }
+
+    private void updatePlayerId(int id) {
+        playerId = id;
+        log("Updated playerId to " + playerId);
+    }
+
+    // ---------------------- Reconnect ----------------------
+
+    private void scheduleReconnect() {
+        reconnectAttempts++;
+        long delay = Math.min(60, 1 << Math.min(reconnectAttempts, 6)); // exponential backoff
+        reconnectExecutor.schedule(() -> {
+            if (closing.get()) return;
+            try {
+                connect();
+            } catch (Exception e) {
+                log("Reconnect attempt failed: " + e);
+                scheduleReconnect();
+            }
+        }, delay, TimeUnit.SECONDS);
+    }
+
+    // ---------------------- Sending Messages ----------------------
+
+    public void sendText(String message) {
+        if (session != null && session.isOpen()) {
+            session.getAsyncRemote().sendText(message);
+        } else {
+            throw new IllegalStateException("WebSocket session is not open");
+        }
+    }
+
+    public <T> void sendCommand(EventType type, T data) throws Exception {
+        Message<T> msg = new Message<>(type, data);
+        sendText(mapper.writeValueAsString(msg));
+    }
+
+    // ---------------------- Receiving Messages ----------------------
+
+    public String waitForNextMessage() throws InterruptedException {
+        return messageQueue.take();
+    }
+
+    public String pollNextMessage(long timeout, TimeUnit unit) throws InterruptedException {
+        return messageQueue.poll(timeout, unit);
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    // ---------------------- Close / Shutdown ----------------------
+
+    @Override
+    public void close() {
+        closing.set(true);
+        connected.set(false);
+        if (session != null && session.isOpen()) {
+            try {
+                session.close();
+            } catch (IOException e) {
+                log("Error closing WebSocket session: " + e.getMessage());
+            }
+        }
+        reconnectExecutor.shutdownNow();
+    }
+
+    // ---------------------- Helper Logging ----------------------
+
+    private void log(String msg) {
+        System.out.println("[ChessClientEndpoint] " + msg);
+    }
+}
+</file>
+
+<file path="client/src/main/java/local/launch/Main.java">
+package local.launch;
+
+import board.BoardConfig;
+import game.Game;
+import interfaces.IGame;
+import interfaces.IPlayer;
+import local.view.GamePanel;
+import player.PlayerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+
+public class Main {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            JFrame frame = new JFrame("KFChess");
+            frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+            BoardConfig boardConfig = new BoardConfig(new Dimension(8,8), new Dimension(700,700), new Dimension(500,500));
+
+            IPlayer[] players = PlayerFactory.createPlayers(new String[]{"player 1", "player 2"}, boardConfig);
+
+            IGame game = new Game(boardConfig , players);
+            GamePanel gameView = new GamePanel(game);
+
+            // Add debug prints
+            System.out.println("Debug: Initial game state setup");
+
+            game.run();
+
+            frame.setContentPane(gameView);
+            frame.pack();
+            frame.setLocationRelativeTo(null);
+            frame.setVisible(true);
+        });
+    }
+}
+</file>
+
+<file path="client/src/main/java/sound/SoundManager.java">
+package sound;
+
+import utils.LogUtils;
+
+import javax.sound.sampled.*;
+import java.net.URL;
+
+public class SoundManager {
+
+    public static void playSound(String fileName) {
+        try {
+            URL soundURL = SoundManager.class.getClassLoader().getResource("sounds/" + fileName);
+            if (soundURL == null) {
+                LogUtils.logDebug("Sound file not found: " + fileName);
+                return;
+            }
+
+            try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL)) {
+                Clip clip = AudioSystem.getClip();
+
+                // סגירה אוטומטית אחרי סיום הניגון
+                clip.addLineListener(event -> {
+                    if (event.getType() == LineEvent.Type.STOP) {
+                        clip.close();
+                    }
+                });
+
+                clip.open(audioInputStream);
+                clip.start(); // מתחיל לנגן
+            }
+
+        } catch (Exception e) {
+            LogUtils.logDebug("Error playing endpoint.sound " + fileName + ": " + e.getMessage());
+        }
+    }
+}
+</file>
+
+<file path="client/src/main/java/viewUtils/PlayerInfoPanel.java">
+package viewUtils;
+
+import constants.PlayerConstants;
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.IEventListener;
+import events.listeners.ActionData;
+import interfaces.IPlayer;
+
+import javax.swing.*;
+import java.awt.*;
+
+/**
+ * Panel for displaying player information such as name, score, and moves.
+ */
+public class PlayerInfoPanel extends JPanel implements IEventListener {
+    private final IPlayer player;
+    private final JLabel scoreLabel;
+    private final JTextArea movesArea;
+
+    /**
+     * Constructs the player info panel and initializes UI components.
+     */
+    public PlayerInfoPanel(IPlayer player) {
+
+        this.player = player;
+
+        setLayout(new BorderLayout(5,5));
+        setPreferredSize(new Dimension(200, 0));
+
+        JLabel nameLabel = new JLabel(player.getName());
+        nameLabel.setOpaque(true); // Important so the color is also shown as background
+        nameLabel.setBackground(PlayerConstants.PIECES_COLOR[player.getId()]);
+        nameLabel.setForeground(PlayerConstants.PLAYER_COLORS[player.getId()]); // You can choose a contrasting text color
+        nameLabel.setHorizontalAlignment(SwingConstants.CENTER); // Looks better centered
+
+        scoreLabel = new JLabel("Score: "+player.getScore());
+
+        movesArea = new JTextArea(10, 15);
+        movesArea.setEditable(false);
+        movesArea.setLineWrap(true);
+        movesArea.setWrapStyleWord(true);
+        JScrollPane scrollPane = new JScrollPane(movesArea);
+
+        JPanel topPanel = new JPanel(new GridLayout(2, 1));
+        topPanel.add(nameLabel);
+        topPanel.add(scoreLabel);
+
+        add(topPanel, BorderLayout.NORTH);
+        add(scrollPane, BorderLayout.CENTER);
+
+        // MovesLogger.subscribe(this, player.getId()); --> onEvent: addMove(((ActionData)event.data).message);
+
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_START_MOVED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_STARTED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        switch (event.type()){
+            case PIECE_START_MOVED, PIECE_JUMP -> {
+                if (player.getId() == ((ActionData) event.data()).playerId())
+                    addMove(((ActionData) event.data()).message());
+            }
+
+            case PIECE_CAPTURED->{setScore(player.getScore());}
+        }
+
+    }
+
+    /**
+     * Sets the player's score.
+     */
+    public void setScore(int score) {
+        scoreLabel.setText("Score: " + score);
+    }
+
+    /**
+     * Adds a move to the moves area for display.
+     * @param move The move to add.
+     */
+    public void addMove(String move) {
+        movesArea.append(move + "\n");
+    }
+
+    /**
+     * Clears all moves from the moves area.
+     */
+    public void clearMoves() {
+        movesArea.setText("");
+    }
+}
+</file>
+
+<file path="common/src/main/java/board/BoardConfig.java">
+package board;
+
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import java.awt.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.stream.IntStream;
+
+/**
+ * Configuration for the game board, including dimensions and tile size.
+ */
+public record BoardConfig(Dimension gridDimension, Dimension panelDimension,
+                          Dimension physicsDimension) implements Serializable {
+    public static final List<List<Integer>> rowsOfPlayer = List.of(
+            List.of(0, 1), // Player 0
+            List.of(6, 7)  // Player 1
+    );
+
+    @JsonCreator
+    public BoardConfig(
+            @JsonProperty("gridDimension") Dimension gridDimension,
+            @JsonProperty("panelDimension") Dimension panelDimension,
+            @JsonProperty("physicsDimension") Dimension physicsDimension
+    ) {
+        this.gridDimension = gridDimension;
+        this.panelDimension = panelDimension;
+        this.physicsDimension = physicsDimension;
+    }
+
+    public static int getPlayerOf(int row) {
+        return IntStream.range(0, rowsOfPlayer.size())
+                .filter(i -> rowsOfPlayer.get(i).contains(row))
+                .findFirst().getAsInt();
+    }
+
+    public boolean isInBounds(int r, int c) {
+        return r >= 0 && r < gridDimension.getWidth() && c >= 0 && c < gridDimension.getHeight();
+    }
+}
+</file>
+
+<file path="common/src/main/java/command/JumpCommand.java">
+package command;
+
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.listeners.ActionData;
+import interfaces.*;
+
+/**
+ * Command for performing a jump action with a piece on the board.
+ */
+public class JumpCommand implements ICommand {
+
+    /** The piece to perform the jump action. */
+    private final IPiece p;
+    /** The board on which the jump is performed. */
+    private final IBoard board;
+
+    /**
+     * Constructs a JumpCommand for the given piece and board.
+     *
+     * @param p The piece to jump
+     * @param board The board instance
+     */
+    public JumpCommand(IPiece p, IBoard board){
+        this.p = p;
+        this.board = board;
+    }
+
+    /**
+     * Executes the jump command if the jump is legal.
+     */
+    @Override
+    public void execute() {
+        if(!board.isJumpLegal(p))
+            return;
+        board.jump(p);
+        EventPublisher.getInstance()
+                .publish(EGameEvent.PIECE_JUMP,
+                        new GameEvent(EGameEvent.PIECE_JUMP, new ActionData(p.getPlayer(),"piece "+p+" jumping")));
+    }
+}
+</file>
+
+<file path="common/src/main/java/dto/PlayerSelectedDTO.java">
+package dto;
+
+import pieces.Position;
+
+/**
+ * @param playerId  The ID of the player making the selection.
+ * @param selection The position selected by the player.
+ */
+public record PlayerSelectedDTO(int playerId, Position selection) { }
+</file>
+
+<file path="common/src/main/java/interfaces/IGraphicsData.java">
+package interfaces;
+
+import java.awt.image.BufferedImage;
+
+/**
+ * Interface for graphics data operations for piece animation.
+ */
+public interface IGraphicsData {
+
+    void reset();
+
+    /**
+     * Updates the animation frame based on elapsed time.
+     */
+    void update(long now);
+
+    /**
+     * Gets the current frame number.
+     * @return The current frame index
+     */
+    int getCurrentNumFrame();
+
+    /**
+     * Gets the total number of frames.
+     * @return The total number of frames
+     */
+    int getTotalFrames();
+
+    /**
+     * Gets the frames per second for the animation.
+     * @return Frames per second
+     */
+    double getFramesPerSec();
+
+    /**
+     * Gets the current frame image.
+     * @return The current frame as BufferedImage
+     */
+    BufferedImage getCurrentFrame();
+
+    int getCurrentFrameIdx();
+
+    void setFrames(BufferedImage[] frames);
+
+    void setTotalFrames(int totalFrames);
+}
+</file>
+
+<file path="common/src/main/java/interfaces/IPlayer.java">
+package interfaces;
+
+import board.BoardConfig;
+import pieces.Position;
+
+import java.awt.*;
+import java.io.Serializable;
+import java.util.List;
+import java.util.Optional;
+
+/**
+ * Interface for player operations.
+ */
+public interface IPlayer extends Serializable {
+    /**
+     * Gets the list of pieces owned by the player.
+     * @return List of pieces
+     */
+    List<IPiece> getPieces();
+
+    /**
+     * Gets the player's ID.
+     * @return The player ID
+     */
+    int getId();
+
+    String getName();
+
+    /**
+     * Returns true if the player has failed (e.g., lost their king).
+     * @return true if failed, false otherwise
+     */
+    boolean isFailed();
+
+    /**
+     * Marks a piece as captured and updates player status if king is captured.
+     * @param p The piece to mark as captured
+     */
+    void markPieceCaptured(IPiece p);
+
+    /**
+     * Handles the selection logic for the player, returning a command if an action is performed.
+     * @param board The game board
+     * @return ICommand representing the action, or null if no action
+     */
+
+    Optional<ICommand> handleSelection(IBoard board, Position selected);
+
+    int getScore();
+
+    IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc);
+
+    Color getColor();
+
+    void setName(String name);
+}
+</file>
+
+<file path="common/src/main/java/interfaces/IState.java">
+package interfaces;
+
+import pieces.EPieceEvent;
+import pieces.Position;
+import state.EState;
+
+import java.awt.geom.Point2D;
+import java.io.Serializable;
+import java.util.Optional;
+
+/**
+ * Interface for piece state operations.
+ */
+public interface IState extends Serializable {
+
+    /**
+     * Resets the state to a new action.
+     * @param from The starting position
+     * @param to The target position
+     */
+//    void reset(EState state, Position from, Position to);
+
+    void reset(Position from, Position to);
+
+    /**
+     * Updates the physics and graphics for the current state.
+     */
+    Optional<EPieceEvent> update(long now);
+
+    /**
+     * Checks if the current action is finished.
+     * @return true if finished, false otherwise
+     */
+    boolean isActionFinished();
+
+    Position getCurrentPosition();
+
+    /**
+     * Gets the physics data for the state.
+     * @return The physics data
+     */
+    IPhysicsData getPhysics();
+
+    /**
+     * Gets the graphics data for the state.
+     * @return The graphics data
+     */
+    IGraphicsData getGraphics();
+
+    EState getName();
+}
+</file>
+
+<file path="common/src/main/java/moves/Moves.java">
+package moves;
+
+import pieces.EPieceType;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Represents the legal moves for a piece type.
+ */
+public class Moves {
+
+
+    public static List<Move> createMovesList(EPieceType pieceType, int playerId) throws IOException {
+        List<Move> moves;
+        moves = new ArrayList<>();
+
+        // Extracted resource path to PieceConstants
+        String resourcePath = constants.PieceConstants.PIECE_MOVES_PATH_PREFIX + pieceType.getVal() + constants.PieceConstants.PIECE_MOVES_PATH_SUFFIX + playerId + constants.PieceConstants.PIECE_MOVES_PATH_EXT;
+        try (InputStream is = Moves.class.getClassLoader().getResourceAsStream(resourcePath)) {
+            if (is == null) {
+                throw new IOException(utils.ConfigLoader.getMessage("resource.not.found", "Resource not found: ") + resourcePath); // extracted to messages.properties
+            }
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    String[]parts = line.trim().split(constants.PieceConstants.CONDITION_SEPARATOR); // extracted separator for conditions
+                    String[] steps = parts[0].split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator for positions
+                    if (steps.length == 2) {
+                        int dx = Integer.parseInt(steps[0]);
+                        int dy = Integer.parseInt(steps[1]);
+                        String[]conditions = parts.length<2?null:parts[1].split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator for conditions
+                        moves.add(new Move(dx, dy, conditions == null?null: Arrays.stream(conditions)
+                                .map(c -> ECondition.valueOf(c.toUpperCase()))
+                                .toArray(ECondition[]::new)));
+                    }
+                }
+            }
+        }
+        return moves;
+    }
+}
+</file>
+
+<file path="common/src/main/java/utils/LogUtils.java">
+package utils;
+
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+
+/**
+ * Utility class for logging debug messages to a file.
+ */
+public class LogUtils {
+    /**
+     * Appends a debug message to the application's log file.
+     * @param message the message to log
+     */
+    public static void logDebug(String message) {
+        // Extracted log file name to config.properties
+        String logFile = ConfigLoader.getConfig("log.file", "debug.log");
+        try (PrintWriter out = new PrintWriter(new FileWriter(logFile, true))) {
+            out.println(message);
+        } catch (IOException e) {
+            System.err.println("Failed to write to " + logFile + ": " + e.getMessage());
+        }
+    }
+}
+</file>
+
+<file path="server/pom.xml">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.kfchess</groupId>
+        <artifactId>kfchess-parent</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <artifactId>chess-websocket-server</artifactId>
+    <version>1.0.0</version>
+    <packaging>jar</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-server</artifactId>
+            <version>${tyrus.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.glassfish.tyrus</groupId>
+            <artifactId>tyrus-container-grizzly-server</artifactId>
+            <version>${tyrus.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.kfchess</groupId>
+            <artifactId>common</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.11.0</version>
+                <configuration>
+                    <source>${maven.compiler.source}</source>
+                    <target>${maven.compiler.target}</target>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals><goal>shade</goal></goals>
+                        <configuration>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>endpoint.launch.WebSocketServer</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+</file>
+
+<file path="client/src/main/java/local/view/GamePanel.java">
+package local.view;
+
+import sound.EventSoundListener;
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.IEventListener;
+import interfaces.IGame;
+import interfaces.IPlayerCursor;
+import pieces.Position;
+import player.PlayerCursor;
+import utils.LogUtils;
+import viewUtils.PlayerInfoPanel;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.Objects;
+
+/**
+ * Full game panel with board in center, players on sides, and background.
+ */
+public class GamePanel extends JPanel implements IEventListener {
+    private final BoardPanel boardPanel;
+    private final IGame model;
+    private Image backgroundImage;
+
+    private final JLabel timerLabel;
+    private final Timer timerForUI;
+
+    public GamePanel(IGame model){
+        this.model = model;
+
+        // Set layout with gaps between regions
+        setLayout(new BorderLayout(20, 20)); // Spacing between center and sides
+        setBorder(new EmptyBorder(20, 20, 20, 20)); // Internal padding from edges
+
+        // Load background image
+        try {
+            backgroundImage = ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource("background/background.jpg")));
+        } catch (IOException | IllegalArgumentException e) {
+            LogUtils.logDebug("Could not load background image: " + e.getMessage());
+        }
+
+        // Players info panels
+        PlayerInfoPanel player1Panel = new PlayerInfoPanel(model.getPlayerById(0));
+        PlayerInfoPanel player2Panel = new PlayerInfoPanel(model.getPlayerById(1));
+
+        Color semiTransparent = new Color(255, 255, 255, 180);
+        player1Panel.setBackground(semiTransparent);
+        player2Panel.setBackground(semiTransparent);
+
+        // Board
+        IPlayerCursor c1 = new PlayerCursor(new Position(0,0), model.getPlayerById(0).getColor());
+        IPlayerCursor c2 = new PlayerCursor(new Position(0,0), model.getPlayerById(1).getColor());
+
+        boardPanel = new BoardPanel(model.getBoard(), c1, c2);
+        boardPanel.setOpaque(false);
+
+        // Events
+        boardPanel.setOnPlayer1Action((v) -> model.handleSelection(model.getPlayerById(0), c1.getPosition()));
+        boardPanel.setOnPlayer2Action((v) -> model.handleSelection(model.getPlayerById(1), c2.getPosition()));
+
+        boardPanel.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                boardPanel.requestFocusInWindow();
+            }
+        });
+
+        SwingUtilities.invokeLater(boardPanel::requestFocusInWindow);
+
+        // Layout
+        add(player1Panel, BorderLayout.WEST);
+        add(player2Panel, BorderLayout.EAST);
+        add(boardPanel, BorderLayout.CENTER);
+
+        // --- הוספת תצוגת טיימר מעל הלוח ---
+        timerLabel = new JLabel("Time: 00:00");
+        timerLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        timerLabel.setOpaque(false);
+        add(timerLabel, BorderLayout.NORTH);
+
+        timerForUI = new Timer(1000, e -> updateTimer());
+        timerForUI.start();
+        // ---------------------------------------
+
+        LogUtils.logDebug("Initial game state setup");
+
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
+        new EventSoundListener();
+    }
+
+    private void updateTimer() {
+        long nowNano = System.nanoTime();
+        long elapsedNanos = nowNano - model.getStartTimeNano();
+        long elapsedMillis = elapsedNanos / 1_000_000; // convert nanoseconds to milliseconds
+
+        int seconds = (int) (elapsedMillis / 1000) % 60;
+        int minutes = (int) (elapsedMillis / (1000 * 60));
+
+        timerLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        timerForUI.stop();
+
+        JOptionPane pane = new JOptionPane(
+                "Game Over. Winner: Player " + model.win().getName(),
+                JOptionPane.INFORMATION_MESSAGE
+        );
+
+        // יוצרים JDialog לא מודאלי
+        JDialog dialog = pane.createDialog(this, "Game Over");
+        dialog.setModal(false); // חשוב – לא מודאלי
+        dialog.setVisible(true);
+    }
+}
+</file>
+
+<file path="common/src/main/java/command/MoveCommand.java">
+package command;
+
+import board.BoardRulesEngine;
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.listeners.ActionData;
+import interfaces.ICommand;
+import interfaces.IBoard;
+import pieces.Position;
+import utils.Utils;
+import utils.LogUtils;
+
+public class MoveCommand implements ICommand {
+    private final Position from;
+    private final Position to;
+    private final IBoard board;
+
+    public MoveCommand(Position from, Position to, IBoard board) {
+        this.from = from;
+        this.to = to;
+        this.board = board;
+    }
+
+    @Override
+    public void execute() {
+        if (!BoardRulesEngine.isMoveLegal(board, from, to)) {
+            String mes = "Illegal move from " + from + " to " + to;
+            EventPublisher.getInstance()
+                    .publish(EGameEvent.ILLEGAL_CMD,
+                            new GameEvent(EGameEvent.ILLEGAL_CMD ,new ActionData(board.getPiece(from).getPlayer(), mes)));
+            LogUtils.logDebug(mes);
+            return;
+        }
+        String mes = Utils.getName(from) + " --> " + Utils.getName(to);
+        EventPublisher.getInstance()
+                .publish(EGameEvent.PIECE_START_MOVED,
+                        new GameEvent(EGameEvent.PIECE_START_MOVED, new ActionData(board.getPiece(from).getPlayer(), mes)));
+        LogUtils.logDebug(mes);
+        board.move(from, to);
+    }
+}
+</file>
+
+<file path="common/src/main/java/events/EGameEvent.java">
+package events;
+
+public enum EGameEvent {
+    // Extracted event names to CommandNames
+    PIECE_START_MOVED("pieceStartMoved"),
+    PIECE_END_MOVED("pieceEndMoved"),
+    ILLEGAL_CMD("illegalCmd"),
+    PIECE_JUMP("pieceJump"),
+    PIECE_CAPTURED("pieceCaptured"),
+    GAME_STARTED("gameStarted"),
+    GAME_ENDED("gameEnded"),
+    GAME_UPDATE("gameUpdate");
+
+    private final String val;
+
+    EGameEvent(String val){
+        this.val = val;
+    }
+
+    public String getVal() {
+        return val;
+    }
+}
+</file>
+
+<file path="common/src/main/java/graphics/GraphicsLoader.java">
+package graphics;
+
+import state.EState;
+
+import javax.imageio.ImageIO;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.util.*;
+
+import pieces.EPieceType;
+import utils.LogUtils;
+
+public class GraphicsLoader {
+
+    private static final Map<String, Image> cache = new HashMap<>();
+
+    /**
+     * Loads a single sprite image by piece type, state, and frame index (1-based).
+     */
+    public static BufferedImage loadSprite(EPieceType pieceType, int player, EState stateName, int frameIndex) {
+        String path = String.format("/pieces/%s/states/%s/sprites/sprites%d/%d.png", pieceType.getVal(), stateName, player, frameIndex);
+
+        if (cache.containsKey(path)) {
+            return (BufferedImage) cache.get(path);
+        }
+
+        try {
+            BufferedImage image = ImageIO.read(Objects.requireNonNull(GraphicsLoader.class.getResourceAsStream(path)));
+            cache.put(path, image);
+            return image;
+        } catch (IOException | IllegalArgumentException | NullPointerException e) {
+            LogUtils.logDebug("Failed to load sprite: " + path);
+            return null;
+        }
+    }
+
+    /**
+     * Loads all sprite frames in sequence (1,2,3,...) until the next file does not exist.
+     */
+    public static BufferedImage[] loadAllSprites(EPieceType pieceType, int player, EState stateName) {
+        List<BufferedImage> sprites = new ArrayList<>();
+        // Extracted initial frame index to config.properties (if needed)
+        int index = 1;
+
+        while (true) {
+            BufferedImage sprite = loadSprite(pieceType, player, stateName, index);
+            if (sprite == null) break;
+            sprites.add(sprite);
+            index++;
+        }
+
+        if(sprites.isEmpty())
+            throw new RuntimeException("failed to load piece images");
+
+        return sprites.toArray(new BufferedImage[0]);
+    }
+}
+</file>
+
+<file path="common/src/main/java/player/PlayerCursor.java">
+package player;
+
+import interfaces.IPlayerCursor;
+import pieces.Position;
+
+import java.awt.*;
+
+/**
+ * Represents a player's cursor for selecting pieces on the board.
+ */
+public class PlayerCursor implements IPlayerCursor {
+    private final Position pos;
+    private final Color color;
+    public final int ROWS;
+    public final int COLS;
+
+    /**
+     * Constructs a PlayerCursor for selecting pieces.
+     * @param pos The initial position of the cursor
+     * @param color The color used to draw the cursor
+     */
+    public PlayerCursor(Position pos, Color color) {
+        // Extracted board size to GameConstants
+        ROWS = constants.GameConstants.BOARD_ROWS;
+        COLS = constants.GameConstants.BOARD_COLS;
+        this.pos = pos;
+        this.color = color;
+    }
+
+    /**
+     * Moves the cursor up by one row if possible.
+     */
+    @Override
+    public void moveUp() {
+        if (pos.getRow() > 0) pos.reduceOneRow();
+    }
+
+    /**
+     * Moves the cursor down by one row if possible.
+     */
+    @Override
+    public void moveDown() {
+        if (pos.getRow() < ROWS-1) pos.addOneRow();
+    }
+
+    /**
+     * Moves the cursor left by one column if possible.
+     */
+    @Override
+    public void moveLeft() {
+        if (pos.getCol() > 0) pos.reduceOneCol();
+    }
+
+    /**
+     * Moves the cursor right by one column if possible.
+     */
+    @Override
+    public void moveRight() {
+        if (pos.getCol() < COLS-1) pos.addOneCol();
+    }
+
+    /**
+     * Draws the cursor on the board panel.
+     * @param g Graphics context
+     * @param panelWidth Width of the panel
+     * @param panelHeight Height of the panel
+     */
+    @Override
+    public void draw(Graphics g, int panelWidth, int panelHeight) {
+        int squareWidth = panelWidth / COLS;
+        int squareHeight = panelHeight / ROWS;
+
+        int x = pos.getCol() * squareWidth;
+        int y = pos.getRow() * squareHeight;
+
+        Graphics2D g2d = (Graphics2D) g;  // Convert to Graphics2D
+
+        g2d.setColor(color);
+        g2d.setStroke(new BasicStroke(3));  // Use thicker stroke for cursor
+        g2d.drawRect(x, y, squareWidth, squareHeight);
+    }
+
+    /**
+     * Gets the current position of the cursor.
+     * @return The position object
+     */
+    @Override
+    public Position getPosition(){
+        return pos;
+    }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+}
+</file>
+
+<file path="common/src/main/java/player/PlayerFactory.java">
+package player;
+
+import board.BoardConfig;
+import interfaces.IPiece;
+import interfaces.IPlayer;
+import pieces.EPieceType;
+import pieces.PiecesFactory;
+import pieces.Position;
+import utils.LogUtils;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * Factory responsible for creating Player instances based on board configuration and the initial piece layout.
+ */
+public class PlayerFactory {
+
+    /**
+     * Creates a single Player by reading the initial piece codes from LoadPieces and materializing IPiece instances.
+     *
+     * @param id       Player ID (must be 0 or 1 for current two-player setup)
+     * @param name     Player name
+     * @param bc       Board configuration
+     * @return IPlayer constructed with its initial pieces
+     */
+    public static IPlayer createPlayer(int id, String name, BoardConfig bc) {
+        if (id < 0) throw new IllegalArgumentException("Player id must be >= 0");
+    // Defensive: guard in case more colors are added later
+        Color[] palette = constants.PlayerConstants.PLAYER_COLORS;
+        Color color = id < palette.length ? palette[id] : Color.WHITE;
+
+        List<interfaces.IPiece> pieces = new ArrayList<>();
+
+    // For each starting row assigned to this player, instantiate pieces from LoadPieces.board
+        for (int row : BoardConfig.rowsOfPlayer.get(id)) {
+            for (int col = 0; col < constants.GameConstants.BOARD_COLS; col++) {
+                String pieceCodeStr = game.LoadPieces.board[row][col];
+                if (pieceCodeStr == null || pieceCodeStr.isEmpty()) continue;
+
+                // Use the first character as the piece type, e.g. "B" from "BB"
+                String codeChar = String.valueOf(pieceCodeStr.charAt(0));
+                EPieceType type;
+                try {
+                    type = EPieceType.valueOf(codeChar);
+                } catch (IllegalArgumentException e) {
+                    LogUtils.logDebug("Unknown piece code '" + codeChar + "' at " + row + "," + col + " for player " + id);
+                    continue;
+                }
+
+                Position pos = new Position(row, col);
+                IPiece piece = PiecesFactory.createPieceByCode(
+                        type,
+                        id,
+                        pos,
+                        bc
+                );
+                if (piece != null) {
+                    pieces.add(piece);
+                } else {
+                    LogUtils.logDebug("Failed to create piece of type " + type + " for player " + id + " at " + pos);
+                }
+            }
+        }
+
+        return new Player(id, name, color, pieces);
+    }
+
+    /**
+     * Convenience helper to create both players given their names.
+     *
+     * @param names array of player names; expected length >= 2, uses first two entries for players 0 and 1
+     * @param bc    Board configuration
+     * @return array of two IPlayer instances
+     */
+    public static IPlayer[] createPlayers(String[] names, BoardConfig bc) {
+        return java.util.stream.IntStream.range(0, names.length)
+                .mapToObj(i -> createPlayer(i, names[i], bc))
+                .toArray(IPlayer[]::new);
+    }
+}
+</file>
+
+<file path="common/src/main/java/state/GraphicsData.java">
+package state;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import interfaces.IGraphicsData;
+
+import java.awt.image.BufferedImage;
+
+/**
+ * Represents the graphics data used for piece animation, including frame management and timing.
+ * This class handles the animation state for graphical objects, such as chess pieces.
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class GraphicsData implements IGraphicsData {
+    /**
+     * The array of animation frames (images). Not serialized.
+     */
+    @JsonIgnore
+    private BufferedImage[] frames;
+
+    /**
+     * The total number of frames in the animation.
+     */
+    private int totalFrames;
+
+    /**
+     * The current frame index being displayed.
+     */
+    private int currentFrame;
+
+    /**
+     * The number of frames to display per second.
+     */
+    @JsonProperty("frames_per_sec")
+    private double framesPerSec;
+
+    /**
+     * The timestamp (in nanoseconds) of the last frame update.
+     */
+    private long lastFrameTimeNanos;
+
+
+    /**
+     * Default constructor. Initializes the animation to the first frame and sets the last frame time to now.
+     */
+    public GraphicsData(){
+        currentFrame=0;
+        this.lastFrameTimeNanos = System.nanoTime();
+    }
+
+    /**
+     * Constructs a GraphicsData object for piece animation.
+     *
+     * @param frames       Array of animation frames (BufferedImage)
+     * @param framesPerSec Number of frames to display per second
+     */
+    public GraphicsData(BufferedImage[] frames, double framesPerSec) {
+        this.frames = frames;
+        this.totalFrames = frames.length;
+        this.framesPerSec = framesPerSec;
+        this.currentFrame = 0;
+        this.lastFrameTimeNanos = System.nanoTime();
+    }
+
+    /**
+     * Resets the animation to the first frame and updates the last frame time.
+     * Should be called when switching to a new animation state.
+     */
+    @Override
+    public void reset() {
+        this.currentFrame = 0;
+        this.lastFrameTimeNanos = System.nanoTime();
+    }
+
+    /**
+     * Updates the animation frame based on the elapsed time since the last update.
+     *
+     * @param now The current time in nanoseconds
+     */
+    @Override
+    public void update(long now) {
+        double elapsedSec = (now - lastFrameTimeNanos) / 1_000_000_000.0;
+        if (elapsedSec >= 1.0 / framesPerSec) {
+            currentFrame = (currentFrame+1)%totalFrames;
+            lastFrameTimeNanos = now;
+        }
+    }
+
+    /**
+     * Returns the current frame number (index).
+     *
+     * @return The current frame index
+     */
+    @Override
+    public int getCurrentNumFrame() {
+        return currentFrame;
+    }
+
+    /**
+     * Returns the total number of frames in the animation.
+     *
+     * @return The total number of frames
+     */
+    @Override
+    public int getTotalFrames() {
+        return totalFrames;
+    }
+
+    /**
+     * Returns the number of frames per second for the animation.
+     *
+     * @return Frames per second
+     */
+    @Override
+    public double getFramesPerSec() {
+        return framesPerSec;
+    }
+
+    /**
+     * Returns the current frame image as a BufferedImage.
+     *
+     * @return The current frame as BufferedImage
+     */
+    @Override
+    public BufferedImage getCurrentFrame() {
+        return frames[currentFrame];
+    }
+
+    /**
+     * Returns the current frame index.
+     *
+     * @return The current frame index
+     */
+    @Override
+    public int getCurrentFrameIdx(){
+        return currentFrame;
+    }
+
+    /**
+     * Sets the array of animation frames.
+     *
+     * @param frames The array of BufferedImage frames
+     */
+    @Override
+    public void setFrames(BufferedImage[] frames) {
+        this.frames = frames;
+    }
+
+    /**
+     * Sets the total number of frames in the animation.
+     *
+     * @param totalFrames The total number of frames
+     */
+    @Override
+    public void setTotalFrames(int totalFrames) {
+        this.totalFrames = totalFrames;
+    }
+}
+</file>
+
+<file path="src/main/java/org/example/Main.java">
+package org.example;
+
+//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
+// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+public class Main {
+    public static void main(String[] args) {
+        //TIP Press <shortcut actionId="ShowIntentionActions"/> with your caret at the highlighted text
+        // to see how IntelliJ IDEA suggests fixing it.
+        System.out.printf("Hello and welcome!");
+
+        for (int i = 1; i <= 5; i=i+5) {
+            //TIP Press <shortcut actionId="Debug"/> to start debugging your code. We have set one <icon src="AllIcons.Debugger.Db_set_breakpoint"/> breakpoint
+            // for you, but you can always add more by pressing <shortcut actionId="ToggleLineBreakpoint"/>.
+            System.out.println("hello!!");
+            System.out.println("i+5 = " + i+5);
+        }
+
+    }
+}
+</file>
+
+<file path="client/src/main/java/endpoint/launch/KFChessClientApp.java">
+package endpoint.launch;
+
+import constants.PlayerConstants;
+import constants.ServerConfig;
+import controller.GameController;
+import dto.EventType;
+import dto.GameDTO;
+import endpoint.view.AskUserName;
+import endpoint.view.GamePanel;
+import endpoint.view.WaitDialog;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+import javax.swing.*;
+import java.net.URI;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import controller.GameController.GameEventListener;
+
+public class KFChessClientApp implements GameEventListener {
+
+    private static final Logger logger = Logger.getLogger(KFChessClientApp.class.getName());
+
+    private ChessClientEndpoint client;
+    private GameController controller;
+
+    private volatile int playerId = -1;
+    private final ObjectMapper mapper = new ObjectMapper();
+
+    private final CountDownLatch playerIdLatch = new CountDownLatch(1);
+    private boolean gameStarted = false;
+
+    private WaitDialog waitDialog;
+    private volatile GameDTO pendingGameDTO = null;
+
+    public KFChessClientApp() throws Exception {
+        initUIAndConnect();
+        // שמירה על החיבור פעיל גם אם המשתמש סוגר את ה-UI
+        Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
+    }
+
+    private void initUIAndConnect() throws Exception {
+        // יצירת URL ל-WebSocket
+        String wsUrl = String.format("ws://%s:%s%s%s",
+                ServerConfig.HOST,
+                ServerConfig.PORT,
+                ServerConfig.WS_PATH,
+                ServerConfig.SERVER_ENDPOINT);
+
+        client = new ChessClientEndpoint(new URI(wsUrl));
+
+        String username;
+        try{
+            username= AskUserName.askUsername();
+        } catch (Exception e) {
+            username = null;
+        }
+        if (username == null || username.isBlank()) {
+            username = "Anonymous - "+(playerId !=-1? PlayerConstants.COLORS_NAME[playerId]:"");
+        }
+
+        // שליחת שם השחקן
+        client.sendCommand(EventType.SET_NAME, username);
+
+        waitDialog = new WaitDialog();
+        waitDialog.setOnCloseAction(() -> {
+            shutdown();
+            System.exit(0);
+        });
+
+        controller = new GameController(client, mapper);
+        controller.addListener(this);
+        controller.startListening();
+
+        // המתנה לקבלת PlayerId בצורה אסינכרונית
+        SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for player ID from server..."));
+
+        boolean gotId = playerIdLatch.await(60, TimeUnit.SECONDS);
+
+        if (playerId == -1) { // בדיקה סופית אחרי ההמתנה
+            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(
+                    "Error: Did not receive player ID from server."));
+            shutdown();
+            throw new RuntimeException("Failed to receive playerId from server");
+        }
+
+        if (!gameStarted) {
+            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for the game to start..."));
+        }
+    }
+
+    @Override
+    public void onWaitMessage(String message) {
+        if (gameStarted) return;
+        SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(message));
+    }
+
+    @Override
+    public void onPlayerId(int id) {
+        playerId = id;
+        logger.info("Received playerId: " + playerId);
+
+        playerIdLatch.countDown();
+
+        if (pendingGameDTO != null) {
+            pendingGameDTO = null;
+            SwingUtilities.invokeLater(this::onGameInit);
+        }
+    }
+
+    @Override
+    public void onUnknownMessage(String type) {
+        logger.warning("Unknown message type: " + type);
+    }
+
+    @Override
+    public void onGameInit() {
+        gameStarted = true;
+        SwingUtilities.invokeLater(() -> waitDialog.close());
+
+        SwingUtilities.invokeLater(this::initializeGameUI);
+    }
+
+    private void initializeGameUI() {
+        JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1) +
+                " - " + controller.getModel().getPlayerById(playerId).getName());
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        GamePanel gamePanel = (GamePanel) controller.getGamePanel();
+
+        frame.add(gamePanel);
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
+
+        gamePanel.setFocusable(true);
+        gamePanel.requestFocusInWindow();
+
+        controller.startRunGame();
+    }
+
+    public void shutdown() {
+        try {
+            if (controller != null) controller.stopListening();
+            if (client != null) client.close();
+        } catch (Exception e) {
+            logger.log(Level.WARNING, "Error during shutdown", e);
+        }
+    }
+
+    public static void main(String[] args) {
+        new Thread(() -> {
+            try {
+                new KFChessClientApp();
+                // שמירה על התהליך פעיל עד סגירה ידנית
+                synchronized (KFChessClientApp.class) {
+                    KFChessClientApp.class.wait();
+                }
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        }, "App-Starter").start();
+    }
+}
+</file>
+
+<file path="client/src/main/java/endpoint/view/BoardPanel.java">
+package endpoint.view;
+
+import dto.PieceView;
+import game.IBoardView;
+import interfaces.IBoard;
+import interfaces.IPlayerCursor;
+import pieces.Position;
+import utils.LogUtils;
+import viewUtils.BoardRenderer;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
+
+/**
+ * Pure UI panel: displays board, pieces, cursor, selection and legal moves.
+ * Receives all updates from external sources (controller).
+ */
+public class BoardPanel extends JPanel implements IBoardView {
+
+    private BufferedImage boardImage;
+    private final IBoard board;
+    private final IPlayerCursor cursor;
+
+    private Position selected = null;
+    private List<Position> legalMoves = Collections.emptyList();
+    private final Color selectColor;
+
+    private Consumer<Position> onPlayerAction; // returns selected cursor position
+
+    public BoardPanel(IBoard board, IPlayerCursor cursor) {
+        this.board = board;
+        this.cursor = cursor;
+
+        Color base = cursor.getColor();
+        selectColor = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
+
+        setPreferredSize(board.getBoardConfig().panelDimension());
+
+        setFocusable(true);
+
+        loadBoardImage();
+
+    }
+
+    private void loadBoardImage() {
+        try {
+            URL imageUrl = getClass().getClassLoader().getResource("board/board.png");
+            if (imageUrl != null) {
+                boardImage = ImageIO.read(imageUrl);
+            } else {
+                LogUtils.logDebug("Board image not found in resources!");
+            }
+        } catch (IOException e) {
+            LogUtils.logDebug("Exception loading board image: " + e.getMessage());
+        }
+    }
+
+    public void initKeyBindings() {
+        InputMap im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = getActionMap();
+
+        im.put(KeyStroke.getKeyStroke("UP"), "moveUp");
+        im.put(KeyStroke.getKeyStroke("DOWN"), "moveDown");
+        im.put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
+        im.put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
+        im.put(KeyStroke.getKeyStroke("ENTER"), "select");
+
+        am.put("moveUp", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveUp(); repaint(); }
+        });
+        am.put("moveDown", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveDown(); repaint(); }
+        });
+        am.put("moveLeft", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveLeft(); repaint(); }
+        });
+        am.put("moveRight", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveRight(); repaint(); }
+        });
+        am.put("select", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { if(onPlayerAction!=null) onPlayerAction.accept(cursor.getPosition()); }
+        });
+    }
+
+
+    private void handleSelection() {
+        Position pos = cursor.getPosition();
+        if (onPlayerAction != null) onPlayerAction.accept(pos);
+    }
+
+    public void setOnPlayerAction(Consumer<Position> handler) {
+        this.onPlayerAction = handler;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (boardImage != null) {
+            g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), this);
+        } else {
+            g.setColor(Color.DARK_GRAY);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        BoardRenderer.draw(g, PieceView.toPieceViews(board), board.getBoardConfig());
+        cursor.draw(g, getWidth(), getHeight());
+
+        if (selected != null) {
+            Graphics2D g2 = (Graphics2D) g;
+            int cellW = getWidth() / constants.GameConstants.BOARD_COLS;
+            int cellH = getHeight() / constants.GameConstants.BOARD_ROWS;
+
+            g2.setColor(selectColor);
+            g2.fillRect(selected.getCol() * cellW, selected.getRow() * cellH, cellW, cellH);
+
+            for (Position move : legalMoves) {
+                int x = move.getCol() * cellW + cellW / 4;
+                int y = move.getRow() * cellH + cellH / 4;
+                int w = cellW / 2;
+                int h = cellH / 2;
+                g2.fillOval(x, y, w, h);
+            }
+        }
+    }
+
+    public void update() {
+        repaint();
+    }
+
+    public void setSelected(Position selected) {
+        this.selected = selected;
+    }
+
+    public void setLegalMoves(List<Position> legalMoves) {
+        this.legalMoves = legalMoves;
+    }
+
+    public void clearSelection() { setSelected(null); setLegalMoves(Collections.emptyList()); repaint(); }
+}
+</file>
+
+<file path="client/src/main/java/local/view/BoardPanel.java">
+package local.view;
+
+import dto.PieceView;
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.IEventListener;
+import game.IBoardView;
+import interfaces.IBoard;
+import interfaces.IPiece;
+import interfaces.IPlayerCursor;
+import pieces.Position;
+import utils.LogUtils;
+import viewUtils.BoardRenderer;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.function.Consumer;
+
+/**
+ * Panel for displaying the game board and handling player input.
+ */
+public class BoardPanel extends JPanel implements IBoardView, IEventListener {
+    private BufferedImage boardImage;
+    private final IBoard board;
+
+    private final IPlayerCursor cursor1;
+    private final IPlayerCursor cursor2;
+
+    private Consumer<Void> onPlayer1Action;
+    private Consumer<Void> onPlayer2Action;
+
+    private Position selected1 = null;
+    private List<Position> legalMoves1 = Collections.emptyList();
+
+    private Position selected2 = null;
+    private List<Position> legalMoves2 = Collections.emptyList();
+
+    private static final Color SELECT_COLOR_P1 = new Color(255, 0, 0, 128);   // אדום חצי שקוף
+    private static final Color SELECT_COLOR_P2 = new Color(0, 0, 255, 128);   // כחול חצי שקוף
+
+
+    public BoardPanel(IBoard board, IPlayerCursor pc1, IPlayerCursor pc2) {
+        this.board = board;
+        this.cursor1 = pc1;
+        this.cursor2 = pc2;
+
+        setPreferredSize(board.getBoardConfig().panelDimension());
+        setFocusable(true);
+        loadBoardImage();
+
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyPressed(KeyEvent e) {
+                handleKey(e);
+            }
+        });
+
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
+    }
+
+    private void loadBoardImage() {
+        try {
+            URL imageUrl = getClass().getClassLoader().getResource("board/board.png");
+            if (imageUrl != null) {
+                boardImage = ImageIO.read(imageUrl);
+            } else {
+                System.err.println("Image not found in resources!");
+                LogUtils.logDebug("Image not found in resources!");
+            }
+        } catch (IOException e) {
+            String mes = "Exception loading board image: " + e.getMessage();
+            LogUtils.logDebug(mes);
+            throw new RuntimeException(mes);
+        }
+    }
+
+    private void handleKey(KeyEvent e) {
+        int key = e.getKeyCode();
+
+        switch (key) {
+            case KeyEvent.VK_UP -> cursor1.moveUp();
+            case KeyEvent.VK_DOWN -> cursor1.moveDown();
+            case KeyEvent.VK_LEFT -> cursor1.moveLeft();
+            case KeyEvent.VK_RIGHT -> cursor1.moveRight();
+            case KeyEvent.VK_ENTER -> {
+                Position pos = cursor1.getPosition();
+                if (selected1 == null) {
+                    IPiece p = board.getPiece(pos);
+                    if (p == null || p.isCaptured() || p.getPlayer() != 0 || !p.canAction()) {
+                        LogUtils.logDebug("can not choose piece");
+                    } else {
+                        selected1 = pos.copy();
+                        legalMoves1 = board.getLegalMoves(pos);
+                    }
+                } else {
+                    selected1 = null;
+                    legalMoves1 = Collections.emptyList();
+                }
+                if (onPlayer1Action != null) onPlayer1Action.accept(null);
+                repaint();
+            }
+
+            case KeyEvent.VK_W -> cursor2.moveUp();
+            case KeyEvent.VK_S -> cursor2.moveDown();
+            case KeyEvent.VK_A -> cursor2.moveLeft();
+            case KeyEvent.VK_D -> cursor2.moveRight();
+            case KeyEvent.VK_SPACE -> {
+                Position pos = cursor2.getPosition();
+                if (selected2 == null) {
+                    IPiece p = board.getPiece(pos);
+                    if (p == null || p.isCaptured() || p.getPlayer() != 1 || !p.canAction()) {
+                        LogUtils.logDebug("can not choose piece");
+                    } else {
+                        selected2 = pos.copy();
+                        legalMoves2 = board.getLegalMoves(pos);
+                    }
+                } else {
+                    selected2 = null;
+                    legalMoves2 = Collections.emptyList();
+                }
+                if (onPlayer2Action != null) onPlayer2Action.accept(null);
+            }
+        }
+
+        repaint();
+    }
+
+    public void setOnPlayer1Action(Consumer<Void> handler) {
+        this.onPlayer1Action = handler;
+    }
+
+    public void setOnPlayer2Action(Consumer<Void> handler) {
+        this.onPlayer2Action = handler;
+    }
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+
+        if (boardImage != null) {
+            g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), this);
+        } else {
+            g.setColor(Color.DARK_GRAY);
+            g.fillRect(0, 0, getWidth(), getHeight());
+        }
+
+        if (board != null)
+            BoardRenderer.draw(g, PieceView.toPieceViews(board), board.getBoardConfig());
+
+        if (cursor1 != null) cursor1.draw(g, getWidth(), getHeight());
+        if (cursor2 != null) cursor2.draw(g, getWidth(), getHeight());
+
+        Graphics2D g2 = (Graphics2D) g;
+        int cellW = getWidth() / board.getCols();
+        int cellH = getHeight() / board.getRows();
+
+        // --- Player 1 selection and legal moves ---
+        if (selected1 != null) {
+            g2.setColor(SELECT_COLOR_P1);
+            g2.fillRect(selected1.getCol() * cellW, selected1.getRow() * cellH, cellW, cellH);
+
+            g2.setColor(SELECT_COLOR_P1);
+            for (Position move : legalMoves1) {
+                int x = move.getCol() * cellW + cellW / 4;
+                int y = move.getRow() * cellH + cellH / 4;
+                int w = cellW / 2;
+                int h = cellH / 2;
+                g2.fillOval(x, y, w, h);
+            }
+        }
+
+        // --- Player 2 selection and legal moves ---
+        if (selected2 != null) {
+            g2.setColor(SELECT_COLOR_P2);
+            g2.fillRect(selected2.getCol() * cellW, selected2.getRow() * cellH, cellW, cellH);
+
+            g2.setColor(SELECT_COLOR_P2);
+            for (Position move : legalMoves2) {
+                int x = move.getCol() * cellW + cellW / 4;
+                int y = move.getRow() * cellH + cellH / 4;
+                int w = cellW / 2;
+                int h = cellH / 2;
+                g2.fillOval(x, y, w, h);
+            }
+        }
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        repaint();
+        if(event.type() == EGameEvent.PIECE_END_MOVED) {
+            if (selected1 != null)
+                legalMoves1 = board.getLegalMoves(selected1);
+            if(selected2 != null)
+                legalMoves2 = board.getLegalMoves(selected2);
+        }
+    }
+}
+</file>
+
+<file path="common/src/main/java/game/LoadPieces.java">
+package game;
+
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * Utility class for loading initial piece codes from a CSV file into a static board matrix.
+ */
+public class LoadPieces {
+
+    /** Number of rows in the board. */
+    public static final int ROWS = constants.GameConstants.BOARD_ROWS; // extracted board size
+    /** Number of columns in the board. */
+    public static final int COLS = constants.GameConstants.BOARD_COLS; // extracted board size
+
+    /** Static matrix holding the piece codes for the board. */
+    public static final String[][] board = new String[ROWS][COLS];
+
+    // Static initializer to load the board from CSV.
+    static {
+        loadFromCSV();
+    }
+
+    /**
+     * Loads piece codes from a CSV file directly into the static board matrix.
+     * The CSV is expected to be located at /board/board.csv in the resources.
+     */
+    private static void loadFromCSV() {
+        String csvResourcePath = utils.ConfigLoader.getConfig("piece.csv.path", "/board/board.csv"); // extracted to config.properties
+
+        try (InputStream is = LoadPieces.class.getResourceAsStream(csvResourcePath)) {
+            if (is == null) throw new FileNotFoundException(csvResourcePath);
+
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(is))) {
+                String line;
+                int row = 0;
+
+                while ((line = reader.readLine()) != null && row < ROWS) {
+                    String[] cells = line.split(constants.PieceConstants.POSITION_SEPARATOR); // extracted separator
+                    for (int col = 0; col < Math.min(cells.length, COLS); col++) {
+                        String pieceCode = cells[col].trim();
+                        if (!pieceCode.isEmpty()) {
+                            board[row][col] = pieceCode;
+                        } else {
+                            board[row][col] = null;
+                        }
+                    }
+                    row++;
+                }
+
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+}
+</file>
+
+<file path="common/src/main/java/interfaces/IBoard.java">
+package interfaces;
+
+import board.BoardConfig;
+import pieces.Position;
+
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Interface for board operations and queries.
+ */
+public interface IBoard extends Serializable {
+
+    boolean hasPiece(Position pos);
+
+    boolean hasPieceOrIsTarget(Position pos);
+
+    /**
+     * Gets the piece at the specified position.
+     * @param pos The position object
+     * @return The piece or null
+     */
+    IPiece getPiece(Position pos);
+
+    /**
+     * Returns the player index for a given position.
+     * @param pos The position object
+     * @return The player index
+     */
+    int getPlayerOf(Position pos);
+
+    /**
+     * Moves a piece from one position to another.
+     * @param from The starting position
+     * @param to The target position
+     */
+    void move(Position from, Position to);
+
+    /**
+     * Updates all pieces and handles captures and board state.
+     */
+    void updateAll();
+
+    /**
+     * Checks if the specified position is within board bounds.
+     * @param p The position object
+     * @return true if in bounds, false otherwise
+     */
+    boolean isInBounds(Position p);
+
+    /**
+     * Checks if a move from one position to another is legal.
+     * @param from The starting position
+     * @param to The target position
+     * @return true if legal, false otherwise
+     */
+    boolean isMoveLegal(Position from, Position to);
+
+    /**
+     * Checks if a jump action is legal for the given piece.
+     * @param p The piece object
+     * @return true if jump is legal, false otherwise
+     */
+    boolean isJumpLegal(IPiece p);
+
+    /**
+     * Performs a jump action for the given piece.
+     * @param p The piece object
+     */
+    void jump(IPiece p);
+
+    /**
+     * Returns the array of players.
+     * @return Array of players
+     */
+    IPlayer[] getPlayers();
+
+    /**
+     * Returns the number of rows on the board.
+     * @return Number of rows
+     */
+    int getRows();
+
+    /**
+     * Returns the number of columns on the board.
+     * @return Number of columns
+     */
+    int getCols();
+
+    /**
+     * Returns the board configuration.
+     * @return BoardConfig object
+     */
+    BoardConfig getBoardConfig();
+
+    List<Position> getLegalMoves(Position selectedPosition);
+}
+</file>
+
+<file path="common/src/main/java/state/PhysicsData.java">
+package state;
+
+import board.BoardConfig;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import interfaces.IPhysicsData;
+import pieces.Position;
+
+/**
+ * Handles the physics data for chess piece movement, including speed, position, and timing.
+ * This class manages the calculation of piece movement and determines when an action is finished.
+ */
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class PhysicsData implements IPhysicsData {
+    @JsonProperty("speed_m_per_sec")
+    private double speedMetersPerSec;
+    @JsonProperty("action_time")
+    private double actionTime;
+
+    private double currentX, currentY;
+    private Position startPos;
+    private Position targetPos;
+    private BoardConfig bc;
+
+    private long startTimeNanos;
+
+    /**
+     * Default constructor. Initializes actionTime to -1.
+     */
+    public PhysicsData(){actionTime = -1;}
+    /**
+     * Constructs PhysicsData for piece movement.
+     *
+     * @param speedMetersPerSec The speed in meters per second
+     */
+    public PhysicsData(double speedMetersPerSec) {
+        this.speedMetersPerSec = speedMetersPerSec;
+    }
+
+    /**
+     * Gets the speed in meters per second.
+     *
+     * @return Speed in meters per second
+     */
+    @Override
+    public double getSpeedMetersPerSec() {
+        return speedMetersPerSec;
+    }
+
+    /**
+     * Sets the speed in meters per second.
+     *
+     * @param speedMetersPerSec Speed value
+     */
+    @Override
+    public void setSpeedMetersPerSec(double speedMetersPerSec) {
+        this.speedMetersPerSec = speedMetersPerSec;
+    }
+
+    /**
+     * Resets the physics data for a new movement.
+     *
+     * @param state          The state of the piece
+     * @param startPos       The starting position
+     * @param to             The target position
+     * @param bc             The board configuration
+     * @param startTimeNanos The start time in nanoseconds
+     */
+    @Override
+    public void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos) {
+        this.currentX = startPos.getCol() * ((double) bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
+        this.currentY = startPos.getRow() * ((double) bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
+        this.startPos = startPos;
+        this.targetPos = to;
+        this.bc = bc;
+        this.startTimeNanos = startTimeNanos;
+    }
+
+    /**
+     * Updates the physics data for the piece.
+     *
+     * @param now The current time in nanoseconds
+     */
+    @Override
+    public void update(long now) {
+        updatePosition(now);
+    }
+
+    /**
+     * Updates the current position based on elapsed time and speed.
+     *
+     * @param now The current time in nanoseconds
+     */
+    private void updatePosition(long now) {
+        double speed = getSpeedMetersPerSec();
+        double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
+        double dx = targetPos.dx(startPos) * ((double) bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
+        double dy = targetPos.dy(startPos) * ((double) bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
+        double totalDistance = Math.sqrt(dx * dx + dy * dy);
+        if (totalDistance == 0 || speed == 0) return;
+        double distanceSoFar = Math.min(speed * elapsedSec, totalDistance);
+        double t = distanceSoFar / totalDistance;
+        currentX = (startPos.getCol() * (bc.physicsDimension().getWidth() / bc.gridDimension().getWidth())) + dx * t;
+        currentY = (startPos.getRow() * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight())) + dy * t;
+    }
+
+    /**
+     * Checks if the movement is finished based on elapsed time and distance.
+     *
+     * @return true if movement is finished, false otherwise
+     */
+    @Override
+    public boolean isActionFinished() {
+        if (actionTime != -1){
+            long elapsedNanos = System.nanoTime() - startTimeNanos;
+            return elapsedNanos >= (long)(actionTime * 1_000_000_000L);
+        }
+        if(speedMetersPerSec == 0)
+            return false;
+        double elapsedSec = (System.nanoTime() - startTimeNanos) / 1_000_000_000.0;
+        double dx = targetPos.dx(startPos) * ((double) bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
+        double dy = targetPos.dy(startPos) * ((double) bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
+        double totalDistance = Math.sqrt(dx * dx + dy * dy);
+        return speedMetersPerSec * elapsedSec >= totalDistance;
+    }
+
+    /**
+     * Gets the current X position in pixels.
+     *
+     * @return The X position
+     */
+    @Override
+    public double getCurrentX() {
+        return currentX;
+    }
+
+    /**
+     * Gets the current Y position in pixels.
+     *
+     * @return The Y position
+     */
+    @Override
+    public double getCurrentY() {
+        return currentY;
+    }
+
+    /**
+     * Gets the starting position of the piece.
+     *
+     * @return The starting position
+     */
+    @Override
+    public Position getStartPos() {
+        return startPos;
+    }
+
+    /**
+     * Gets the target position of the piece.
+     *
+     * @return The target position
+     */
+    @Override
+    public Position getTargetPos() {
+        return targetPos;
+    }
+}
+</file>
+
+<file path="common/src/main/java/state/State.java">
+package state;
+
+import board.BoardConfig;
+import interfaces.*;
+import pieces.EPieceEvent;
+import pieces.Position;
+
+import java.awt.geom.Point2D;
+import java.util.Optional;
+
+/**
+ * Represents the state of a chess piece, including its physics and graphics data.
+ * This class manages the state transitions, updates, and provides access to the
+ * current physics and graphics information for a piece.
+ */
+public class State implements IState {
+    private final EState name;
+    private final IPhysicsData physics;
+    private final IGraphicsData graphics;
+
+    private Position startPos;
+    private Position targetPos;
+    private final BoardConfig bc;
+
+
+    /**
+     * Constructs a new State for a chess piece.
+     *
+     * @param name      The state name (enum)
+     * @param startPos  The starting position
+     * @param targetPos The target position
+     * @param bc        The board configuration
+     * @param physics   The physics data object
+     * @param graphics  The graphics data object
+     */
+    public State(EState name, Position startPos, Position targetPos,
+                 BoardConfig bc, IPhysicsData physics, IGraphicsData graphics) {
+        this.name = name;
+        this.startPos = startPos;
+        this.targetPos = targetPos;
+        this.physics = physics;
+        this.graphics = graphics;
+        this.bc = bc;
+    }
+
+    /**
+     * Resets the state to a new action, updating physics and graphics data.
+     *
+     * @param from The starting position
+     * @param to   The target position
+     */
+    @Override
+    public void reset(Position from, Position to) {
+        if (from != null && to != null) {
+            this.startPos = from;
+            this.targetPos = to;
+        }
+        long startTimeNanos = System.nanoTime();
+        if (graphics != null) graphics.reset();
+        if (physics != null) physics.reset(name, startPos, targetPos, bc, startTimeNanos);
+    }
+
+    /**
+     * Updates the physics and graphics for the current state.
+     *
+     * @param now The current time in nanoseconds
+     * @return An Optional containing EPieceEvent.DONE if the action is finished, otherwise empty
+     */
+    @Override
+    public Optional<EPieceEvent> update(long now) {
+        if (graphics != null) graphics.update(now);
+        if (physics != null) physics.update(now);
+        if (isActionFinished()) {
+            startPos = targetPos;
+            return Optional.of(EPieceEvent.DONE);
+        }
+        return Optional.empty();
+    }
+
+    /**
+     * Checks if the current action (move, jump, rest) is finished.
+     *
+     * @return true if finished, false otherwise
+     */
+    @Override
+    public boolean isActionFinished() {
+        return physics.isActionFinished();
+    }
+
+    /**
+     * Gets the current position in pixels.
+     *
+     * @return The current position as Point2D.Double
+     */
+    @Override
+    public Position getCurrentPosition() {
+        return new Position((int) physics.getCurrentX(), (int) physics.getCurrentY());
+    }
+
+    /**
+     * Gets the physics data for the state.
+     *
+     * @return The physics data
+     */
+    @Override
+    public IPhysicsData getPhysics() {
+        return physics;
+    }
+
+    /**
+     * Gets the graphics data for the state.
+     *
+     * @return The graphics data
+     */
+    @Override
+    public IGraphicsData getGraphics() {
+        return graphics;
+    }
+
+    /**
+     * Gets the name of the state.
+     *
+     * @return The state name (EState)
+     */
+    @Override
+    public EState getName() {
+        return name;
+    }
+}
+</file>
+
+<file path="client/src/main/java/endpoint/view/GamePanel.java">
+package endpoint.view;
+
+import constants.PlayerConstants;
+import controller.IGameUI;
+import interfaces.IPlayer;
+import sound.EventSoundListener;
+import utils.LogUtils;
+import viewUtils.PlayerInfoPanel;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.List;
+import java.util.Objects;
+
+/**
+ * GamePanel is responsible for displaying:
+ * - The chess board (BoardPanel)
+ * - Player info panels (PlayerInfoPanel)
+ * - Timer and background
+ *
+ * All UI elements are initialized and updated here.
+ */
+public class GamePanel extends JPanel implements IGameUI {
+
+    private final BoardPanel boardPanel;
+    private final List<PlayerInfoPanel> playerPanels;
+    private final Image backgroundImage;
+    private final JLabel timerLabel;
+
+    /**
+     * Constructor receives all UI components and external dependencies.
+     *
+     * @param boardPanel BoardPanel representing the chess board
+     * @param playerPanels List of two PlayerInfoPanel instances
+     */
+    public GamePanel(BoardPanel boardPanel, List<PlayerInfoPanel> playerPanels) {
+        this.boardPanel = boardPanel;
+        this.playerPanels = playerPanels;
+
+        setLayout(new BorderLayout(20, 20));
+        setBorder(new EmptyBorder(20, 20, 20, 20));
+
+        // Load background image
+        backgroundImage = loadBackgroundImage("background/background.jpg");
+
+        // Initialize UI and timer
+        timerLabel = createTimerLabel();
+        initUI();
+        boardPanel.initKeyBindings();
+
+        // Initialize sound listener
+        new EventSoundListener();
+
+        LogUtils.logDebug("GamePanel initialized");
+    }
+
+    // ----------- UI Initialization -----------
+
+    private void initUI() {
+        // Add player info panels to EAST/WEST
+        add(playerPanels.get(0), BorderLayout.WEST);
+        add(playerPanels.get(1), BorderLayout.EAST);
+
+        // Configure and add the board panel
+        boardPanel.setOpaque(false);
+        enableBoardFocus(boardPanel);
+        add(boardPanel, BorderLayout.CENTER);
+
+        // Add timer at the top
+        add(timerLabel, BorderLayout.NORTH);
+    }
+
+    // ----------- COMPONENT CREATORS -----------
+
+    private Image loadBackgroundImage(String path) {
+        try {
+            return ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource(path)));
+        } catch (IOException | IllegalArgumentException e) {
+            LogUtils.logDebug("Could not load background image: " + e.getMessage());
+            return null;
+        }
+    }
+
+    private JLabel createTimerLabel() {
+        JLabel label = new JLabel("Time: 00:00");
+        label.setFont(new Font("Arial", Font.BOLD, 18));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        return label;
+    }
+
+    /**
+     * Ensures the BoardPanel receives keyboard focus on click.
+     */
+    private void enableBoardFocus(BoardPanel board) {
+        board.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                board.requestFocusInWindow();
+            }
+        });
+        SwingUtilities.invokeLater(board::requestFocusInWindow);
+    }
+
+    /**
+     * Called when the game ends.
+     * Displays a non-blocking dialog with the winner.
+     */
+    @Override
+    public void onWin(IPlayer winner) {
+        JOptionPane pane = new JOptionPane(
+                "Game Over. Winner: Player " + winner.getName() + " (" +
+                        PlayerConstants.COLORS_NAME[winner.getId()] + ")",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+        JDialog dialog = pane.createDialog(this, "Game Over");
+        dialog.setModal(false);
+        dialog.setVisible(true);
+    }
+
+    /**
+     * Called when the board updates (piece moved, captured, etc.)
+     */
+    @Override
+    public void onGameUpdate() {
+        boardPanel.update();
+    }
+
+    @Override
+    public void updateTimerLabel(String text) {
+        timerLabel.setText(text);
+    }
+
+    // ----------- OVERRIDES -----------
+
+    @Override
+    protected void paintComponent(Graphics g) {
+        super.paintComponent(g);
+        if (backgroundImage != null) {
+            g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+        }
+    }
+
+    // ----------- GETTERS & SETTERS -----------
+
+    @Override
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
+    }
+}
+</file>
+
+<file path="common/src/main/java/dto/PlayerDTO.java">
+package dto;
+
+import board.BoardConfig;
+import interfaces.IPlayer;
+
+import java.awt.*;
+
+public record PlayerDTO(int id, String name, String colorHex) {
+
+    /**
+     * Converts from a regular IPlayer object to PlayerDTO.
+     */
+    public static PlayerDTO from(IPlayer player) {
+        Color c = player.getColor();
+        String colorHex = String.format(constants.PieceConstants.COLOR_HEX_FORMAT,
+                c.getRed(), c.getGreen(), c.getBlue());
+        return new PlayerDTO(player.getId(), player.getName(), colorHex);
+    }
+
+    /**
+     * Converts a PlayerDTO to an IPlayer instance.
+     */
+    public static IPlayer to(PlayerDTO playerDTO, BoardConfig bc) {
+        return player.PlayerFactory.createPlayer(playerDTO.id(), playerDTO.name(), bc);
+    }
+}
+</file>
+
+<file path="pom.xml">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
+                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.kfchess</groupId>
+    <artifactId>kfchess-parent</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <modules>
+        <module>common</module>
+        <module>client</module>
+        <module>server</module>
+    </modules>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <jackson.version>2.15.2</jackson.version>
+        <slf4j.version>2.0.7</slf4j.version>
+        <tyrus.version>1.17</tyrus.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${jackson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-simple</artifactId>
+                <version>${slf4j.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+</project>
+</file>
+
+<file path="client/src/main/java/controller/GameController.java">
+package controller;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dto.*;
+import endpoint.launch.ChessClientEndpoint;
+import endpoint.view.BoardPanel;
+import endpoint.view.GamePanel;
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.IEventListener;
+import game.Game;
+import interfaces.IGame;
+import interfaces.IPiece;
+import interfaces.IPlayer;
+import interfaces.IPlayerCursor;
+import pieces.Position;
+import player.PlayerCursor;
+import utils.LogUtils;
+import utils.Utils;
+import viewUtils.PlayerInfoPanel;
+
+import java.awt.*;
+import java.net.IDN;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.TimeUnit;
+import java.util.function.Consumer;
+
+public class GameController implements Runnable, IEventListener {
+
+    private IGame model;
+    private IGameUI gamePanel;
+    private int playerId=-1;
+
+    private final ChessClientEndpoint client;
+    private final ObjectMapper mapper;
+    private final List<GameEventListener> listeners = new CopyOnWriteArrayList<>();
+    private Thread listenerThread;
+
+    private Position selected = null;
+    private ClientState clientState;
+
+    private volatile boolean running = true;
+
+    public GameController(ChessClientEndpoint client, ObjectMapper mapper) {
+        this.client = client;
+        this.mapper = mapper;
+        clientState = ClientState.WAIT_SELECTING_PIECE;
+
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
+        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
+    }
+
+    public void startListening() {
+        if (listenerThread == null || !listenerThread.isAlive()) {
+            listenerThread = new Thread(this, "GameController-Listener");
+            listenerThread.setDaemon(true);
+            running = true;
+            listenerThread.start();
+            LogUtils.logDebug("GameController started listening thread");
+        }
+    }
+
+    public void stopListening() {
+        running = false;
+        if (listenerThread != null) {
+            listenerThread.interrupt();
+            try {
+                listenerThread.join(2000);
+            } catch (InterruptedException ignored) {
+                Thread.currentThread().interrupt();
+            }
+            LogUtils.logDebug("GameController stopped listening thread");
+        }
+    }
+
+    public void addListener(GameEventListener listener) {
+        listeners.add(listener);
+        LogUtils.logDebug("Added listener: " + listener);
+    }
+
+    public void removeListener(GameEventListener listener) {
+        listeners.remove(listener);
+        LogUtils.logDebug("Removed listener: " + listener);
+    }
+
+    private void handlePlayerSelection(Position pos){
+        IPiece p = model.getBoard().getPiece(pos);
+        BoardPanel boardPanel = gamePanel.getBoardPanel();
+
+        switch (clientState){
+            case WAIT_SELECTING_PIECE -> {
+                if (p == null || p.isCaptured() || p.getPlayer() != playerId || !p.canAction()) return;
+                // עדכון UI
+                boardPanel.setSelected(pos.copy());
+                boardPanel.setLegalMoves(model.getBoard().getLegalMoves(pos));
+                boardPanel.repaint();
+                selected = pos.copy();
+                clientState = ClientState.WAIT_SELECTING_TARGET;
+            }
+
+            case WAIT_SELECTING_TARGET -> {
+                boardPanel.clearSelection();
+                selected = null;
+                clientState = ClientState.WAIT_SELECTING_PIECE;
+            }
+        }
+
+        // שליחה לשרת
+        try {
+            sendPlayerSelection(pos);
+        } catch (Exception e){
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private PlayerInfoPanel createPlayerInfoPanel(IPlayer player) {
+        PlayerInfoPanel panel = new PlayerInfoPanel(player);
+        panel.setBackground(new Color(255, 255, 255, 180));
+        return panel;
+    }
+
+    private void sendPlayerSelection(Position pos) throws Exception {
+        client.sendCommand(EventType.PLAYER_SELECTED, new PlayerSelectedDTO(playerId, pos));
+    }
+
+    private <T> void sendMessage(EventType type, T data) {
+        try {
+            Message<T> msg = new Message<>(type, data);
+            client.sendText(mapper.writeValueAsString(msg));
+        } catch (JsonProcessingException e) {
+            LogUtils.logDebug("Failed to send message: " + e.getMessage());
+        }
+    }
+
+    @Override
+    public void run() {
+        LogUtils.logDebug("GameController run() loop started");
+
+        while (running) {
+            try {
+                String message = client.pollNextMessage(500, TimeUnit.MILLISECONDS);
+                if (message != null) handleMessage(message);
+            } catch (InterruptedException e) {
+                LogUtils.logDebug("GameController thread interrupted, stopping...");
+                Thread.currentThread().interrupt();
+                running = false;
+            } catch (Exception e) {
+                LogUtils.logDebug("Error in GameController loop: " + e);
+            }
+        }
+        LogUtils.logDebug("GameController run() loop ended");
+    }
+
+    private volatile boolean gameLoopStarted = false;
+
+    public void startRunGame() {
+        if (!gameLoopStarted && model != null) {
+            gameLoopStarted = true;
+            new Thread(() -> model.run(), "Game-Loop-Thread").start();
+        }
+    }
+
+    private void handleMessage(String message) {
+        try {
+            JsonNode root = mapper.readTree(message);
+            String typeStr = root.path("type").asText("");
+            JsonNode dataNode = root.path("data");
+
+            EventType type = EventType.UNKNOWN;
+            try { type = EventType.valueOf(typeStr); }
+            catch (IllegalArgumentException ignored) {}
+
+            switch (type) {
+                case WAIT -> fireEvent(l -> l.onWaitMessage(dataNode.asText("")));
+                case GAME_INIT -> {
+                    GameDTO dto = mapper.treeToValue(dataNode, GameDTO.class);
+                    playInit(dto);
+                }
+                case PLAYER_SELECTED -> {
+                    PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
+                    onPlayerSelect(cmd);
+                }
+                case PLAYER_ID -> onPlayerId(dataNode.asInt(-1));
+                default -> fireEvent(l -> l.onUnknownMessage(typeStr));
+            }
+        } catch (JsonProcessingException e) {
+            LogUtils.logDebug("Failed to parse JSON message: " + e.getMessage());
+        }
+    }
+
+    private void onPlayerId(int id){
+        this.playerId = id;
+        fireEvent(l ->  l.onPlayerId(id));
+    }
+
+    private void playInit(GameDTO dto){
+        IPlayer[] players = Arrays.stream(dto.getPlayers())
+                .map(p -> PlayerDTO.to(p, dto.getBoardConfig()))
+                .toArray(IPlayer[]::new);
+
+        model = new Game(dto.getBoardConfig(), players);
+
+        IPlayerCursor cursor = new PlayerCursor(
+                new Position(0,0),
+                model.getPlayerById(playerId).getColor()
+        );
+
+        BoardPanel boardPanel = new BoardPanel(model.getBoard(), cursor);
+        boardPanel.setOnPlayerAction(this::handlePlayerSelection);
+
+        List<PlayerInfoPanel> pips = Arrays.stream(model.getPlayers()).map(this::createPlayerInfoPanel).toList();
+
+        this.gamePanel = new GamePanel(boardPanel, pips);
+
+        fireEvent(GameEventListener::onGameInit);
+    }
+
+    private void onPlayerSelect(PlayerSelectedDTO cmd){
+        model.handleSelection(cmd.playerId(), cmd.selection());
+    }
+
+    private void fireEvent(Consumer<GameEventListener> action) {
+        for (GameEventListener l : listeners) {
+            try {
+                action.accept(l);
+            } catch (Exception e) {
+                LogUtils.logDebug("Listener error: " + e);
+            }
+        }
+    }
+
+    @Override
+    public void onEvent(GameEvent event) {
+        switch (event.type()){
+            case GAME_ENDED -> gamePanel.onWin(model.win());
+            case GAME_UPDATE -> {
+                gamePanel.onGameUpdate();
+                gamePanel.updateTimerLabel(Utils.formatElapsedTime(model.getElapsedMillis()));
+            }
+            case PIECE_END_MOVED -> {if(selected != null) gamePanel.getBoardPanel().setLegalMoves(model.getBoard().getLegalMoves(selected));}
+        }
+    }
+
+    public IGameUI getGamePanel() {
+        return gamePanel;
+    }
+
+    public IGame getModel() {
+        return model;
+    }
+
+    public interface GameEventListener {
+        void onWaitMessage(String message);
+
+        void onPlayerId(int playerId);
+
+        void onUnknownMessage(String type);
+
+        void onGameInit();
+    }
+}
+</file>
+
+<file path="common/src/main/java/game/Game.java">
+package game;
+
+import board.Board;
+import board.BoardConfig;
+import constants.GameConstants;
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.listeners.CapturedLogger;
+import events.listeners.GameEndLogger;
+import events.listeners.JumpsLogger;
+import events.listeners.MovesLogger;
+import interfaces.ICommand;
+import interfaces.IBoard;
+import interfaces.IGame;
+import interfaces.IPlayer;
+import pieces.Position;
+import utils.LogUtils;
+
+import javax.swing.*;
+import java.util.LinkedList;
+import java.util.Optional;
+import java.util.Queue;
+
+/**
+ * Main game logic and state management.
+ * Handles command execution, player turns, and win condition.
+ */
+public class Game implements IGame {
+    private final IPlayer[] players;
+    /** Queue of commands to be executed. */
+    private final Queue<ICommand> commandQueue;
+    /** The board instance for the game. */
+    private final IBoard board;
+
+    private Timer timer;
+
+    private long startTimeNano;
+    private volatile boolean running;
+
+    public Game(BoardConfig bc, IPlayer[] players) {
+        this.board = new Board(bc, players);
+        this.players = players;
+        this.commandQueue = new LinkedList<>();
+        this.running = false;
+
+        // startTimeNano will be set when run() is invoked, not here.
+        this.startTimeNano = 0;
+
+        new MovesLogger();
+        new JumpsLogger();
+        new CapturedLogger();
+        new GameEndLogger();
+    }
+
+    /**
+     * Adds a command to the queue.
+     *
+     * @param cmd The command to add
+     */
+    @Override
+    public void addCommand(ICommand cmd) {
+        commandQueue.add(cmd);
+    }
+
+    /**
+     * Executes all commands in the queue.
+     */
+    @Override
+    public void update() {
+        ICommand cmd;
+        while ((cmd = commandQueue.poll()) != null) {
+            cmd.execute();
+        }
+    }
+
+    @Override
+    public IPlayer getPlayerById(int id) {
+        if (id < 0 || id >= players.length) {
+            throw new IllegalArgumentException("Invalid player id: " + id);
+        }
+        return players[id];
+    }
+
+    /**
+     * Gets the game board.
+     *
+     * @return The board instance
+     */
+    @Override
+    public IBoard getBoard() {
+        return board;
+    }
+
+    /**
+     * Handles selection for the given player.
+     * Adds the resulting command to the queue if not null.
+     *
+     * @param player   The player making a selection
+     * @param selected The selected position
+     */
+    @Override
+    public void handleSelection(IPlayer player, Position selected) {
+        Optional<ICommand> cmd = player.handleSelection(getBoard(), selected);
+        cmd.ifPresent(this::addCommand);
+    }
+
+    @Override
+    public void handleSelection(int playerId, Position selected) {
+        handleSelection(getPlayerById(playerId), selected);
+    }
+
+    /**
+     * Returns the winning player, or null if no winner yet.
+     */
+    @Override
+    public IPlayer win() {
+        if (board.getPlayers()[0].isFailed())
+            return players[1];
+        if (board.getPlayers()[1].isFailed())
+            return players[0];
+        return null;
+    }
+
+    @Override
+    public void run() {
+        if (timer == null) {
+            // set running before starting timer to avoid race in elapsed time queries
+            timer = new Timer(GameConstants.GAME_LOOP_MS, e -> tick());
+        }
+        if (!running) {
+            running = true;
+            startTimeNano = System.nanoTime();
+        }
+        timer.start();
+    }
+
+    /**
+     * Single tick of the game loop. Separated to allow deterministic unit testing.
+     */
+    private void tick() {
+        IPlayer winner = win();
+        if (winner == null) {
+            update();
+            board.updateAll();
+            EventPublisher.getInstance().publish(EGameEvent.GAME_UPDATE, new GameEvent(EGameEvent.GAME_UPDATE, null));
+        } else {
+            EventPublisher.getInstance().publish(EGameEvent.GAME_ENDED, new GameEvent(EGameEvent.GAME_ENDED, null));
+            stopGameLoop();
+            LogUtils.logDebug("Game Over. Winner: Player " + winner.getName());
+        }
+    }
+
+    @Override
+    public void stopGameLoop() {
+        if (timer != null && timer.isRunning()) {
+            timer.stop();
+        }
+        running = false;
+    }
+
+    @Override
+    public long getStartTimeNano() {
+        return startTimeNano;
+    }
+
+    @Override
+    public long getElapsedMillis() {
+        if (startTimeNano == 0) return 0;
+        return (System.nanoTime() - startTimeNano) / 1_000_000;
+    }
+
+
+    @Override
+    public IPlayer[] getPlayers() {
+        return players;
+    }
+
+    @Override
+    public boolean isRunning() {
+        return running;
+    }
+
+    @Override
+    public void setPlayerName(int playerId, String name) {
+        getPlayerById(playerId).setName(name);
+    }
+}
+</file>
+
+<file path="common/src/main/java/interfaces/IPiece.java">
+package interfaces;
+
+import moves.Move;
+import pieces.EPieceType;
+import pieces.Position;
+
+import java.awt.geom.Point2D;
+import java.io.Serializable;
+import java.util.List;
+
+/**
+ * Interface for piece operations.
+ */
+public interface IPiece extends Serializable {
+
+    /**
+     * Gets the player index for this piece.
+     * @return The player index
+     */
+    int getPlayer();
+
+    /**
+     * Gets the type of the piece.
+     * @return The piece type
+     */
+    EPieceType getType();
+
+    /**
+     * Updates the piece's state.
+     */
+    void update(long now);
+
+    /**
+     * Moves the piece to a new position.
+     * @param to The target position
+     */
+    void move(Position to);
+
+    /**
+     * Performs a jump action for the piece.
+     */
+    void jump();
+
+    /**
+     * Returns true if the piece is captured.
+     * @return true if captured, false otherwise
+     */
+    boolean isCaptured();
+
+    /**
+     * Marks the piece as captured.
+     */
+    void markCaptured();
+
+    /**
+     * Gets the legal moves for the piece.
+     * @return The Moves object
+     */
+    List<Move> getMoves();
+
+    void setMoves(List<Move> moves);
+
+    /**
+     * Returns true if the piece can move over other pieces.
+     * @return true if can move over, false otherwise
+     */
+    boolean canCapturable();
+
+    Position getPos();
+
+    boolean isFirstMove();
+
+    void setFirstMove(boolean firstMove);
+
+    IState getCurrentState();
+
+    boolean canAction();
+}
+</file>
+
+<file path="common/src/main/java/pieces/Position.java">
+package pieces;
+
+import java.io.Serializable;
+import java.util.Objects;
+
+public class Position implements Serializable {
+    private int row;
+    private int col;
+
+    // Empty constructor required for Jackson
+    public Position() {}
+
+    // Standard constructor
+    public Position(int r, int c){
+        this.row = r;
+        this.col = c;
+    }
+
+    // Public getters and setters
+
+    public int getRow() {
+        return row;
+    }
+
+    public int getCol() {
+        return col;
+    }
+
+    public int dx(Position other){
+        return col - other.col;
+    }
+
+    public int dy(Position other){
+        return row - other.row;
+    }
+
+    @Override
+    public boolean equals(Object obj){
+        return obj instanceof Position && ((Position)obj).row == row && ((Position)obj).col == col;
+    }
+
+    public Position add(int x, int y){
+        return new Position(row + x, col + y);
+    }
+
+    @Override
+    public String toString() {
+    return row + constants.PieceConstants.POSITION_SEPARATOR + col; // Use separator from PieceConstants
+    }
+
+    public void reduceOneRow(){
+        row--;
+    }
+
+    public void reduceOneCol(){
+        col--;
+    }
+
+    public void addOneRow(){
+        row++;
+    }
+
+    public void addOneCol(){
+        col++;
+    }
+
+    public Position copy(){
+        return new Position(getRow(), getCol());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(row, col);
+    }
+}
+</file>
+
+<file path="common/src/main/java/pieces/Piece.java">
+package pieces;
+
+import constants.GameConstants;
+import interfaces.IState;
+import interfaces.IPiece;
+import moves.Move;
+import moves.Moves;
+import state.EState;
+import state.StateMachine;
+
+import java.awt.geom.Point2D;
+import java.io.IOException;
+import java.util.List;
+
+public class Piece implements IPiece {
+    private final EPieceType type;
+    private final int playerId;
+    private List<Move> moves;
+    private final StateMachine fsm;
+    private Position position;
+    private boolean wasCaptured;
+    private boolean isFirstMove;
+
+    public Piece(EPieceType type, int playerId, StateMachine sm, Position position) throws IOException {
+        this.type = type;
+        this.playerId = playerId;
+        this.position = position;
+        this.isFirstMove = true;
+        this.fsm = sm;
+
+        this.moves = Moves.createMovesList(type, playerId);
+    }
+
+    public Position getPosition() {
+        return position;
+    }
+
+    private void setPosition(Position position) {
+        this.position = position;
+    }
+
+    public int getPlayerId() {
+        return playerId;
+    }
+
+    @Override
+    public EPieceType getType() {
+        return type;
+    }
+
+    @Override
+    public int getPlayer() {
+        return playerId;
+    }
+
+    @Override
+    public void update(long now) {
+        if (fsm.getCurrentState().isActionFinished()) {
+            // Update logical position only after the action is finished
+            setPosition(fsm.getCurrentState().getPhysics().getTargetPos());
+        }
+        fsm.update(now);
+    }
+
+    @Override
+    public void move(Position to) {
+        fsm.onEvent(EPieceEvent.MOVE, position, to);
+        setFirstMove(false);
+    }
+
+    @Override
+    public void jump() {
+        fsm.onEvent(EPieceEvent.JUMP);
+    }
+
+    @Override
+    public boolean isCaptured() {
+        return wasCaptured;
+    }
+
+    @Override
+    public void markCaptured() {
+        this.wasCaptured = true;
+    }
+
+    @Override
+    public List<Move> getMoves() {
+        return moves;
+    }
+
+    @Override
+    public void setMoves(List<Move> moves) {
+        this.moves = moves;
+    }
+
+    @Override
+    public boolean canCapturable(){
+        return fsm.getCurrentState().getName().isCanCapturable();
+    }
+
+    @Override
+    public String toString() {
+        return type.toString()+getPlayer();
+    }
+
+    @Override
+    public Position getPos() {
+        return position;
+    }
+
+    @Override
+    public boolean isFirstMove() {
+        return isFirstMove;
+    }
+
+    @Override
+    public void setFirstMove(boolean firstMove) {
+        isFirstMove = firstMove;
+    }
+
+    @Override
+    public IState getCurrentState(){
+        return fsm.getCurrentState();
+    }
+
+    @Override
+    public boolean canAction(){
+        return fsm.getCurrentState().getName().isCanAction();
+    }
+}
+</file>
+
+<file path="common/src/main/java/pieces/PiecesFactory.java">
+package pieces;
+
+import board.BoardConfig;
+import graphics.GraphicsLoader;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import state.*;
+import interfaces.IGraphicsData;
+import interfaces.IPhysicsData;
+import interfaces.IState;
+import utils.LogUtils;
+
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.*;
+
+/**
+ * Factory for creating pieces by code and position.
+ */
+public class PiecesFactory {
+
+    private static final ObjectMapper mapper = new ObjectMapper();
+
+    /**
+     * Creates a piece by its code, position, and board configuration.
+     * Loads all states and graphics for the piece from resources.
+     * @param code Piece code
+     * @param pos Position on the board
+     * @param config Board configuration
+     * @return Piece instance or null if failed
+     */
+    public static Piece createPieceByCode(EPieceType code, int playerId, Position pos, BoardConfig config) {
+        Map<EState, IState> states = new HashMap<>();
+        String basePath = "/pieces/" + code.getVal() + "/states/";
+
+        try {
+            URL dirURL = PiecesFactory.class.getResource(basePath);
+            if (dirURL == null || !dirURL.getProtocol().equals("file")) {
+                LogUtils.logDebug("Cannot load states from: " + basePath);
+                return null;
+            }
+
+            File statesDir = new File(dirURL.toURI());
+            File[] subdirs = statesDir.listFiles(File::isDirectory);
+            if (subdirs == null) return null;
+
+            // Load each state
+            for (File stateFolder : subdirs) {
+                EState stateName = EState.getValueOf(stateFolder.getName());
+                String configPath = basePath + stateName + "/config.json";
+                InputStream is = PiecesFactory.class.getResourceAsStream(configPath);
+                if (is == null) {
+                    LogUtils.logDebug("Missing config for state: " + stateName);
+                    continue;
+                }
+
+                JsonNode root = mapper.readTree(is);
+                JsonNode physicsNode = root.path("physics");
+
+                IPhysicsData physics = mapper.treeToValue(physicsNode, PhysicsData.class);
+
+                JsonNode graphicsNode = root.path("graphics");
+                IGraphicsData graphicsData = mapper.treeToValue(graphicsNode, GraphicsData.class);
+
+                BufferedImage[] sprites = GraphicsLoader.loadAllSprites(code, playerId, stateName);
+                if (sprites.length == 0) {
+                    LogUtils.logDebug("No sprites for state: " + stateName);
+                    continue;
+                }
+
+                graphicsData.setFrames(sprites);
+                graphicsData.setTotalFrames(sprites.length);
+
+                IState state = new State(stateName, pos, pos, config, physics, graphicsData);
+                states.put(stateName, state);
+            }
+
+            if (states.isEmpty()) {
+                LogUtils.logDebug("No states loaded for piece: " + code.getVal());
+                return null;
+            }
+
+            // Decide initial state: prefer LONG_REST if present, else first key
+            EState initialState = states.containsKey(EState.LONG_REST) ? EState.LONG_REST
+                    : states.keySet().iterator().next();
+
+
+            StateMachine sm = new StateMachine(states, new TransitionTable(basePath+"transitions.csv"), initialState, pos);
+
+            // Create and return piece with template
+            return new Piece(code, playerId, sm, pos);
+
+        } catch (Exception e) {
+            String mes = "Exception in createPieceByCode: " + e.getMessage();
+            LogUtils.logDebug(mes);
+            throw new RuntimeException(mes, e);
+        }
+    }
+
+}
+</file>
+
+<file path="common/src/main/java/player/Player.java">
+package player;
+
+import board.BoardConfig;
+import command.JumpCommand;
+import command.MoveCommand;
+import interfaces.ICommand;
+import interfaces.IBoard;
+import interfaces.IPiece;
+import interfaces.IPlayer;
+import pieces.EPieceType;
+import pieces.PiecesFactory;
+import pieces.Position;
+import utils.LogUtils;
+
+import java.awt.*;
+import java.util.*;
+import java.util.List;
+
+/**
+ * Represents a player in the game, holding pieces and managing actions.
+ */
+public class Player implements IPlayer {
+    private final int id;
+    private String name;
+    private Position pending;
+    private final Color color;
+
+    private final List<IPiece> pieces;
+    private int score;
+    private boolean isFailed;
+
+    /**
+     * Constructs a Player with explicit ID, name, color, and initial pieces.
+     */
+    Player(int id, String name, Color color, List<IPiece> initialPieces) {
+        if (initialPieces == null) throw new IllegalArgumentException("initialPieces cannot be null");
+        this.id = id;
+        this.name = Objects.requireNonNull(name);
+        this.color = color == null ? Color.WHITE : color;
+        this.pieces = new ArrayList<>(initialPieces);
+        this.pending = null;
+        this.isFailed = false;
+
+        this.score = 0;
+        for (IPiece p : pieces) {
+            this.score += p.getType().getScore();
+        }
+    }
+
+    /**
+     * Convenience constructor when pieces will be added later.
+     */
+    public Player(int id, String name, Color color) {
+        this(id, name, color, new ArrayList<>());
+    }
+
+    @Override
+    public List<IPiece> getPieces() {
+        return Collections.unmodifiableList(pieces);
+    }
+
+    @Override
+    public int getId() {
+        return id;
+    }
+
+    @Override
+    public String getName() {
+        return name;
+    }
+
+    private Position getPendingFrom() {
+        return pending == null ? null : pending.copy(); // defensive copy
+    }
+
+    private void setPendingFrom(Position pending) {
+        this.pending = pending == null ? null : pending.copy();
+    }
+
+    @Override
+    public boolean isFailed() {
+        return isFailed;
+    }
+
+    @Override
+    public void markPieceCaptured(IPiece p) {
+        if (p == null) return;
+        p.markCaptured();
+        score -= p.getType().getScore();
+        if (p.getType() == EPieceType.K) {
+            isFailed = true;
+        }
+    }
+
+    @Override
+    public Optional<ICommand> handleSelection(IBoard board, Position selected) {
+        Position previous = getPendingFrom();
+
+        if (previous == null) {
+            IPiece piece = board.getPiece(selected);
+            if (piece == null || piece.getPlayer() != id) {
+                return Optional.empty();
+            }
+
+            if (board.hasPiece(selected)
+                    && piece.canAction()) {
+                setPendingFrom(selected);
+            } else {
+                LogUtils.logDebug("Cannot choose piece at " + selected + " for player " + id);
+            }
+        } else {
+            setPendingFrom(null);
+            if (previous.equals(selected)) {
+                IPiece piece = board.getPiece(selected);
+                if (piece != null) {
+                    return Optional.of(new JumpCommand(piece, board));
+                }
+            } else {
+                return Optional.of(new MoveCommand(previous, selected.copy(), board));
+            }
+        }
+
+        return Optional.empty();
+    }
+
+    @Override
+    public int getScore() {
+        return score;
+    }
+
+    /**
+     * Replaces the given piece with a queen (promotion) and updates score.
+     */
+    @Override
+    public IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc) {
+        if (piece == null) throw new IllegalArgumentException("piece cannot be null");
+
+        // Remove old piece
+        pieces.remove(piece);
+        score -= piece.getType().getScore();
+
+        // Build new queen piece at the target position
+        IPiece queen = PiecesFactory.createPieceByCode(
+                EPieceType.Q,
+                id,
+                targetPos,
+                bc
+        );
+
+        if (queen != null) {
+            pieces.add(queen);
+            score += queen.getType().getScore();
+        } else {
+            LogUtils.logDebug("Failed to promote piece to Queen at " + targetPos + " for player " + id);
+        }
+
+        return queen;
+    }
+
+    @Override
+    public Color getColor() {
+        return color;
+    }
+
+    @Override
+    public void setName(String name) {
+        this.name = Objects.requireNonNull(name);
+    }
+}
+</file>
+
+<file path="server/src/main/java/endpoint/launch/ChessServerEndpoint.java">
+package endpoint.launch;
+
+import board.BoardConfig;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import constants.Messages;
+import constants.ServerConfig;
+import constants.GameConstants;
+import dto.*;
+import game.Game;
+import interfaces.IGame;
+import interfaces.IPlayer;
+import player.PlayerFactory;
+
+import javax.websocket.*;
+import javax.websocket.server.ServerEndpoint;
+import java.awt.*;
+import java.io.IOException;
+import java.util.*;
+import java.util.List;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
+@ServerEndpoint(ServerConfig.SERVER_ENDPOINT)
+public class ChessServerEndpoint {
+
+    private static final Logger LOGGER = Logger.getLogger(ChessServerEndpoint.class.getName());
+    private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
+    private static final ObjectMapper mapper = new ObjectMapper();
+    private static volatile IGame game = null;
+
+    private static final int MAX_PLAYERS = GameConstants.MAX_PLAYERS;
+    private static final List<String> playersName = Collections.synchronizedList(new ArrayList<>(List.of(
+            Messages.get(Messages.Key.PLAYER_1_NAME),
+            Messages.get(Messages.Key.PLAYER_2_NAME)
+    )));
+
+    // ---------------------- Connection Handling ----------------------
+
+    @OnOpen
+    public synchronized void onOpen(Session session) throws IOException {
+        int playerId = sessionPlayerIds.size();
+        if (playerId >= MAX_PLAYERS) {
+            session.close(new CloseReason(CloseReason.CloseCodes.TRY_AGAIN_LATER,
+                    Messages.get(Messages.Key.GAME_FULL_MESSAGE)));
+            return;
+        }
+
+        sessionPlayerIds.put(session, playerId);
+        logInfo("Client connected: %s, assigned playerId: %d", session.getId(), playerId);
+
+        if (sessionPlayerIds.size() < MAX_PLAYERS) {
+            sendMessage(session, new Message<>(EventType.WAIT,
+                    Messages.get(Messages.Key.WAIT_MESSAGE)));
+        }
+    }
+
+    @OnClose
+    public void onClose(Session session, CloseReason reason) {
+        sessionPlayerIds.remove(session);
+        logInfo("Client disconnected: %s, reason: %s", session.getId(), reason);
+    }
+
+    @OnError
+    public void onError(Session session, Throwable throwable) {
+        LOGGER.log(Level.SEVERE,
+                String.format("Session error for %s: %s", session != null ? session.getId() : "unknown",
+                        throwable.getMessage()), throwable);
+    }
+
+    // ---------------------- Message Handling ----------------------
+
+    @OnMessage
+    public void onMessage(String message, Session session) {
+        System.out.println(message);
+        Integer playerId = sessionPlayerIds.get(session);
+        if (playerId == null) return;
+
+        try {
+            Message<JsonNode> genericMsg = mapper.readValue(message, new TypeReference<>() {});
+            handleMessageByType(genericMsg, session, playerId);
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Failed to process message", e);
+        }
+    }
+
+    private void handleMessageByType(Message<JsonNode> msg, Session session, int playerId) throws IOException {
+        switch (msg.type()) {
+            case PLAYER_SELECTED -> handlePlayerSelected(msg.data(), playerId);
+            case SET_NAME -> handleSetName(msg.data(), playerId, session);
+            default -> LOGGER.warning("Unknown message type: " + msg.data());
+        }
+    }
+
+    private void handlePlayerSelected(JsonNode data, int playerId) throws IOException {
+        logInfo(data.toString());
+        if (game == null) return;
+
+        PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);
+        if (cmd.playerId() != playerId) {
+            LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
+            return;
+        }
+
+        game.handleSelection(cmd.playerId(), cmd.selection());
+        broadcastMessage(new Message<>(EventType.PLAYER_SELECTED, cmd));
+    }
+
+    private void handleSetName(JsonNode data, int playerId, Session session) {
+        String name = data.asText("");
+        playersName.set(playerId, name);
+        logInfo("Set name for player %d: %s", playerId, name);
+
+        initializeGameIfReady();
+    }
+
+    // ---------------------- Game Initialization ----------------------
+
+    private void initializeGameIfReady() {
+        synchronized (ChessServerEndpoint.class) {
+            //for one player - commented this line
+            if (sessionPlayerIds.size() < MAX_PLAYERS || game != null) return;
+            createGame();
+            sendInitialGameStateToAll();
+        }
+    }
+
+    private void createGame() {
+        BoardConfig boardConfig = new BoardConfig(
+                new Dimension(GameConstants.BOARD_SIZE, GameConstants.BOARD_SIZE),
+                new Dimension(GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE, GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE),
+                new Dimension(500,500)
+        );
+
+        IPlayer[] players = PlayerFactory.createPlayers(
+                new String[]{playersName.get(0), playersName.get(1)},
+                boardConfig
+        );
+
+        game = new Game(boardConfig, players);
+        game.run();
+    }
+
+    private void sendInitialGameStateToAll() {
+        GameDTO initialGameState = createInitialGameDTO();
+        sessionPlayerIds.forEach((s, id) -> {
+            sendMessage(s, new Message<>(EventType.PLAYER_ID, id));
+            sendMessage(s, new Message<>(EventType.GAME_INIT, initialGameState));
+        });
+    }
+
+    private GameDTO createInitialGameDTO() {
+        GameDTO gameDTO = new GameDTO();
+        gameDTO.setBoardConfig(game.getBoard().getBoardConfig());
+        gameDTO.setStartTimeNano(game.getStartTimeNano());
+        gameDTO.setPlayers(Arrays.stream(game.getPlayers())
+                .map(PlayerDTO::from)
+                .toArray(PlayerDTO[]::new));
+        return gameDTO;
+    }
+
+    // ---------------------- Messaging Helpers ----------------------
+
+    private void sendMessage(Session session, Message<?> message) {
+        if (session == null || !session.isOpen()) return;
+        try {
+            session.getBasicRemote().sendText(mapper.writeValueAsString(message));
+        } catch (IOException e) {
+            LOGGER.log(Level.WARNING, "Failed to send message to session " + session.getId(), e);
+        }
+    }
+
+    private void broadcastMessage(Message<?> message) {
+        sessionPlayerIds.keySet().forEach(s -> sendMessage(s, message));
+    }
+
+    // ---------------------- Logging Helper ----------------------
+
+    private void logInfo(String template, Object... args) {
+        LOGGER.info(() -> String.format(template, args));
+    }
+}
+</file>
+
+<file path="common/src/main/java/board/Board.java">
+package board;
+
+import events.EGameEvent;
+import events.EventPublisher;
+import events.GameEvent;
+import events.listeners.ActionData;
+import interfaces.*;
+import moves.Data;
+import moves.Move;
+import pieces.EPieceType;
+import pieces.Position;
+
+import java.util.Arrays;
+import java.util.List;
+
+/**
+ * Represents the chess game board and manages piece placement, movement, and game logic.
+ * This class provides methods for checking legal moves, updating the board state,
+ * handling captures, and interacting with players and pieces.
+ */
+public class Board implements IBoard {
+    /**
+     * 2D array representing the board grid with pieces.
+     * Each cell contains a reference to an IPiece or null if empty.
+     */
+    private final IPiece[][] boardGrid;
+
+    /**
+     * 2D array indicating which player is targeting each cell. -1 means no target.
+     */
+    private final int[][] isTarget;
+
+    /**
+     * Array of players in the game.
+     */
+    public final IPlayer[] players;
+
+    /**
+     * Board configuration object.
+     */
+    public final BoardConfig boardConfig;
+
+    /**
+     * Constructs the board with the given configuration and players.
+     * Initializes the board grid with the pieces from each player.
+     *
+     * @param bc Board configuration
+     * @param players Array of players
+     */
+    public Board(BoardConfig bc, IPlayer[] players) {
+        boardConfig = bc;
+        this.boardGrid = new IPiece[(int) bc.gridDimension().getWidth()][(int) bc.gridDimension().getHeight()];
+        this.isTarget = new int[boardGrid.length][boardGrid[0].length];
+        for (int[] row : isTarget) {
+            Arrays.fill(row, -1);
+        }
+        this.players = players;
+        initializeFromPlayers();
+    }
+
+    /**
+     * Initializes the board grid with the pieces from each player.
+     * Each piece is placed on the board according to its position.
+     */
+    private void initializeFromPlayers(){
+        for (IPlayer p : players) {
+            for (IPiece piece : p.getPieces()) {
+                boardGrid[piece.getPos().getRow()][piece.getPos().getCol()] = piece;
+            }
+        }
+    }
+
+    /**
+     * Checks if there is a piece at the specified row and column.
+     */
+    private boolean hasPiece(int row, int col) {
+        return isInBounds(row, col) && boardGrid[row][col] != null;
+    }
+
+    @Override
+    public boolean hasPiece(Position pos){
+        return hasPiece(pos.getRow(), pos.getCol());
+    }
+
+    @Override
+    public boolean hasPieceOrIsTarget(Position pos){
+        return hasPiece(pos) || isTarget[pos.getRow()][pos.getCol()] != -1;
+    }
+
+    /**
+     * Gets the piece at the specified row and column.
+     */
+    private IPiece getPiece(int row, int col) {
+        if (!isInBounds(row, col))
+            return null;
+        return boardGrid[row][col];
+    }
+
+    /**
+     * Gets the piece at the specified position.
+     */
+    @Override
+    public IPiece getPiece(Position pos) {
+        return getPiece(pos.getRow(), pos.getCol());
+    }
+
+    private int getPlayerOf(int row) {
+        return BoardConfig.getPlayerOf(row);
+    }
+
+    /**
+     * Returns the player index for a given position.
+     */
+    @Override
+    public int getPlayerOf(Position pos){
+        return getPlayerOf(pos.getRow());
+    }
+
+    /**
+     * Moves a piece from one position to another.
+     */
+    @Override
+    public void move(Position from, Position to) {
+        IPiece piece = boardGrid[from.getRow()][from.getCol()];
+        isTarget[to.getRow()][to.getCol()] = getPiece(from).getPlayer();
+        boardGrid[from.getRow()][from.getCol()] = null;
+
+        if (piece != null) {
+            piece.move(to);
+        }
+    }
+
+    /**
+     * Updates all pieces and handles captures and board state.
+     * This method resets previous positions, updates piece states,
+     * and handles captures before and after movement.
+     */
+    public void updateAll() {
+        long now = System.nanoTime();
+        for (IPlayer player : players) {
+            for (int i=0; i<player.getPieces().size(); i++) {
+                IPiece piece = player.getPieces().get(i);
+                if (piece.isCaptured()) continue;
+
+                if (piece.getCurrentState().isActionFinished()) {
+                    Position targetPos = piece.getCurrentState().getPhysics().getTargetPos();
+                    IPiece target = boardGrid[targetPos.getRow()][targetPos.getCol()];
+
+                    if (target != null && target != piece && !target.isCaptured()) {
+                        if (target.canCapturable())
+                            players[target.getPlayer()].markPieceCaptured(target);
+                        else
+                            players[piece.getPlayer()].markPieceCaptured(piece);
+                        EventPublisher.getInstance().publish(EGameEvent.PIECE_CAPTURED, new GameEvent(EGameEvent.PIECE_CAPTURED, new ActionData(piece.getPlayer(),null)));
+                    }
+
+                    boardGrid[targetPos.getRow()][targetPos.getCol()] = piece;
+                    isTarget[targetPos.getRow()][targetPos.getCol()] = -1;
+
+                    if(piece.getType() == EPieceType.P && (targetPos.getRow() == 0 || targetPos.getRow() == boardConfig.gridDimension().getWidth()-1)) {
+                        boardGrid[targetPos.getRow()][targetPos.getCol()] = player.replacePToQ(piece, targetPos.copy(), boardConfig);
+                    }
+                }
+
+                piece.update(now);
+            }
+        }
+    }
+
+    /**
+     * Checks if the specified row and column are within board bounds.
+     */
+    private boolean isInBounds(int r, int c) {
+        return boardConfig.isInBounds(r,c);
+    }
+
+    /**
+     * Checks if the specified position is within board bounds.
+     */
+    public boolean isInBounds(Position p){
+        return isInBounds(p.getRow(), p.getCol());
+    }
+
+    /**
+     * Checks if a move from one position to another is legal.
+     */
+    @Override
+    public boolean isMoveLegal(Position from, Position to) {
+        IPiece fromPiece = getPiece(from);
+        if (fromPiece == null)
+            return false;
+
+        // Check resting states first
+        if (!fromPiece.canAction())
+            return false;
+
+        // Check if the move is in the legal move list
+        List<Move> moves = fromPiece.getMoves();
+
+        int dx = to.getRow() - from.getRow();
+        int dy = to.getCol() - from.getCol();
+
+        Data data = new Data(this, fromPiece, to);
+        boolean isLegal = moves.stream().anyMatch(m -> m.getDx() == dx && m.getDy() == dy && (m.getCondition() == null || Arrays.stream(m.getCondition()).allMatch(c->c.isCanMove(data))));
+
+        if (!isLegal)
+            return false;
+
+        // Check path clearance (except knights)
+        if (!fromPiece.getType().isCanSkip() && !isPathClear(from, to)) {
+            isPathClear(from, to);
+            return false;
+        }
+
+        // Check if capturing own piece
+        IPiece toPiece = getPiece(to);
+        return (toPiece == null || fromPiece.getPlayer() != toPiece.getPlayer()) && fromPiece.getPlayer() != isTarget[to.getRow()][to.getCol()];
+    }
+
+    /**
+     * Checks if the path between two positions is clear for movement.
+     */
+    private boolean isPathClear(Position from, Position to) {
+        int dRow = Integer.signum(to.dy(from));
+        int dCol = Integer.signum(to.dx(from));
+
+        Position current = from.add(dRow, dCol);
+
+        while (!current.equals(to)) {
+            if (hasPiece(current))
+                return false;
+            current = current.add(dRow, dCol);
+        }
+
+        return true;
+    }
+
+    /**
+     * Checks if a jump action is legal for the given piece.
+     */
+    @Override
+    public boolean isJumpLegal(IPiece p) {
+        return p.canAction();
+    }
+
+    /**
+     * Performs a jump action for the given piece.
+     */
+    @Override
+    public void jump(IPiece p) {
+        if (p == null) return;
+        p.jump();
+    }
+
+    /**
+     * Returns the array of players.
+     */
+    @Override
+    public IPlayer[] getPlayers() {
+        return players;
+    }
+
+    /**
+     * Returns the number of columns on the board.
+     */
+    @Override
+    public int getCols() {
+        return (int) boardConfig.gridDimension().getHeight();
+    }
+
+    /**
+     * Returns the number of rows on the board.
+     */
+    @Override
+    public int getRows() {
+        return (int) boardConfig.gridDimension().getWidth();
+    }
+
+    /**
+     * Returns the board configuration.
+     */
+    @Override
+    public BoardConfig getBoardConfig() {
+        return boardConfig;
+    }
+
+    @Override
+    public List<Position> getLegalMoves(Position selectedPosition){
+        if (!isInBounds(selectedPosition)) {
+            return List.of();
+        }
+
+        IPiece piece = getPiece(selectedPosition);
+        if (piece == null || piece.isCaptured()) {
+            return List.of();
+        }
+
+        return piece.getMoves().stream()
+                .filter(move -> BoardRulesEngine.isMoveLegal(this, selectedPosition, selectedPosition.add(move.getDx(), move.getDy())))
+                .map(move -> selectedPosition.add(move.getDx(), move.getDy()))
+                .toList();
+    }
+
+}
+</file>
+
+</files>

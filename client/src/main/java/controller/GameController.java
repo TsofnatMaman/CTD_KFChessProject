@@ -183,10 +183,12 @@ public class GameController implements Runnable, IEventListener {
                     GameDTO dto = mapper.treeToValue(dataNode, GameDTO.class);
                     playInit(dto);
                 }
+
                 case PLAYER_SELECTED -> {
                     PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
                     onPlayerSelect(cmd);
                 }
+
                 case PLAYER_ID -> onPlayerId(dataNode.asInt(-1));
                 default -> fireEvent(l -> l.onUnknownMessage(typeStr));
             }
