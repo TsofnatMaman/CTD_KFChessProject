@@ -14,7 +14,7 @@ import interfaces.IGame;
 import interfaces.IPlayerCursor;
 import pieces.Position;
 import player.PlayerCursor;
-import sound.EventListener;
+import sound.EventSoundListener;
 import utils.LogUtils;
 import viewUtils.PlayerInfoPanel;
 
@@ -28,17 +28,15 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * Clean GamePanel: handles UI layout, timer, background, player panels, boardPanel.
- * Purely visual and communication (sending selection to server), no game logic.
+ * GamePanel אחראי על הצגת הלוח, שני שחקנים, הטיימר והרקע.
+ * הקוד מסודר לפונקציות קטנות ונקי, עם שני PlayerInfoPanel.
  */
 public class GamePanel extends JPanel implements IEventListener {
 
     private final IGame model;
-    private final BoardPanel boardPanel;
-
+    private BoardPanel boardPanel;
     private final Image backgroundImage;
-
-    private final JLabel timerLabel;
+    private JLabel timerLabel;
     private long startTimeNano;
 
     private final ChessClientEndpoint client;
@@ -56,34 +54,48 @@ public class GamePanel extends JPanel implements IEventListener {
 
         backgroundImage = loadBackgroundImage("background/background.jpg");
 
+        initUI();
+        initTimer();
+        subscribeEvents();
+
+        LogUtils.logDebug("GamePanel initialized");
+    }
+
+    // ----------- INIT METHODS -----------
+
+    private void initUI() {
+        // שני פאנלים של השחקנים: מזרח ומערב
         add(createPlayerInfoPanel(0), BorderLayout.WEST);
         add(createPlayerInfoPanel(1), BorderLayout.EAST);
 
-        IPlayerCursor cursor = new PlayerCursor(new Position(0, 0), model.getPlayerById(playerId).getColor());
+        IPlayerCursor cursor = new PlayerCursor(
+                new Position(0,0),
+                model.getPlayerById(playerId).getColor()
+        );
 
         boardPanel = new BoardPanel(model.getBoard(), playerId, cursor);
         boardPanel.setPreferredSize(new Dimension(700, 700));
         boardPanel.setOpaque(false);
         enableBoardFocus(boardPanel);
-
         boardPanel.setOnPlayerAction(this::sendPlayerSelection);
 
         add(boardPanel, BorderLayout.CENTER);
 
-        timerLabel = new JLabel("Time: 00:00");
-        timerLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        timerLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        timerLabel.setOpaque(false);
+        timerLabel = createTimerLabel();
         add(timerLabel, BorderLayout.NORTH);
+    }
 
+    private void initTimer() {
         Timer uiTimer = new Timer(constants.GameConstants.UI_TIMER_MS, e -> updateTimer());
         uiTimer.start();
-
-        LogUtils.logDebug("GamePanel initialized");
-
-        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
-        new EventListener();
     }
+
+    private void subscribeEvents() {
+        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
+        new EventSoundListener();
+    }
+
+    // ----------- COMPONENT CREATORS -----------
 
     private Image loadBackgroundImage(String path) {
         try {
@@ -100,6 +112,13 @@ public class GamePanel extends JPanel implements IEventListener {
         return panel;
     }
 
+    private JLabel createTimerLabel() {
+        JLabel label = new JLabel("Time: 00:00");
+        label.setFont(new Font("Arial", Font.BOLD, 18));
+        label.setHorizontalAlignment(SwingConstants.CENTER);
+        return label;
+    }
+
     private void enableBoardFocus(BoardPanel board) {
         board.addMouseListener(new MouseAdapter() {
             @Override
@@ -109,6 +128,8 @@ public class GamePanel extends JPanel implements IEventListener {
         });
         SwingUtilities.invokeLater(board::requestFocusInWindow);
     }
+
+    // ----------- GAME ACTIONS -----------
 
     private void sendPlayerSelection(Position pos) {
         try {
@@ -127,6 +148,8 @@ public class GamePanel extends JPanel implements IEventListener {
         timerLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
     }
 
+    // ----------- OVERRIDES -----------
+
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -138,15 +161,16 @@ public class GamePanel extends JPanel implements IEventListener {
     @Override
     public void onEvent(GameEvent event) {
         JOptionPane pane = new JOptionPane(
-                "Game Over. Winner: Player " + model.win().getName() +": "+ PlayerConstants.COLORS_NAME[model.win().getId()],
+                "Game Over. Winner: Player " + model.win().getName() + ": " +
+                        PlayerConstants.COLORS_NAME[model.win().getId()],
                 JOptionPane.INFORMATION_MESSAGE
         );
-
-        // יוצרים JDialog לא מודאלי
         JDialog dialog = pane.createDialog(this, "Game Over");
-        dialog.setModal(false); // חשוב – לא מודאלי
+        dialog.setModal(false);
         dialog.setVisible(true);
     }
+
+    // ----------- GETTERS & SETTERS -----------
 
     public BoardPanel getBoardPanel() { return boardPanel; }
     public IGame getModel() { return model; }

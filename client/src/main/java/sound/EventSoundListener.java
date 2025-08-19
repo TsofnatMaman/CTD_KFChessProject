@@ -5,8 +5,8 @@ import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
 
-public class EventListener implements IEventListener {
-    public EventListener(){
+public class EventSoundListener implements IEventListener {
+    public EventSoundListener(){
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_JUMP, this);

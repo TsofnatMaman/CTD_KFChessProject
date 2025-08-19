@@ -13,6 +13,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
+/**
+ * Controller אחראי על קבלת הודעות מהשרת והפצתן ל־listeners.
+ */
 public class GameController implements Runnable {
 
     private final ChessClientEndpoint client;
@@ -83,18 +86,15 @@ public class GameController implements Runnable {
 
                 switch (type) {
                     case WAIT -> fireEvent(l -> l.onWaitMessage(dataNode.asText("")));
-                    case GAME_INIT -> {
-                        GameDTO gameDTO = mapper.treeToValue(dataNode, GameDTO.class);
-                        fireEvent(l -> l.onGameInit(gameDTO));
-                    }
-                    case PLAYER_SELECTED -> {
-                        PlayerSelectedDTO cmd = mapper.treeToValue(dataNode, PlayerSelectedDTO.class);
-                        fireEvent(l -> l.onPlayerSelected(cmd));
-                    }
-                    case PLAYER_ID -> {
-                        int playerId = dataNode.asInt(-1);
-                        fireEvent(l -> l.onPlayerId(playerId));
-                    }
+                    case GAME_INIT -> fireEvent(l -> {
+                        try { l.onGameInit(mapper.treeToValue(dataNode, GameDTO.class)); }
+                        catch (Exception e) { LogUtils.logDebug(e.toString()); }
+                    });
+                    case PLAYER_SELECTED -> fireEvent(l -> {
+                        try { l.onPlayerSelected(mapper.treeToValue(dataNode, PlayerSelectedDTO.class)); }
+                        catch (Exception e) { LogUtils.logDebug(e.toString()); }
+                    });
+                    case PLAYER_ID -> fireEvent(l -> l.onPlayerId(dataNode.asInt(-1)));
                     default -> fireEvent(l -> l.onUnknownMessage(typeStr));
                 }
 
@@ -111,23 +111,16 @@ public class GameController implements Runnable {
 
     private void fireEvent(Consumer<GameEventListener> action) {
         for (GameEventListener l : listeners) {
-            try {
-                action.accept(l);
-            } catch (Exception e) {
-                LogUtils.logDebug("Listener error: " + e);
-            }
+            try { action.accept(l); }
+            catch (Exception e) { LogUtils.logDebug("Listener error: " + e); }
         }
     }
 
     public interface GameEventListener {
         void onWaitMessage(String message);
-
         void onGameInit(GameDTO gameDTO);
-
         void onPlayerSelected(PlayerSelectedDTO cmd);
-
         void onPlayerId(int playerId);
-
         void onUnknownMessage(String type);
     }
 }

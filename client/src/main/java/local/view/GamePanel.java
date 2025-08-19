@@ -1,6 +1,6 @@
 package local.view;
 
-import sound.EventListener;
+import sound.EventSoundListener;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
@@ -94,7 +94,7 @@ public class GamePanel extends JPanel implements IEventListener {
         LogUtils.logDebug("Initial game state setup");
 
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
-        new EventListener();
+        new EventSoundListener();
     }
 
     private void updateTimer() {
