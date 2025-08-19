@@ -1,7 +1,6 @@
 package endpoint.launch;
 
 import board.BoardConfig;
-import board.Dimension;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,8 +15,10 @@ import player.PlayerFactory;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
+import java.awt.*;
 import java.io.IOException;
 import java.util.*;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -128,9 +129,9 @@ public class ChessServerEndpoint {
 
     private void createGame() {
         BoardConfig boardConfig = new BoardConfig(
-                new Dimension(GameConstants.BOARD_SIZE),
-                new Dimension(1,1),
-                new Dimension(GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE)
+                new Dimension(GameConstants.BOARD_SIZE, GameConstants.BOARD_SIZE),
+                new Dimension(GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE, GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE),
+                new Dimension(500,500)
         );
 
         IPlayer[] players = PlayerFactory.createPlayers(
@@ -138,7 +139,7 @@ public class ChessServerEndpoint {
                 boardConfig
         );
 
-        game = new Game(boardConfig, players);
+        game = Game.getInstance(boardConfig, players);
         game.run();
     }
 

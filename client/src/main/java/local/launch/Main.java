@@ -1,7 +1,6 @@
 package local.launch;
 
 import board.BoardConfig;
-import board.Dimension;
 import game.Game;
 import interfaces.IGame;
 import interfaces.IPlayer;
@@ -9,6 +8,7 @@ import local.view.GamePanel;
 import player.PlayerFactory;
 
 import javax.swing.*;
+import java.awt.*;
 
 public class Main {
     public static void main(String[] args) {
@@ -16,11 +16,11 @@ public class Main {
             JFrame frame = new JFrame("KFChess");
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            BoardConfig boardConfig = new BoardConfig(new Dimension(8), new Dimension(1,1),new Dimension(64*8));
+            BoardConfig boardConfig = new BoardConfig(new Dimension(8,8), new Dimension(700,700), new Dimension(500,500));
 
             IPlayer[] players = PlayerFactory.createPlayers(new String[]{"player 1", "player 2"}, boardConfig);
 
-            IGame game = new Game(boardConfig , players);
+            IGame game = Game.getInstance(boardConfig , players);
             GamePanel gameView = new GamePanel(game);
 
             // Add debug prints

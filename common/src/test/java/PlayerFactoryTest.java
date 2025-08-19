@@ -1,5 +1,4 @@
 import board.BoardConfig;
-import board.Dimension;
 import interfaces.IPlayer;
 import org.junit.jupiter.api.Test;
 import player.PlayerFactory;

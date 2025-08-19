@@ -67,7 +67,6 @@ public class GamePanel extends JPanel implements IGameUI {
         add(playerPanels.get(1), BorderLayout.EAST);
 
         // Configure and add the board panel
-        boardPanel.setPreferredSize(new Dimension(700, 700));
         boardPanel.setOpaque(false);
         enableBoardFocus(boardPanel);
         add(boardPanel, BorderLayout.CENTER);

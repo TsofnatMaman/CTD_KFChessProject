@@ -53,12 +53,6 @@ public interface IPiece extends Serializable {
     void markCaptured();
 
     /**
-     * Gets the current pixel position of the piece.
-     * @return The pixel position
-     */
-    Point2D.Double getCurrentPixelPosition();
-
-    /**
      * Gets the legal moves for the piece.
      * @return The Moves object
      */

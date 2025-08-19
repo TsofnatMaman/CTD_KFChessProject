@@ -79,13 +79,13 @@ public interface IBoard extends Serializable {
      * Returns the number of rows on the board.
      * @return Number of rows
      */
-    int getROWS();
+    int getRows();
 
     /**
      * Returns the number of columns on the board.
      * @return Number of columns
      */
-    int getCOLS();
+    int getCols();
 
     /**
      * Returns the board configuration.

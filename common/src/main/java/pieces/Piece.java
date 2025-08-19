@@ -1,9 +1,11 @@
 package pieces;
 
+import constants.GameConstants;
 import interfaces.IState;
 import interfaces.IPiece;
 import moves.Move;
 import moves.Moves;
+import state.EState;
 import state.StateMachine;
 
 import java.awt.geom.Point2D;
@@ -79,11 +81,6 @@ public class Piece implements IPiece {
     @Override
     public void markCaptured() {
         this.wasCaptured = true;
-    }
-
-    @Override
-    public Point2D.Double getCurrentPixelPosition() {
-        return fsm.getCurrentState().getCurrentPosition();
     }
 
     @Override

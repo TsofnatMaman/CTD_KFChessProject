@@ -33,7 +33,7 @@ public interface IState extends Serializable {
      */
     boolean isActionFinished();
 
-    Point2D.Double getCurrentPosition();
+    Position getCurrentPosition();
 
     /**
      * Gets the physics data for the state.

@@ -5,7 +5,7 @@ package constants;
  */
 public class GameConstants {
     public static final int BOARD_SIZE = 8; // logical board size (for square board)
-    public static final int SQUARE_SIZE = 64; // pixel size per square
+    public static final int SQUARE_SIZE = 85; // pixel size per square
     public static final int BOARD_ROWS = Integer.parseInt(utils.ConfigLoader.getConfig("board.rows", "8")); // extracted from config.properties
     public static final int BOARD_COLS = Integer.parseInt(utils.ConfigLoader.getConfig("board.cols", "8")); // extracted from config.properties
     public static final int MAX_PLAYERS = 2; // logical limit

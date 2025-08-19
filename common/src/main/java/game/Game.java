@@ -38,7 +38,20 @@ public class Game implements IGame {
     private long startTimeNano;
     private volatile boolean running;
 
-    public Game(BoardConfig bc, IPlayer[] players) {
+    private static volatile Game instance;
+
+    public static Game getInstance(BoardConfig bc, IPlayer[] players) {
+        if (instance == null) {
+            synchronized (Game.class) {
+                if (instance == null) {
+                    instance = new Game(bc, players);
+                }
+            }
+        }
+        return instance;
+    }
+
+    protected Game(BoardConfig bc, IPlayer[] players) {
         this.board = new Board(bc, players);
         this.players = players;
         this.commandQueue = new LinkedList<>();

@@ -49,7 +49,7 @@ public class Board implements IBoard {
      */
     public Board(BoardConfig bc, IPlayer[] players) {
         boardConfig = bc;
-        this.boardGrid = new IPiece[bc.gridDimension.getX()][bc.gridDimension.getY()];
+        this.boardGrid = new IPiece[(int) bc.gridDimension().getWidth()][(int) bc.gridDimension().getHeight()];
         this.isTarget = new int[boardGrid.length][boardGrid[0].length];
         for (int[] row : isTarget) {
             Arrays.fill(row, -1);
@@ -157,7 +157,7 @@ public class Board implements IBoard {
                     boardGrid[targetPos.getRow()][targetPos.getCol()] = piece;
                     isTarget[targetPos.getRow()][targetPos.getCol()] = -1;
 
-                    if(piece.getType() == EPieceType.P && (targetPos.getRow() == 0 || targetPos.getRow() == boardConfig.gridDimension.getX()-1)) {
+                    if(piece.getType() == EPieceType.P && (targetPos.getRow() == 0 || targetPos.getRow() == boardConfig.gridDimension().getWidth()-1)) {
                         boardGrid[targetPos.getRow()][targetPos.getCol()] = player.replacePToQ(piece, targetPos.copy(), boardConfig);
                     }
                 }
@@ -264,16 +264,16 @@ public class Board implements IBoard {
      * Returns the number of columns on the board.
      */
     @Override
-    public int getCOLS() {
-        return boardConfig.gridDimension.getY();
+    public int getCols() {
+        return (int) boardConfig.gridDimension().getHeight();
     }
 
     /**
      * Returns the number of rows on the board.
      */
     @Override
-    public int getROWS() {
-        return boardConfig.gridDimension.getX();
+    public int getRows() {
+        return (int) boardConfig.gridDimension().getWidth();
     }
 
     /**

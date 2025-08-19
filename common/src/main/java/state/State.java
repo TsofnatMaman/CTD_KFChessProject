@@ -93,8 +93,8 @@ public class State implements IState {
      * @return The current position as Point2D.Double
      */
     @Override
-    public Point2D.Double getCurrentPosition() {
-        return new Point2D.Double(physics.getCurrentX(), physics.getCurrentY());
+    public Position getCurrentPosition() {
+        return new Position((int) physics.getCurrentX(), (int) physics.getCurrentY());
     }
 
     /**

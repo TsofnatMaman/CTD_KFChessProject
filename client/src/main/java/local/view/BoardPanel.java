@@ -1,5 +1,6 @@
 package local.view;
 
+import dto.PieceView;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
@@ -52,7 +53,7 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         this.cursor1 = pc1;
         this.cursor2 = pc2;
 
-        setPreferredSize(new Dimension(800, 800));
+        setPreferredSize(board.getBoardConfig().panelDimension());
         setFocusable(true);
         loadBoardImage();
 
@@ -154,14 +155,14 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         }
 
         if (board != null)
-            BoardRenderer.draw(g, board, getWidth(), getHeight());
+            BoardRenderer.draw(g, PieceView.toPieceViews(board), board.getBoardConfig());
 
         if (cursor1 != null) cursor1.draw(g, getWidth(), getHeight());
         if (cursor2 != null) cursor2.draw(g, getWidth(), getHeight());
 
         Graphics2D g2 = (Graphics2D) g;
-        int cellW = getWidth() / board.getCOLS();
-        int cellH = getHeight() / board.getROWS();
+        int cellW = getWidth() / board.getCols();
+        int cellH = getHeight() / board.getRows();
 
         // --- Player 1 selection and legal moves ---
         if (selected1 != null) {

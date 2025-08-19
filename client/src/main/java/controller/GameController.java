@@ -196,7 +196,7 @@ public class GameController implements Runnable, IEventListener {
                 .map(p -> PlayerDTO.to(p, dto.getBoardConfig()))
                 .toArray(IPlayer[]::new);
 
-        model = new Game(dto.getBoardConfig(), players);
+        model = Game.getInstance(dto.getBoardConfig(), players);
 
         IPlayerCursor cursor = new PlayerCursor(
                 new Position(0,0),
@@ -210,12 +210,11 @@ public class GameController implements Runnable, IEventListener {
 
         this.gamePanel = new GamePanel(boardPanel, pips);
 
-        fireEvent(l -> l.onGameInit(dto));
+        fireEvent(GameEventListener::onGameInit);
     }
 
     private void onPlayerSelect(PlayerSelectedDTO cmd){
         model.handleSelection(cmd.playerId(), cmd.selection());
-        fireEvent(l -> l.onPlayerSelected(cmd));
     }
 
     private void fireEvent(Consumer<GameEventListener> action) {
@@ -244,15 +243,17 @@ public class GameController implements Runnable, IEventListener {
         return gamePanel;
     }
 
+    public IGame getModel() {
+        return model;
+    }
+
     public interface GameEventListener {
         void onWaitMessage(String message);
-
-        void onGameInit(GameDTO gameDTO);
-
-        void onPlayerSelected(PlayerSelectedDTO cmd);
 
         void onPlayerId(int playerId);
 
         void onUnknownMessage(String type);
+
+        void onGameInit();
     }
 }

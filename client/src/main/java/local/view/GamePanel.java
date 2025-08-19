@@ -59,7 +59,6 @@ public class GamePanel extends JPanel implements IEventListener {
         IPlayerCursor c2 = new PlayerCursor(new Position(0,0), model.getPlayerById(1).getColor());
 
         boardPanel = new BoardPanel(model.getBoard(), c1, c2);
-        boardPanel.setPreferredSize(new Dimension(700, 700));
         boardPanel.setOpaque(false);
 
         // Events

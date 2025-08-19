@@ -5,20 +5,14 @@ import constants.ServerConfig;
 import controller.GameController;
 import dto.EventType;
 import dto.GameDTO;
-import dto.PlayerDTO;
-import dto.PlayerSelectedDTO;
 import endpoint.view.AskUserName;
 import endpoint.view.GamePanel;
 import endpoint.view.WaitDialog;
-import game.Game;
-import interfaces.IPlayer;
-import interfaces.IGame;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import javax.swing.*;
 import java.net.URI;
-import java.util.Arrays;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
@@ -33,12 +27,10 @@ public class KFChessClientApp implements GameEventListener {
     private GameController controller;
 
     private volatile int playerId = -1;
-    private GamePanel gamePanel;
-    private IGame gameModel;
     private final ObjectMapper mapper = new ObjectMapper();
 
     private final CountDownLatch playerIdLatch = new CountDownLatch(1);
-    private volatile boolean gameStarted = false;
+    private boolean gameStarted = false;
 
     private WaitDialog waitDialog;
     private volatile GameDTO pendingGameDTO = null;
@@ -106,40 +98,6 @@ public class KFChessClientApp implements GameEventListener {
     }
 
     @Override
-    public void onGameInit(GameDTO gameDTO) {
-        gameStarted = true;
-        SwingUtilities.invokeLater(() -> waitDialog.close());
-
-        try {
-            IPlayer[] players = Arrays.stream(gameDTO.getPlayers())
-                    .map(p -> PlayerDTO.to(p, gameDTO.getBoardConfig()))
-                    .toArray(IPlayer[]::new);
-            gameModel = new Game(gameDTO.getBoardConfig(), players);
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to initialize game model", e);
-            return;
-        }
-
-        if (playerId == -1) {
-            pendingGameDTO = gameDTO;
-        } else {
-            SwingUtilities.invokeLater(() -> initializeGameUI(gameDTO));
-        }
-    }
-
-    @Override
-    public void onPlayerSelected(PlayerSelectedDTO cmd) {
-        if (gameModel == null) return;
-
-        gameModel.handleSelection(cmd.playerId(), cmd.selection());
-        SwingUtilities.invokeLater(() -> {
-            if (gamePanel != null && gamePanel.getBoardPanel() != null) {
-                gamePanel.getBoardPanel().repaint();
-            }
-        });
-    }
-
-    @Override
     public void onPlayerId(int id) {
         playerId = id;
         logger.info("Received playerId: " + playerId);
@@ -147,9 +105,8 @@ public class KFChessClientApp implements GameEventListener {
         playerIdLatch.countDown();
 
         if (pendingGameDTO != null) {
-            GameDTO dto = pendingGameDTO;
             pendingGameDTO = null;
-            SwingUtilities.invokeLater(() -> initializeGameUI(dto));
+            SwingUtilities.invokeLater(this::onGameInit);
         }
     }
 
@@ -158,12 +115,20 @@ public class KFChessClientApp implements GameEventListener {
         logger.warning("Unknown message type: " + type);
     }
 
-    private void initializeGameUI(GameDTO gameDTO) {
+    @Override
+    public void onGameInit() {
+        gameStarted = true;
+        SwingUtilities.invokeLater(() -> waitDialog.close());
+
+        SwingUtilities.invokeLater(this::initializeGameUI);
+    }
+
+    private void initializeGameUI() {
         JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1) +
-                " - " + gameModel.getPlayerById(playerId).getName());
+                " - " + controller.getModel().getPlayerById(playerId).getName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        gamePanel = (GamePanel) controller.getGamePanel();
+        GamePanel gamePanel = (GamePanel) controller.getGamePanel();
 
         frame.add(gamePanel);
         frame.pack();

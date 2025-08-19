@@ -1,12 +1,8 @@
 package endpoint.view;
 
-import events.EGameEvent;
-import events.EventPublisher;
-import events.GameEvent;
-import events.IEventListener;
+import dto.PieceView;
 import game.IBoardView;
 import interfaces.IBoard;
-import interfaces.IPiece;
 import interfaces.IPlayerCursor;
 import pieces.Position;
 import utils.LogUtils;
@@ -16,8 +12,6 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -48,10 +42,8 @@ public class BoardPanel extends JPanel implements IBoardView {
         Color base = cursor.getColor();
         selectColor = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
 
-        setPreferredSize(new Dimension(
-                constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE,
-                constants.GameConstants.BOARD_SIZE * constants.GameConstants.SQUARE_SIZE
-        ));
+        setPreferredSize(board.getBoardConfig().panelDimension());
+
         setFocusable(true);
 
         loadBoardImage();
@@ -119,7 +111,7 @@ public class BoardPanel extends JPanel implements IBoardView {
             g.fillRect(0, 0, getWidth(), getHeight());
         }
 
-        BoardRenderer.draw(g, board, getWidth(), getHeight());
+        BoardRenderer.draw(g, PieceView.toPieceViews(board), board.getBoardConfig());
         cursor.draw(g, getWidth(), getHeight());
 
         if (selected != null) {
