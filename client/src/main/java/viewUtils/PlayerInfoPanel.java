@@ -60,12 +60,13 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
 
     @Override
     public void onEvent(GameEvent event) {
-        if(event.data() instanceof ActionData) {
-            if (player.getId() == ((ActionData) event.data()).playerId())
-                addMove(((ActionData) event.data()).message());
+        switch (event.type()){
+            case PIECE_START_MOVED, PIECE_JUMP -> {
+                if (player.getId() == ((ActionData) event.data()).playerId())
+                    addMove(((ActionData) event.data()).message());
+            }
 
-            if (event.type().equals(EGameEvent.PIECE_CAPTURED))
-                setScore(player.getScore());
+            case PIECE_CAPTURED->{setScore(player.getScore());}
         }
 
     }

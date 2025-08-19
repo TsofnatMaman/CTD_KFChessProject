@@ -119,6 +119,7 @@ public class ChessServerEndpoint {
 
     private void initializeGameIfReady() {
         synchronized (ChessServerEndpoint.class) {
+            //for one player - commented this line
             if (sessionPlayerIds.size() < MAX_PLAYERS || game != null) return;
             createGame();
             sendInitialGameStateToAll();
@@ -144,8 +145,8 @@ public class ChessServerEndpoint {
     private void sendInitialGameStateToAll() {
         GameDTO initialGameState = createInitialGameDTO();
         sessionPlayerIds.forEach((s, id) -> {
-            sendMessage(s, new Message<>(EventType.GAME_INIT, initialGameState));
             sendMessage(s, new Message<>(EventType.PLAYER_ID, id));
+            sendMessage(s, new Message<>(EventType.GAME_INIT, initialGameState));
         });
     }
 

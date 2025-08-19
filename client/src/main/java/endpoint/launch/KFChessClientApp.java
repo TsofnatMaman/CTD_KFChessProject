@@ -1,5 +1,6 @@
 package endpoint.launch;
 
+import constants.PlayerConstants;
 import constants.ServerConfig;
 import controller.GameController;
 import dto.EventType;
@@ -49,13 +50,6 @@ public class KFChessClientApp implements GameEventListener {
     }
 
     private void initUIAndConnect() throws Exception {
-        String username = AskUserName.askUsername();
-        if (username == null || username.isBlank()) {
-            logger.warning("No username entered, exiting.");
-            shutdown();
-            System.exit(0);
-        }
-
         // יצירת URL ל-WebSocket
         String wsUrl = String.format("ws://%s:%s%s%s",
                 ServerConfig.HOST,
@@ -64,6 +58,16 @@ public class KFChessClientApp implements GameEventListener {
                 ServerConfig.SERVER_ENDPOINT);
 
         client = new ChessClientEndpoint(new URI(wsUrl));
+
+        String username;
+        try{
+            username= AskUserName.askUsername();
+        } catch (Exception e) {
+            username = null;
+        }
+        if (username == null || username.isBlank()) {
+            username = "Anonymous - "+(playerId !=-1? PlayerConstants.COLORS_NAME[playerId]:"");
+        }
 
         // שליחת שם השחקן
         client.sendCommand(EventType.SET_NAME, username);
@@ -78,10 +82,12 @@ public class KFChessClientApp implements GameEventListener {
         controller.addListener(this);
         controller.startListening();
 
-        // המתנה לקבלת PlayerId
+        // המתנה לקבלת PlayerId בצורה אסינכרונית
+        SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for player ID from server..."));
+
         boolean gotId = playerIdLatch.await(60, TimeUnit.SECONDS);
-        if (!gotId) {
-            logger.severe("Did not receive playerId from server in time.");
+
+        if (playerId == -1) { // בדיקה סופית אחרי ההמתנה
             SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(
                     "Error: Did not receive player ID from server."));
             shutdown();
@@ -157,8 +163,7 @@ public class KFChessClientApp implements GameEventListener {
                 " - " + gameModel.getPlayerById(playerId).getName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        gamePanel = new GamePanel(gameModel, playerId, client, new ObjectMapper());
-        gamePanel.setStartTimeNano(gameDTO.getStartTimeNano());
+        gamePanel = (GamePanel) controller.getGamePanel();
 
         frame.add(gamePanel);
         frame.pack();
@@ -168,8 +173,7 @@ public class KFChessClientApp implements GameEventListener {
         gamePanel.setFocusable(true);
         gamePanel.requestFocusInWindow();
 
-        // הפעלת Thread של הלוגיקה של המשחק
-        new Thread(gameModel::run, "Game-Loop-Thread").start();
+        controller.startRunGame();
     }
 
     public void shutdown() {

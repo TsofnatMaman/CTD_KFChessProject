@@ -15,6 +15,7 @@ import viewUtils.BoardRenderer;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
@@ -28,7 +29,7 @@ import java.util.function.Consumer;
  * Pure UI panel: displays board, pieces, cursor, selection and legal moves.
  * Receives all updates from external sources (controller).
  */
-public class BoardPanel extends JPanel implements IBoardView, IEventListener {
+public class BoardPanel extends JPanel implements IBoardView {
 
     private BufferedImage boardImage;
     private final IBoard board;
@@ -37,14 +38,12 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     private Position selected = null;
     private List<Position> legalMoves = Collections.emptyList();
     private final Color selectColor;
-    private final int playerId;
 
     private Consumer<Position> onPlayerAction; // returns selected cursor position
 
-    public BoardPanel(IBoard board, int playerId, IPlayerCursor cursor) {
+    public BoardPanel(IBoard board, IPlayerCursor cursor) {
         this.board = board;
         this.cursor = cursor;
-        this.playerId = playerId;
 
         Color base = cursor.getColor();
         selectColor = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
@@ -56,16 +55,6 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         setFocusable(true);
 
         loadBoardImage();
-
-        addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                handleKey(e);
-            }
-        });
-
-        EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
-        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
 
     }
 
@@ -82,31 +71,37 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         }
     }
 
-    private void handleKey(KeyEvent e) {
-        switch (e.getKeyCode()) {
-            case KeyEvent.VK_UP -> cursor.moveUp();
-            case KeyEvent.VK_DOWN -> cursor.moveDown();
-            case KeyEvent.VK_LEFT -> cursor.moveLeft();
-            case KeyEvent.VK_RIGHT -> cursor.moveRight();
-            case KeyEvent.VK_ENTER -> {
-                Position pos = cursor.getPosition();
-                if (selected == null) {
-                    IPiece p = board.getPiece(pos);
-                    if (p == null || p.isCaptured() || p.getPlayer() != playerId || !p.canAction()) {
-                        LogUtils.logDebug("can not choose piece");
-                    } else {
-                        selected = pos.copy();
-                        legalMoves = board.getLegalMoves(pos);
-                    }
-                } else {
-                    selected = null;
-                    legalMoves = Collections.emptyList();
-                }
-                if (onPlayerAction != null) onPlayerAction.accept(pos);
-                repaint();
-            }
-        }
-        repaint();
+    public void initKeyBindings() {
+        InputMap im = getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
+        ActionMap am = getActionMap();
+
+        im.put(KeyStroke.getKeyStroke("UP"), "moveUp");
+        im.put(KeyStroke.getKeyStroke("DOWN"), "moveDown");
+        im.put(KeyStroke.getKeyStroke("LEFT"), "moveLeft");
+        im.put(KeyStroke.getKeyStroke("RIGHT"), "moveRight");
+        im.put(KeyStroke.getKeyStroke("ENTER"), "select");
+
+        am.put("moveUp", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveUp(); repaint(); }
+        });
+        am.put("moveDown", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveDown(); repaint(); }
+        });
+        am.put("moveLeft", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveLeft(); repaint(); }
+        });
+        am.put("moveRight", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { cursor.moveRight(); repaint(); }
+        });
+        am.put("select", new AbstractAction() {
+            public void actionPerformed(ActionEvent e) { if(onPlayerAction!=null) onPlayerAction.accept(cursor.getPosition()); }
+        });
+    }
+
+
+    private void handleSelection() {
+        Position pos = cursor.getPosition();
+        if (onPlayerAction != null) onPlayerAction.accept(pos);
     }
 
     public void setOnPlayerAction(Consumer<Position> handler) {
@@ -145,8 +140,17 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
         }
     }
 
-    @Override
-    public void onEvent(GameEvent event) {
+    public void update() {
         repaint();
     }
+
+    public void setSelected(Position selected) {
+        this.selected = selected;
+    }
+
+    public void setLegalMoves(List<Position> legalMoves) {
+        this.legalMoves = legalMoves;
+    }
+
+    public void clearSelection() { setSelected(null); setLegalMoves(Collections.emptyList()); repaint(); }
 }

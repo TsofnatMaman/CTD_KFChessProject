@@ -55,7 +55,7 @@ public class Piece implements IPiece {
     public void update(long now) {
         if (fsm.getCurrentState().isActionFinished()) {
             // Update logical position only after the action is finished
-            setPosition(fsm.getCurrentState().getPhysics().getTargetPos());//TODO:maybe copy
+            setPosition(fsm.getCurrentState().getPhysics().getTargetPos());
         }
         fsm.update(now);
     }

@@ -5,7 +5,7 @@ import pieces.Position;
 /**
  * Interface for game logic and state management.
  */
-public interface IGame {
+public interface IGame extends Runnable{
 
     /**
      * Adds a command to the queue.
@@ -40,11 +40,14 @@ public interface IGame {
      */
     IPlayer win();
 
+    @Override
     void run();
 
     void stopGameLoop();
 
     long getStartTimeNano();
+
+    long getElapsedMillis();
 
     IPlayer[] getPlayers();
 

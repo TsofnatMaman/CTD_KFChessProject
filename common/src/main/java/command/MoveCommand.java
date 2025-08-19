@@ -8,7 +8,7 @@ import events.listeners.ActionData;
 import interfaces.ICommand;
 import interfaces.IBoard;
 import pieces.Position;
-import utils.ConvertPiecePositionToName;
+import utils.Utils;
 import utils.LogUtils;
 
 public class MoveCommand implements ICommand {
@@ -32,7 +32,7 @@ public class MoveCommand implements ICommand {
             LogUtils.logDebug(mes);
             return;
         }
-        String mes = ConvertPiecePositionToName.getName(from) + " --> " + ConvertPiecePositionToName.getName(to);
+        String mes = Utils.getName(from) + " --> " + Utils.getName(to);
         EventPublisher.getInstance()
                 .publish(EGameEvent.PIECE_START_MOVED,
                         new GameEvent(EGameEvent.PIECE_START_MOVED, new ActionData(board.getPiece(from).getPlayer(), mes)));

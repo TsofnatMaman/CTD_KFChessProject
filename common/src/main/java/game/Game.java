@@ -165,6 +165,13 @@ public class Game implements IGame {
     }
 
     @Override
+    public long getElapsedMillis() {
+        if (startTimeNano == 0) return 0;
+        return (System.nanoTime() - startTimeNano) / 1_000_000;
+    }
+
+
+    @Override
     public IPlayer[] getPlayers() {
         return players;
     }

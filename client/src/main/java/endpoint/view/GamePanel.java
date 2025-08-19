@@ -1,19 +1,8 @@
 package endpoint.view;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import constants.PlayerConstants;
-import dto.EventType;
-import dto.Message;
-import dto.PlayerSelectedDTO;
-import endpoint.launch.ChessClientEndpoint;
-import events.EGameEvent;
-import events.EventPublisher;
-import events.GameEvent;
-import events.IEventListener;
-import interfaces.IGame;
-import interfaces.IPlayerCursor;
-import pieces.Position;
-import player.PlayerCursor;
+import controller.IGameUI;
+import interfaces.IPlayer;
 import sound.EventSoundListener;
 import utils.LogUtils;
 import viewUtils.PlayerInfoPanel;
@@ -25,74 +14,66 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.IOException;
+import java.util.List;
 import java.util.Objects;
 
 /**
- * GamePanel אחראי על הצגת הלוח, שני שחקנים, הטיימר והרקע.
- * הקוד מסודר לפונקציות קטנות ונקי, עם שני PlayerInfoPanel.
+ * GamePanel is responsible for displaying:
+ * - The chess board (BoardPanel)
+ * - Player info panels (PlayerInfoPanel)
+ * - Timer and background
+ *
+ * All UI elements are initialized and updated here.
  */
-public class GamePanel extends JPanel implements IEventListener {
+public class GamePanel extends JPanel implements IGameUI {
 
-    private final IGame model;
-    private BoardPanel boardPanel;
+    private final BoardPanel boardPanel;
+    private final List<PlayerInfoPanel> playerPanels;
     private final Image backgroundImage;
-    private JLabel timerLabel;
-    private long startTimeNano;
+    private final JLabel timerLabel;
 
-    private final ChessClientEndpoint client;
-    private final ObjectMapper mapper;
-    private final int playerId;
-
-    public GamePanel(IGame model, int playerId, ChessClientEndpoint client, ObjectMapper mapper) {
-        this.model = model;
-        this.client = client;
-        this.mapper = mapper;
-        this.playerId = playerId;
+    /**
+     * Constructor receives all UI components and external dependencies.
+     *
+     * @param boardPanel BoardPanel representing the chess board
+     * @param playerPanels List of two PlayerInfoPanel instances
+     */
+    public GamePanel(BoardPanel boardPanel, List<PlayerInfoPanel> playerPanels) {
+        this.boardPanel = boardPanel;
+        this.playerPanels = playerPanels;
 
         setLayout(new BorderLayout(20, 20));
         setBorder(new EmptyBorder(20, 20, 20, 20));
 
+        // Load background image
         backgroundImage = loadBackgroundImage("background/background.jpg");
 
+        // Initialize UI and timer
+        timerLabel = createTimerLabel();
         initUI();
-        initTimer();
-        subscribeEvents();
+        boardPanel.initKeyBindings();
+
+        // Initialize sound listener
+        new EventSoundListener();
 
         LogUtils.logDebug("GamePanel initialized");
     }
 
-    // ----------- INIT METHODS -----------
+    // ----------- UI Initialization -----------
 
     private void initUI() {
-        // שני פאנלים של השחקנים: מזרח ומערב
-        add(createPlayerInfoPanel(0), BorderLayout.WEST);
-        add(createPlayerInfoPanel(1), BorderLayout.EAST);
+        // Add player info panels to EAST/WEST
+        add(playerPanels.get(0), BorderLayout.WEST);
+        add(playerPanels.get(1), BorderLayout.EAST);
 
-        IPlayerCursor cursor = new PlayerCursor(
-                new Position(0,0),
-                model.getPlayerById(playerId).getColor()
-        );
-
-        boardPanel = new BoardPanel(model.getBoard(), playerId, cursor);
+        // Configure and add the board panel
         boardPanel.setPreferredSize(new Dimension(700, 700));
         boardPanel.setOpaque(false);
         enableBoardFocus(boardPanel);
-        boardPanel.setOnPlayerAction(this::sendPlayerSelection);
-
         add(boardPanel, BorderLayout.CENTER);
 
-        timerLabel = createTimerLabel();
+        // Add timer at the top
         add(timerLabel, BorderLayout.NORTH);
-    }
-
-    private void initTimer() {
-        Timer uiTimer = new Timer(constants.GameConstants.UI_TIMER_MS, e -> updateTimer());
-        uiTimer.start();
-    }
-
-    private void subscribeEvents() {
-        EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
-        new EventSoundListener();
     }
 
     // ----------- COMPONENT CREATORS -----------
@@ -106,12 +87,6 @@ public class GamePanel extends JPanel implements IEventListener {
         }
     }
 
-    private PlayerInfoPanel createPlayerInfoPanel(int pid) {
-        PlayerInfoPanel panel = new PlayerInfoPanel(model.getPlayerById(pid));
-        panel.setBackground(new Color(255, 255, 255, 180));
-        return panel;
-    }
-
     private JLabel createTimerLabel() {
         JLabel label = new JLabel("Time: 00:00");
         label.setFont(new Font("Arial", Font.BOLD, 18));
@@ -119,6 +94,9 @@ public class GamePanel extends JPanel implements IEventListener {
         return label;
     }
 
+    /**
+     * Ensures the BoardPanel receives keyboard focus on click.
+     */
     private void enableBoardFocus(BoardPanel board) {
         board.addMouseListener(new MouseAdapter() {
             @Override
@@ -129,23 +107,33 @@ public class GamePanel extends JPanel implements IEventListener {
         SwingUtilities.invokeLater(board::requestFocusInWindow);
     }
 
-    // ----------- GAME ACTIONS -----------
-
-    private void sendPlayerSelection(Position pos) {
-        try {
-            PlayerSelectedDTO cmd = new PlayerSelectedDTO(playerId, pos);
-            Message<PlayerSelectedDTO> msg = new Message<>(EventType.PLAYER_SELECTED, cmd);
-            client.sendText(mapper.writeValueAsString(msg));
-        } catch (Exception e) {
-            LogUtils.logDebug("Failed to send player selection: " + e.getMessage());
-        }
+    /**
+     * Called when the game ends.
+     * Displays a non-blocking dialog with the winner.
+     */
+    @Override
+    public void onWin(IPlayer winner) {
+        JOptionPane pane = new JOptionPane(
+                "Game Over. Winner: Player " + winner.getName() + " (" +
+                        PlayerConstants.COLORS_NAME[winner.getId()] + ")",
+                JOptionPane.INFORMATION_MESSAGE
+        );
+        JDialog dialog = pane.createDialog(this, "Game Over");
+        dialog.setModal(false);
+        dialog.setVisible(true);
     }
 
-    private void updateTimer() {
-        long elapsedMillis = (System.nanoTime() - startTimeNano) / 1_000_000;
-        int seconds = (int) (elapsedMillis / 1000) % 60;
-        int minutes = (int) (elapsedMillis / (1000 * 60));
-        timerLabel.setText(String.format("Time: %02d:%02d", minutes, seconds));
+    /**
+     * Called when the board updates (piece moved, captured, etc.)
+     */
+    @Override
+    public void onGameUpdate() {
+        boardPanel.update();
+    }
+
+    @Override
+    public void updateTimerLabel(String text) {
+        timerLabel.setText(text);
     }
 
     // ----------- OVERRIDES -----------
@@ -158,21 +146,10 @@ public class GamePanel extends JPanel implements IEventListener {
         }
     }
 
-    @Override
-    public void onEvent(GameEvent event) {
-        JOptionPane pane = new JOptionPane(
-                "Game Over. Winner: Player " + model.win().getName() + ": " +
-                        PlayerConstants.COLORS_NAME[model.win().getId()],
-                JOptionPane.INFORMATION_MESSAGE
-        );
-        JDialog dialog = pane.createDialog(this, "Game Over");
-        dialog.setModal(false);
-        dialog.setVisible(true);
-    }
-
     // ----------- GETTERS & SETTERS -----------
 
-    public BoardPanel getBoardPanel() { return boardPanel; }
-    public IGame getModel() { return model; }
-    public void setStartTimeNano(long startTimeNano) { this.startTimeNano = startTimeNano; }
+    @Override
+    public BoardPanel getBoardPanel() {
+        return boardPanel;
+    }
 }
