@@ -139,7 +139,7 @@ public class ChessServerEndpoint {
                 boardConfig
         );
 
-        game = Game.getInstance(boardConfig, players);
+        game = new Game(boardConfig, players);
         game.run();
     }
 

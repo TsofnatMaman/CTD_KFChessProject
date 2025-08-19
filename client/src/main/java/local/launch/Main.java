@@ -20,7 +20,7 @@ public class Main {
 
             IPlayer[] players = PlayerFactory.createPlayers(new String[]{"player 1", "player 2"}, boardConfig);
 
-            IGame game = Game.getInstance(boardConfig , players);
+            IGame game = new Game(boardConfig , players);
             GamePanel gameView = new GamePanel(game);
 
             // Add debug prints

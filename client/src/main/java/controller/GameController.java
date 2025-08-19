@@ -23,6 +23,7 @@ import utils.Utils;
 import viewUtils.PlayerInfoPanel;
 
 import java.awt.*;
+import java.net.IDN;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -41,12 +42,14 @@ public class GameController implements Runnable, IEventListener {
     private Thread listenerThread;
 
     private Position selected = null;
+    private ClientState clientState;
 
     private volatile boolean running = true;
 
     public GameController(ChessClientEndpoint client, ObjectMapper mapper) {
         this.client = client;
         this.mapper = mapper;
+        clientState = ClientState.WAIT_SELECTING_PIECE;
 
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
@@ -90,16 +93,22 @@ public class GameController implements Runnable, IEventListener {
         IPiece p = model.getBoard().getPiece(pos);
         BoardPanel boardPanel = gamePanel.getBoardPanel();
 
-        if (selected == null) { // בחירת כלי
-            if (p == null || p.isCaptured() || p.getPlayer() != playerId || !p.canAction()) return;
-            // עדכון UI
-            boardPanel.setSelected(pos.copy());
-            boardPanel.setLegalMoves(model.getBoard().getLegalMoves(pos));
-            boardPanel.repaint();
-            selected = pos.copy();
-        } else { // בחירת יעד או ביטול
-            boardPanel.clearSelection();
-            selected = null;
+        switch (clientState){
+            case WAIT_SELECTING_PIECE -> {
+                if (p == null || p.isCaptured() || p.getPlayer() != playerId || !p.canAction()) return;
+                // עדכון UI
+                boardPanel.setSelected(pos.copy());
+                boardPanel.setLegalMoves(model.getBoard().getLegalMoves(pos));
+                boardPanel.repaint();
+                selected = pos.copy();
+                clientState = ClientState.WAIT_SELECTING_TARGET;
+            }
+
+            case WAIT_SELECTING_TARGET -> {
+                boardPanel.clearSelection();
+                selected = null;
+                clientState = ClientState.WAIT_SELECTING_PIECE;
+            }
         }
 
         // שליחה לשרת
@@ -196,7 +205,7 @@ public class GameController implements Runnable, IEventListener {
                 .map(p -> PlayerDTO.to(p, dto.getBoardConfig()))
                 .toArray(IPlayer[]::new);
 
-        model = Game.getInstance(dto.getBoardConfig(), players);
+        model = new Game(dto.getBoardConfig(), players);
 
         IPlayerCursor cursor = new PlayerCursor(
                 new Position(0,0),
