@@ -23,18 +23,19 @@ import java.util.logging.Logger;
 
 /**
  * Handles the actual game logic, messaging, and player management.
- * No logic changes from original code.
+ * This version avoids static fields, so each GameHandler instance
+ * manages its own game and players independently.
  */
 public class GameHandler {
 
     private static final Logger LOGGER = Logger.getLogger(GameHandler.class.getName());
-    private static final ObjectMapper MAPPER = new ObjectMapper();
+    private final ObjectMapper mapper = new ObjectMapper();
 
-    private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
-    private static final List<String> playerNames = Collections.synchronizedList(
+    private final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
+    private final List<String> playerNames = Collections.synchronizedList(
             new ArrayList<>(List.of("Player1", "Player2"))
     );
-    private static volatile IGame game = null;
+    private IGame game = null;
 
     // ---------------------- Connection Handling ----------------------
 
@@ -73,8 +74,8 @@ public class GameHandler {
         if (playerId == null) return;
 
         try {
-            Message<JsonNode> genericMsg = MAPPER.readValue(message,
-                    MAPPER.getTypeFactory().constructParametricType(Message.class, JsonNode.class));
+            Message<JsonNode> genericMsg = mapper.readValue(message,
+                    mapper.getTypeFactory().constructParametricType(Message.class, JsonNode.class));
             handleMessageByType(genericMsg, session, playerId);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to process message", e);
@@ -100,7 +101,7 @@ public class GameHandler {
         if (game == null) return;
 
         try {
-            PlayerSelectedDTO cmd = MAPPER.treeToValue(data, PlayerSelectedDTO.class);
+            PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);
             if (cmd.playerId() != playerId) {
                 LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
                 return;
@@ -115,8 +116,8 @@ public class GameHandler {
     // ---------------------- Game Initialization ----------------------
 
     private void initializeGameIfReady() {
-        synchronized (GameHandler.class) {
-            if (sessionPlayerIds.size() < GameConstants.MAX_PLAYERS || game != null) return;
+        synchronized (this) {
+//            if (sessionPlayerIds.size() < GameConstants.MAX_PLAYERS || game != null) return;
             createGame();
             sendInitialGameStateToAll();
         }
@@ -159,5 +160,15 @@ public class GameHandler {
 
     private void logInfo(String template, Object... args) {
         LOGGER.info(() -> String.format(template, args));
+    }
+
+    // ---------------------- Getters ----------------------
+
+    public IGame getGame() {
+        return game;
+    }
+
+    public Map<Session, Integer> getSessionPlayerIds() {
+        return sessionPlayerIds;
     }
 }
