@@ -59,10 +59,6 @@ public class Controller {
                 legalMoves[playerId] = game.getBoard().getLegalMoves(pos);
             }
         } else {
-            // Attempt to move the selected piece to the target position
-            if (legalMoves[playerId].contains(pos)) {
-                game.getBoard().move(selected[playerId], pos);
-            }
             // Reset selection and legal moves after a move or cancellation
             selected[playerId] = null;
             legalMoves[playerId] = Collections.emptyList();
@@ -77,6 +73,7 @@ public class Controller {
             boardPanel.setLegalMoves2(legalMoves[1]);
         }
 
+        game.handleSelection(playerId, pos);
         boardPanel.repaint();
     }
 }
