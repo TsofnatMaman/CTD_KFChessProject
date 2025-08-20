@@ -15,6 +15,8 @@ import java.io.File;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
 
 /**
  * Factory for creating chess pieces by type, player ID, and position.
@@ -35,51 +37,71 @@ public class PiecesFactory {
      */
     public static Piece createPieceByCode(EPieceType code, int playerId, Position pos, BoardConfig config) {
         Map<EState, IState> states = new HashMap<>();
-        String basePath = "/pieces/" + code.getVal() + "/states/";
+        String basePath = "pieces/" + code.getVal() + "/states/";
 
         try {
-            // Load state directories
-            URL dirURL = PiecesFactory.class.getResource(basePath);
-            if (dirURL == null || !"file".equals(dirURL.getProtocol())) {
-                LogUtils.logDebug("Cannot load states from: " + basePath);
+            ClassLoader cl = PiecesFactory.class.getClassLoader();
+            Enumeration<URL> resources = cl.getResources(basePath);
+
+            List<String> stateNames = new ArrayList<>();
+
+            while (resources.hasMoreElements()) {
+                URL url = resources.nextElement();
+
+                if (url.getProtocol().equals("jar")) {
+                    // in JAR
+                    String path = url.getPath();
+                    String jarPath = path.substring(5, path.indexOf("!"));
+                    try (JarFile jar = new JarFile(jarPath)) {
+                        jar.stream()
+                                .map(JarEntry::getName)
+                                .filter(name -> name.startsWith(basePath) && name.endsWith("config.json"))
+                                .forEach(name -> {
+                                    String[] parts = name.split("/");
+                                    if (parts.length >= 4) {
+                                        stateNames.add(parts[3]); // name of folder state
+                                    }
+                                });
+                    }
+                } else if (url.getProtocol().equals("file")) {
+                    // normal folder
+                    File dir = new File(url.toURI());
+                    if (dir.exists() && dir.isDirectory()) {
+                        for (File f : Objects.requireNonNull(dir.listFiles(File::isDirectory))) {
+                            stateNames.add(f.getName());
+                        }
+                    }
+                }
+            }
+
+            if (stateNames.isEmpty()) {
+                LogUtils.logDebug("No states found for piece: " + code.getVal());
                 return null;
             }
 
-            File[] stateDirs = new File(dirURL.toURI()).listFiles(File::isDirectory);
-            if (stateDirs == null || stateDirs.length == 0) {
-                LogUtils.logDebug("No state folders found for piece: " + code.getVal());
-                return null;
-            }
-
-            // Load each state
-            for (File stateFolder : stateDirs) {
-                EState stateName = EState.getValueOf(stateFolder.getName());
-                String configPath = basePath + stateName + "/config.json";
+            for (String stateNameStr : stateNames) {
+                EState stateName = EState.getValueOf(stateNameStr);
+                String configPath = "/" + basePath + stateNameStr + "/config.json";
 
                 try (InputStream is = PiecesFactory.class.getResourceAsStream(configPath)) {
                     if (is == null) {
-                        LogUtils.logDebug("Missing config for state: " + stateName);
+                        LogUtils.logDebug("Missing config for state: " + stateNameStr);
                         continue;
                     }
 
                     JsonNode root = mapper.readTree(is);
-
-                    // Load physics
                     IPhysicsData physics = mapper.treeToValue(root.path("physics"), PhysicsData.class);
-
-                    // Load graphics
                     IGraphicsData graphicsData = mapper.treeToValue(root.path("graphics"), GraphicsData.class);
                     BufferedImage[] sprites = GraphicsLoader.loadAllSprites(code, playerId, stateName);
 
                     if (sprites.length == 0) {
-                        LogUtils.logDebug("No sprites for state: " + stateName);
+                        LogUtils.logDebug("No sprites for state: " + stateNameStr);
                         continue;
                     }
 
                     graphicsData.setFrames(sprites);
                     graphicsData.setTotalFrames(sprites.length);
 
-                    // Create state
                     IState state = new State(stateName, pos, pos, config, physics, graphicsData);
                     states.put(stateName, state);
                 }
@@ -90,13 +112,10 @@ public class PiecesFactory {
                 return null;
             }
 
-            // Choose initial state
             EState initialState = states.containsKey(EState.LONG_REST) ? EState.LONG_REST
                     : states.keySet().iterator().next();
 
-            // Initialize state machine
-            StateMachine sm = new StateMachine(states, new TransitionTable(basePath + "transitions.csv"), initialState, pos);
-
+            StateMachine sm = new StateMachine(states, new TransitionTable("/" + basePath + "transitions.csv"), initialState, pos);
             return new Piece(code, playerId, sm, pos);
 
         } catch (Exception e) {
@@ -105,4 +124,5 @@ public class PiecesFactory {
             throw new RuntimeException(mes, e);
         }
     }
+
 }

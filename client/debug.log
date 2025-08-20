@@ -4,3 +4,15 @@ GameController run() loop ended
 GameController stopped listening thread
 GamePanel initialized
 Sound file not found: this_file_does_not_exist_hopefully.wav
+GameController run() loop started
+GameController started listening thread
+GameController run() loop ended
+GameController stopped listening thread
+GamePanel initialized
+Sound file not found: this_file_does_not_exist_hopefully.wav
+GameController run() loop started
+GameController started listening thread
+GameController run() loop ended
+GameController stopped listening thread
+GamePanel initialized
+Sound file not found: this_file_does_not_exist_hopefully.wav

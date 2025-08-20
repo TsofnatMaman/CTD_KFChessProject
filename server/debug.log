@@ -158,3 +158,259 @@ Failed to load sprite: /pieces/R/states/jump/sprites/sprites1/6.png
 Failed to load sprite: /pieces/R/states/long_rest/sprites/sprites1/6.png
 Failed to load sprite: /pieces/R/states/move/sprites/sprites1/6.png
 Failed to load sprite: /pieces/R/states/short_rest/sprites/sprites1/6.png
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 0 at 0,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 0 at 0,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,7
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 1 at 7,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 1 at 7,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,7
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 0 at 0,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 0 at 0,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,7
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 1 at 7,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 1 at 7,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,7
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 0 at 0,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 0 at 0,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,7
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 1 at 7,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 1 at 7,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,7
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 0 at 0,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 0 at 0,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 0 at 0,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 0 at 0,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 0 at 0,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 0 at 1,7
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,0
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,1
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,2
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,3
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,4
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,5
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,6
+Cannot load states from: /pieces/P/states/
+Failed to create piece of type P for player 1 at 6,7
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,0
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,1
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,2
+Cannot load states from: /pieces/K/states/
+Failed to create piece of type K for player 1 at 7,3
+Cannot load states from: /pieces/Q/states/
+Failed to create piece of type Q for player 1 at 7,4
+Cannot load states from: /pieces/B/states/
+Failed to create piece of type B for player 1 at 7,5
+Cannot load states from: /pieces/N/states/
+Failed to create piece of type N for player 1 at 7,6
+Cannot load states from: /pieces/R/states/
+Failed to create piece of type R for player 1 at 7,7
