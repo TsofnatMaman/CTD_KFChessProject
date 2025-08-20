@@ -4,7 +4,6 @@ import board.BoardConfig;
 import interfaces.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,6 +1,5 @@
 package endpoint.controller;
 
-import endpoint.view.BoardPanel;
 import interfaces.IPlayer;
 import viewUtils.BaseBoardPanel;
 
