@@ -139,24 +139,8 @@ This starts the UI with an in-process `Game` for rapid iteration and UI debuggin
 {
   "type": "PLAYER_SELECTED",
   "playerId": 1,
-  "pieceId": "RW-a2",
-  "action": "JUMP",
-  "target": { "row": 4, "col": 3 },
+  "position": { "row": 4, "col": 3 },
   "clientTimestamp": 169xxxxxxx
-}
-```
-
-**Server → Clients (game snapshot)**
-
-```json
-{
-  "type": "GAME_UPDATE",
-  "timestamp": 169xxxxxxx,
-  "pieces": [
-    { "id":"RW-a2", "player":0, "row":4, "col":3, "state":"JUMP", "frame":0 },
-    { "id":"BB-c4", "player":1, "captured":true }
-  ],
-  "messages": []
 }
 ```
 
