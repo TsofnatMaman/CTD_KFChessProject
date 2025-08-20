@@ -76,7 +76,7 @@ public class KFChessClientApp implements GameEventListener {
         // המתנה לקבלת PlayerId בצורה אסינכרונית
         SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for player ID from server..."));
 
-        boolean gotId = playerIdLatch.await(60, TimeUnit.SECONDS);
+        playerIdLatch.await(60, TimeUnit.SECONDS);
 
         if (playerId == -1) { // בדיקה סופית אחרי ההמתנה
             SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(

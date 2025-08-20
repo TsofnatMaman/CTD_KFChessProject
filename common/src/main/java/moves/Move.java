@@ -6,9 +6,9 @@ import java.util.Objects;
  * Represents a single move with delta x and delta y.
  */
 public class Move {
-    int dx;
-    int dy;
-    ECondition[] condition;
+    final int dx;
+    final int dy;
+    final ECondition[] condition;
 
     /**
      * Constructs a move with the given delta x and delta y.

@@ -90,12 +90,6 @@ public class BoardPanel extends JPanel implements IBoardView {
         });
     }
 
-
-    private void handleSelection() {
-        Position pos = cursor.getPosition();
-        if (onPlayerAction != null) onPlayerAction.accept(pos);
-    }
-
     public void setOnPlayerAction(Consumer<Position> handler) {
         this.onPlayerAction = handler;
     }

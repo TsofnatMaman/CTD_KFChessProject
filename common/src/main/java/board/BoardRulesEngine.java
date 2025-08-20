@@ -1,7 +1,6 @@
 package board;
 
 import interfaces.IBoard;
-import interfaces.IPiece;
 import pieces.Position;
 
 public class BoardRulesEngine {
@@ -9,7 +8,7 @@ public class BoardRulesEngine {
         return board.isInBounds(from) && board.isInBounds(to) && board.isMoveLegal(from, to);
     }
 
-    public static boolean isJumpLegal(IBoard board, IPiece piece) {
-        return board.isJumpLegal(piece);
+    public static boolean isJumpLegal(IBoard board, Position pos) {
+        return board.isInBounds(pos) && board.isJumpLegal(board.getPiece(pos));
     }
 }

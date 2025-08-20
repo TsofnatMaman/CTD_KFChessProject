@@ -58,8 +58,7 @@ public class Game implements IGame {
      *
      * @param cmd The command to add
      */
-    @Override
-    public void addCommand(ICommand cmd) {
+    private void addCommand(ICommand cmd) {
         commandQueue.add(cmd);
     }
 
@@ -151,8 +150,7 @@ public class Game implements IGame {
         }
     }
 
-    @Override
-    public void stopGameLoop() {
+    private void stopGameLoop() {
         if (timer != null && timer.isRunning()) {
             timer.stop();
         }

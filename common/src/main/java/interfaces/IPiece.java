@@ -4,7 +4,6 @@ import moves.Move;
 import pieces.EPieceType;
 import pieces.Position;
 
-import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.List;
 
@@ -69,8 +68,6 @@ public interface IPiece extends Serializable {
     Position getPos();
 
     boolean isFirstMove();
-
-    void setFirstMove(boolean firstMove);
 
     IState getCurrentState();
 

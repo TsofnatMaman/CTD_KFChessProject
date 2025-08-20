@@ -47,13 +47,6 @@ public class Player implements IPlayer {
         }
     }
 
-    /**
-     * Convenience constructor when pieces will be added later.
-     */
-    public Player(int id, String name, Color color) {
-        this(id, name, color, new ArrayList<>());
-    }
-
     @Override
     public List<IPiece> getPieces() {
         return Collections.unmodifiableList(pieces);

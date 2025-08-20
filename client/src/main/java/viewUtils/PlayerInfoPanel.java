@@ -66,7 +66,7 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
                     addMove(((ActionData) event.data()).message());
             }
 
-            case PIECE_CAPTURED->{setScore(player.getScore());}
+            case PIECE_CAPTURED-> setScore(player.getScore());
         }
 
     }

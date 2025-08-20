@@ -1,12 +1,8 @@
 package viewUtils;
 
-import constants.GameConstants;
 import dto.PieceView;
-import interfaces.IPiece;
 
 import java.awt.*;
-import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
 
 /**
  * Utility class for rendering pieces on the board.

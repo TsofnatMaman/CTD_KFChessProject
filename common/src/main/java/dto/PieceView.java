@@ -4,7 +4,6 @@ import board.BoardConfig;
 import interfaces.IBoard;
 import interfaces.IPiece;
 import interfaces.IPlayer;
-import pieces.EPieceType;
 
 import java.awt.image.BufferedImage;
 import java.util.Arrays;
@@ -28,7 +27,6 @@ public record PieceView(BufferedImage frame,
                 .flatMap((IPlayer player) -> player.getPieces().stream())
                 .filter(piece -> !piece.isCaptured())
                 .map(p->PieceView.from(p,board.getBoardConfig()))
-                .collect(Collectors.toList());
+                .toList();
     }
-
 }

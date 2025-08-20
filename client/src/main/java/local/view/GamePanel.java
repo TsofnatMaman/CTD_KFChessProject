@@ -1,5 +1,6 @@
 package local.view;
 
+import constants.GameConstants;
 import sound.EventSoundListener;
 import events.EGameEvent;
 import events.EventPublisher;
@@ -86,7 +87,7 @@ public class GamePanel extends JPanel implements IEventListener {
         timerLabel.setOpaque(false);
         add(timerLabel, BorderLayout.NORTH);
 
-        timerForUI = new Timer(1000, e -> updateTimer());
+        timerForUI = new Timer(GameConstants.UI_TIMER_MS, e -> updateTimer());
         timerForUI.start();
         // ---------------------------------------
 

@@ -4,7 +4,6 @@ import pieces.EPieceEvent;
 import pieces.Position;
 import state.EState;
 
-import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.Optional;
 
@@ -32,8 +31,6 @@ public interface IState extends Serializable {
      * @return true if finished, false otherwise
      */
     boolean isActionFinished();
-
-    Position getCurrentPosition();
 
     /**
      * Gets the physics data for the state.

@@ -8,12 +8,6 @@ import pieces.Position;
 public interface IGame extends Runnable{
 
     /**
-     * Adds a command to the queue.
-     * @param cmd The command to add
-     */
-    void addCommand(ICommand cmd);
-
-    /**
      * Executes all commands in the queue.
      */
     void update();
@@ -42,8 +36,6 @@ public interface IGame extends Runnable{
 
     @Override
     void run();
-
-    void stopGameLoop();
 
     long getStartTimeNano();
 

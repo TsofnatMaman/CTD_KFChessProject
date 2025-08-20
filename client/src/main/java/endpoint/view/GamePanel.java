@@ -22,7 +22,6 @@ import java.util.Objects;
  * - The chess board (BoardPanel)
  * - Player info panels (PlayerInfoPanel)
  * - Timer and background
- *
  * All UI elements are initialized and updated here.
  */
 public class GamePanel extends JPanel implements IGameUI {

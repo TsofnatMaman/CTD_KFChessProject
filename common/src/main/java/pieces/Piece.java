@@ -1,14 +1,11 @@
 package pieces;
 
-import constants.GameConstants;
 import interfaces.IState;
 import interfaces.IPiece;
 import moves.Move;
 import moves.Moves;
-import state.EState;
 import state.StateMachine;
 
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.util.List;
 
@@ -65,7 +62,7 @@ public class Piece implements IPiece {
     @Override
     public void move(Position to) {
         fsm.onEvent(EPieceEvent.MOVE, position, to);
-        setFirstMove(false);
+        setFirstMove();
     }
 
     @Override
@@ -113,9 +110,8 @@ public class Piece implements IPiece {
         return isFirstMove;
     }
 
-    @Override
-    public void setFirstMove(boolean firstMove) {
-        isFirstMove = firstMove;
+    private void setFirstMove() {
+        isFirstMove = false;
     }
 
     @Override

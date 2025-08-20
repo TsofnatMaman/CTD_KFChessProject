@@ -45,7 +45,11 @@ public class PiecesFactory {
 
             File statesDir = new File(dirURL.toURI());
             File[] subdirs = statesDir.listFiles(File::isDirectory);
-            if (subdirs == null) return null;
+
+            if (subdirs == null || subdirs.length == 0) {
+                LogUtils.logDebug("No state folders found for piece: " + code.getVal());
+                return null;
+            }
 
             // Load each state
             for (File stateFolder : subdirs) {
@@ -78,8 +82,9 @@ public class PiecesFactory {
                 states.put(stateName, state);
             }
 
+            // אחרי הלולאה שמוסיפה states
             if (states.isEmpty()) {
-                LogUtils.logDebug("No states loaded for piece: " + code.getVal());
+                LogUtils.logDebug("No valid states loaded for piece: " + code.getVal());
                 return null;
             }
 

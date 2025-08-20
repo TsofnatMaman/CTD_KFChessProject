@@ -5,7 +5,6 @@ import interfaces.*;
 import pieces.EPieceEvent;
 import pieces.Position;
 
-import java.awt.geom.Point2D;
 import java.util.Optional;
 
 /**
@@ -85,16 +84,6 @@ public class State implements IState {
     @Override
     public boolean isActionFinished() {
         return physics.isActionFinished();
-    }
-
-    /**
-     * Gets the current position in pixels.
-     *
-     * @return The current position as Point2D.Double
-     */
-    @Override
-    public Position getCurrentPosition() {
-        return new Position((int) physics.getCurrentX(), (int) physics.getCurrentY());
     }
 
     /**

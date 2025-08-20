@@ -23,7 +23,6 @@ import utils.Utils;
 import viewUtils.PlayerInfoPanel;
 
 import java.awt.*;
-import java.net.IDN;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

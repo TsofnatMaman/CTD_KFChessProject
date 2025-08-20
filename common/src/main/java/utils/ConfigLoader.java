@@ -29,6 +29,7 @@ public class ConfigLoader {
      * Gets a config value with fallback default.
      */
     public static String getConfig(String key, String defaultValue) {
+        if (key == null) return defaultValue;
         return config.getProperty(key, defaultValue);
     }
 
@@ -36,6 +37,7 @@ public class ConfigLoader {
      * Gets a message value with fallback default.
      */
     public static String getMessage(String key, String defaultValue) {
+        if (key == null) return defaultValue;
         return messages.getProperty(key, defaultValue);
     }
 }

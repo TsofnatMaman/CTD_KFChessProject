@@ -68,8 +68,8 @@ public class PhysicsData implements IPhysicsData {
      */
     @Override
     public void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos) {
-        this.currentX = startPos.getCol() * ((double) bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
-        this.currentY = startPos.getRow() * ((double) bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
+        this.currentX = startPos.getCol() * (bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
+        this.currentY = startPos.getRow() * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
         this.startPos = startPos;
         this.targetPos = to;
         this.bc = bc;
@@ -94,8 +94,8 @@ public class PhysicsData implements IPhysicsData {
     private void updatePosition(long now) {
         double speed = getSpeedMetersPerSec();
         double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
-        double dx = targetPos.dx(startPos) * ((double) bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
-        double dy = targetPos.dy(startPos) * ((double) bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
+        double dx = targetPos.dx(startPos) * (bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
+        double dy = targetPos.dy(startPos) * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
         double totalDistance = Math.sqrt(dx * dx + dy * dy);
         if (totalDistance == 0 || speed == 0) return;
         double distanceSoFar = Math.min(speed * elapsedSec, totalDistance);
@@ -118,8 +118,8 @@ public class PhysicsData implements IPhysicsData {
         if(speedMetersPerSec == 0)
             return false;
         double elapsedSec = (System.nanoTime() - startTimeNanos) / 1_000_000_000.0;
-        double dx = targetPos.dx(startPos) * ((double) bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
-        double dy = targetPos.dy(startPos) * ((double) bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
+        double dx = targetPos.dx(startPos) * (bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
+        double dy = targetPos.dy(startPos) * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
         double totalDistance = Math.sqrt(dx * dx + dy * dy);
         return speedMetersPerSec * elapsedSec >= totalDistance;
     }
