@@ -13,6 +13,9 @@ import java.net.URI;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * WebSocket client endpoint for communicating with the chess server.
+ */
 @ClientEndpoint
 public class ChessClientEndpoint implements Closeable {
 
@@ -66,7 +69,7 @@ public class ChessClientEndpoint implements Closeable {
     @OnError
     public void onError(Session session, Throwable throwable) {
         LogUtils.logDebug("WebSocket error: " + throwable.getMessage());
-        // let onClose handle reconnect
+        // onClose will handle reconnection
     }
 
     // ---------------------- Message Processing ----------------------
@@ -88,7 +91,6 @@ public class ChessClientEndpoint implements Closeable {
                 case PLAYER_ID -> updatePlayerId(data.asInt(-1));
                 default -> LogUtils.logDebug("Unknown message type: " + type);
             }
-
 
         } catch (Exception e) {
             LogUtils.logDebug("Failed to parse incoming message: " + e);

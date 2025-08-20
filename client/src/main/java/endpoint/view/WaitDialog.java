@@ -3,6 +3,10 @@ package endpoint.view;
 import javax.swing.*;
 import java.awt.*;
 
+/**
+ * A simple modal dialog displaying a message and an indeterminate progress bar,
+ * used to indicate waiting for an opponent or other game events.
+ */
 public class WaitDialog {
 
     private JDialog dialog;
@@ -10,10 +14,20 @@ public class WaitDialog {
     private JProgressBar progressBar;
     private Runnable onCloseAction;
 
+    /**
+     * Sets an action to execute when the dialog is closed.
+     *
+     * @param onCloseAction Runnable to run when the user closes the dialog.
+     */
     public void setOnCloseAction(Runnable onCloseAction) {
         this.onCloseAction = onCloseAction;
     }
 
+    /**
+     * Shows the dialog with the given message or updates it if already visible.
+     *
+     * @param message The message to display.
+     */
     public synchronized void showOrUpdate(String message) {
         if (SwingUtilities.isEventDispatchThread()) {
             internalShowOrUpdate(message);
@@ -22,8 +36,10 @@ public class WaitDialog {
         }
     }
 
+    // Internal method to safely create or update the dialog on the EDT
     private void internalShowOrUpdate(String message) {
         if (dialog == null) {
+            // Initialize components
             label = new JLabel(wrapHtml(escapeHtml(message)), SwingConstants.CENTER);
             progressBar = new JProgressBar();
             progressBar.setIndeterminate(true);
@@ -42,6 +58,7 @@ public class WaitDialog {
             dialog.setLocationRelativeTo(null);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
+            // Handle window close event
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -53,6 +70,7 @@ public class WaitDialog {
 
             dialog.setVisible(true);
         } else {
+            // Update existing dialog
             label.setText(wrapHtml(escapeHtml(message)));
             if (!dialog.isVisible()) {
                 dialog.setVisible(true);
@@ -60,6 +78,9 @@ public class WaitDialog {
         }
     }
 
+    /**
+     * Closes the dialog safely from any thread.
+     */
     public synchronized void close() {
         if (SwingUtilities.isEventDispatchThread()) {
             internalClose();
@@ -77,10 +98,12 @@ public class WaitDialog {
         }
     }
 
+    // Helper to wrap text in HTML for center alignment
     private static String wrapHtml(String s) {
         return "<html><div style='text-align:center;'>" + s + "</div></html>";
     }
 
+    // Escapes HTML special characters and converts newlines to <br/>
     private static String escapeHtml(String s) {
         if (s == null) return "";
         return s.replace("&", "&amp;")

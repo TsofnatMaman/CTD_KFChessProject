@@ -121,7 +121,7 @@ public class ChessServerEndpoint {
 
     private void initializeGameIfReady() {
         synchronized (ChessServerEndpoint.class) {
-            if (sessionPlayerIds.size() < MAX_PLAYERS || game != null) return;
+//            if (sessionPlayerIds.size() < MAX_PLAYERS || game != null) return;
             createGame();
             sendInitialGameStateToAll();
         }

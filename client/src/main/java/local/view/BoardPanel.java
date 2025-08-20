@@ -1,42 +1,19 @@
 package local.view;
 
-import dto.PieceView;
-import events.EGameEvent;
-import events.EventPublisher;
-import events.GameEvent;
-import events.IEventListener;
-import game.IBoardView;
 import interfaces.IBoard;
-import interfaces.IPiece;
 import interfaces.IPlayerCursor;
+import local.controller.Controller;
 import pieces.Position;
-import utils.LogUtils;
-import viewUtils.BoardRenderer;
+import viewUtils.BaseBoardPanel;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.net.URL;
 import java.util.Collections;
 import java.util.List;
-import java.util.function.Consumer;
 
-/**
- * Panel for displaying the game board and handling player input.
- */
-public class BoardPanel extends JPanel implements IBoardView, IEventListener {
-    private BufferedImage boardImage;
-    private final IBoard board;
+public class BoardPanel extends BaseBoardPanel {
 
     private final IPlayerCursor cursor1;
     private final IPlayerCursor cursor2;
-
-    private Consumer<Void> onPlayer1Action;
-    private Consumer<Void> onPlayer2Action;
 
     private Position selected1 = null;
     private List<Position> legalMoves1 = Collections.emptyList();
@@ -44,165 +21,91 @@ public class BoardPanel extends JPanel implements IBoardView, IEventListener {
     private Position selected2 = null;
     private List<Position> legalMoves2 = Collections.emptyList();
 
-    private static final Color SELECT_COLOR_P1 = new Color(255, 0, 0, 128);   // אדום חצי שקוף
-    private static final Color SELECT_COLOR_P2 = new Color(0, 0, 255, 128);   // כחול חצי שקוף
+    private final Color SELECT_COLOR_P1 = new Color(255, 0, 0, 128);
+    private final Color SELECT_COLOR_P2 = new Color(0, 0, 255, 128);
 
+    private Controller controller;
 
-    public BoardPanel(IBoard board, IPlayerCursor pc1, IPlayerCursor pc2) {
-        this.board = board;
-        this.cursor1 = pc1;
-        this.cursor2 = pc2;
+    public BoardPanel(IBoard board, IPlayerCursor cursor1, IPlayerCursor cursor2) {
+        super(board);
+        this.cursor1 = cursor1;
+        this.cursor2 = cursor2;
 
-        setPreferredSize(board.getBoardConfig().panelDimension());
         setFocusable(true);
-        loadBoardImage();
+        requestFocusInWindow();
 
-        addKeyListener(new KeyAdapter() {
+        addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-            public void keyPressed(KeyEvent e) {
-                handleKey(e);
+            public void keyPressed(java.awt.event.KeyEvent e) {
+                handleKey(e.getKeyCode());
             }
         });
-
-        EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
-        EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
     }
 
-    private void loadBoardImage() {
-        try {
-            URL imageUrl = getClass().getClassLoader().getResource("board/board.png");
-            if (imageUrl != null) {
-                boardImage = ImageIO.read(imageUrl);
-            } else {
-                System.err.println("Image not found in resources!");
-                LogUtils.logDebug("Image not found in resources!");
-            }
-        } catch (IOException e) {
-            String mes = "Exception loading board image: " + e.getMessage();
-            LogUtils.logDebug(mes);
-            throw new RuntimeException(mes);
-        }
+    public void setController(Controller controller) {
+        this.controller = controller;
     }
 
-    private void handleKey(KeyEvent e) {
-        int key = e.getKeyCode();
-
-        switch (key) {
-            case KeyEvent.VK_UP -> cursor1.moveUp();
-            case KeyEvent.VK_DOWN -> cursor1.moveDown();
-            case KeyEvent.VK_LEFT -> cursor1.moveLeft();
-            case KeyEvent.VK_RIGHT -> cursor1.moveRight();
-            case KeyEvent.VK_ENTER -> {
-                Position pos = cursor1.getPosition();
-                if (selected1 == null) {
-                    IPiece p = board.getPiece(pos);
-                    if (p == null || p.isCaptured() || p.getPlayer() != 0 || !p.canAction()) {
-                        LogUtils.logDebug("can not choose piece");
-                    } else {
-                        selected1 = pos.copy();
-                        legalMoves1 = board.getLegalMoves(pos);
-                    }
-                } else {
-                    selected1 = null;
-                    legalMoves1 = Collections.emptyList();
-                }
-                if (onPlayer1Action != null) onPlayer1Action.accept(null);
-                repaint();
+    private void handleKey(int keyCode) {
+        switch (keyCode) {
+            case java.awt.event.KeyEvent.VK_UP -> cursor1.moveUp();
+            case java.awt.event.KeyEvent.VK_DOWN -> cursor1.moveDown();
+            case java.awt.event.KeyEvent.VK_LEFT -> cursor1.moveLeft();
+            case java.awt.event.KeyEvent.VK_RIGHT -> cursor1.moveRight();
+            case java.awt.event.KeyEvent.VK_ENTER -> {
+                if (controller != null)
+                    controller.handlePlayerMove(0, cursor1.getPosition());
             }
 
-            case KeyEvent.VK_W -> cursor2.moveUp();
-            case KeyEvent.VK_S -> cursor2.moveDown();
-            case KeyEvent.VK_A -> cursor2.moveLeft();
-            case KeyEvent.VK_D -> cursor2.moveRight();
-            case KeyEvent.VK_SPACE -> {
-                Position pos = cursor2.getPosition();
-                if (selected2 == null) {
-                    IPiece p = board.getPiece(pos);
-                    if (p == null || p.isCaptured() || p.getPlayer() != 1 || !p.canAction()) {
-                        LogUtils.logDebug("can not choose piece");
-                    } else {
-                        selected2 = pos.copy();
-                        legalMoves2 = board.getLegalMoves(pos);
-                    }
-                } else {
-                    selected2 = null;
-                    legalMoves2 = Collections.emptyList();
-                }
-                if (onPlayer2Action != null) onPlayer2Action.accept(null);
+            case java.awt.event.KeyEvent.VK_W -> cursor2.moveUp();
+            case java.awt.event.KeyEvent.VK_S -> cursor2.moveDown();
+            case java.awt.event.KeyEvent.VK_A -> cursor2.moveLeft();
+            case java.awt.event.KeyEvent.VK_D -> cursor2.moveRight();
+            case java.awt.event.KeyEvent.VK_SPACE -> {
+                if (controller != null)
+                    controller.handlePlayerMove(1, cursor2.getPosition());
             }
         }
 
         repaint();
     }
 
-    public void setOnPlayer1Action(Consumer<Void> handler) {
-        this.onPlayer1Action = handler;
-    }
-
-    public void setOnPlayer2Action(Consumer<Void> handler) {
-        this.onPlayer2Action = handler;
-    }
+    public void setSelected1(Position pos) { selected1 = pos; }
+    public void setLegalMoves1(List<Position> moves) { legalMoves1 = moves; }
+    public void setSelected2(Position pos) { selected2 = pos; }
+    public void setLegalMoves2(List<Position> moves) { legalMoves2 = moves; }
 
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (boardImage != null) {
-            g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), this);
-        } else {
-            g.setColor(Color.DARK_GRAY);
-            g.fillRect(0, 0, getWidth(), getHeight());
-        }
-
-        if (board != null)
-            BoardRenderer.draw(g, PieceView.toPieceViews(board), board.getBoardConfig());
-
-        if (cursor1 != null) cursor1.draw(g, getWidth(), getHeight());
-        if (cursor2 != null) cursor2.draw(g, getWidth(), getHeight());
+        cursor1.draw(g, getWidth(), getHeight());
+        cursor2.draw(g, getWidth(), getHeight());
 
         Graphics2D g2 = (Graphics2D) g;
         int cellW = getWidth() / board.getCols();
         int cellH = getHeight() / board.getRows();
 
-        // --- Player 1 selection and legal moves ---
         if (selected1 != null) {
             g2.setColor(SELECT_COLOR_P1);
             g2.fillRect(selected1.getCol() * cellW, selected1.getRow() * cellH, cellW, cellH);
-
-            g2.setColor(SELECT_COLOR_P1);
             for (Position move : legalMoves1) {
-                int x = move.getCol() * cellW + cellW / 4;
-                int y = move.getRow() * cellH + cellH / 4;
-                int w = cellW / 2;
-                int h = cellH / 2;
+                int x = move.getCol() * cellW + cellW/4;
+                int y = move.getRow() * cellH + cellH/4;
+                int w = cellW/2, h = cellH/2;
                 g2.fillOval(x, y, w, h);
             }
         }
 
-        // --- Player 2 selection and legal moves ---
         if (selected2 != null) {
             g2.setColor(SELECT_COLOR_P2);
             g2.fillRect(selected2.getCol() * cellW, selected2.getRow() * cellH, cellW, cellH);
-
-            g2.setColor(SELECT_COLOR_P2);
             for (Position move : legalMoves2) {
-                int x = move.getCol() * cellW + cellW / 4;
-                int y = move.getRow() * cellH + cellH / 4;
-                int w = cellW / 2;
-                int h = cellH / 2;
+                int x = move.getCol() * cellW + cellW/4;
+                int y = move.getRow() * cellH + cellH/4;
+                int w = cellW/2, h = cellH/2;
                 g2.fillOval(x, y, w, h);
             }
-        }
-    }
-
-    @Override
-    public void onEvent(GameEvent event) {
-        repaint();
-        if(event.type() == EGameEvent.PIECE_END_MOVED) {
-            if (selected1 != null)
-                legalMoves1 = board.getLegalMoves(selected1);
-            if(selected2 != null)
-                legalMoves2 = board.getLegalMoves(selected2);
         }
     }
 }

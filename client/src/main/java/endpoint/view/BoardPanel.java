@@ -6,6 +6,7 @@ import interfaces.IBoard;
 import interfaces.IPlayerCursor;
 import pieces.Position;
 import utils.LogUtils;
+import viewUtils.BaseBoardPanel;
 import viewUtils.BoardRenderer;
 
 import javax.imageio.ImageIO;
@@ -23,10 +24,7 @@ import java.util.function.Consumer;
  * Pure UI panel: displays board, pieces, cursor, selection and legal moves.
  * Receives all updates from external sources (controller).
  */
-public class BoardPanel extends JPanel implements IBoardView {
-
-    private BufferedImage boardImage;
-    private final IBoard board;
+public class BoardPanel extends BaseBoardPanel {
     private final IPlayerCursor cursor;
 
     private Position selected = null;
@@ -36,31 +34,11 @@ public class BoardPanel extends JPanel implements IBoardView {
     private Consumer<Position> onPlayerAction; // returns selected cursor position
 
     public BoardPanel(IBoard board, IPlayerCursor cursor) {
-        this.board = board;
+        super(board);
         this.cursor = cursor;
 
         Color base = cursor.getColor();
         selectColor = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
-
-        setPreferredSize(board.getBoardConfig().panelDimension());
-
-        setFocusable(true);
-
-        loadBoardImage();
-
-    }
-
-    private void loadBoardImage() {
-        try {
-            URL imageUrl = getClass().getClassLoader().getResource("board/board.png");
-            if (imageUrl != null) {
-                boardImage = ImageIO.read(imageUrl);
-            } else {
-                LogUtils.logDebug("Board image not found in resources!");
-            }
-        } catch (IOException e) {
-            LogUtils.logDebug("Exception loading board image: " + e.getMessage());
-        }
     }
 
     public void initKeyBindings() {
@@ -98,14 +76,6 @@ public class BoardPanel extends JPanel implements IBoardView {
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
 
-        if (boardImage != null) {
-            g.drawImage(boardImage, 0, 0, getWidth(), getHeight(), this);
-        } else {
-            g.setColor(Color.DARK_GRAY);
-            g.fillRect(0, 0, getWidth(), getHeight());
-        }
-
-        BoardRenderer.draw(g, PieceView.toPieceViews(board), board.getBoardConfig());
         cursor.draw(g, getWidth(), getHeight());
 
         if (selected != null) {
@@ -124,10 +94,6 @@ public class BoardPanel extends JPanel implements IBoardView {
                 g2.fillOval(x, y, w, h);
             }
         }
-    }
-
-    public void update() {
-        repaint();
     }
 
     public void setSelected(Position selected) {

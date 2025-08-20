@@ -111,7 +111,7 @@ public class Piece implements IPiece {
 
     @Override
     public void move(Position to) {
-        fsm.onEvent(EPieceEvent.MOVE, position, to);
+        fsm.onEvent(EPieceEvent.MOVE, position, to.copy());
         setFirstMove();
     }
 

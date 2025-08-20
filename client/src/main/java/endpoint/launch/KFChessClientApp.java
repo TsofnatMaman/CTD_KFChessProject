@@ -2,14 +2,15 @@ package endpoint.launch;
 
 import constants.PlayerConstants;
 import constants.ServerConfig;
-import controller.GameController;
+import endpoint.controller.GameController;
+import endpoint.controller.GameController.GameEventListener;
 import dto.EventType;
 import dto.GameDTO;
 import endpoint.view.AskUserName;
-import endpoint.view.GamePanel;
 import endpoint.view.WaitDialog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import viewUtils.GamePanel;
 
 import javax.swing.*;
 import java.net.URI;
@@ -17,8 +18,11 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import controller.GameController.GameEventListener;
 
+/**
+ * Main client application for KFChess.
+ * Handles UI initialization, server communication, and game start.
+ */
 public class KFChessClientApp implements GameEventListener {
 
     private static final Logger logger = Logger.getLogger(KFChessClientApp.class.getName());
@@ -27,21 +31,24 @@ public class KFChessClientApp implements GameEventListener {
     private GameController controller;
 
     private volatile int playerId = -1;
-
     private final CountDownLatch playerIdLatch = new CountDownLatch(1);
-    private boolean gameStarted = false;
 
+    private boolean gameStarted = false;
     private WaitDialog waitDialog;
     private volatile GameDTO pendingGameDTO = null;
 
     public KFChessClientApp() throws Exception {
         initUIAndConnect();
-        // שמירה על החיבור פעיל גם אם המשתמש סוגר את ה-UI
+
+        // Keep WebSocket alive even if UI is closed
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
+    /**
+     * Initializes the WebSocket connection, sends player name,
+     * and shows a waiting dialog until the game starts.
+     */
     private void initUIAndConnect() throws Exception {
-        // יצירת URL ל-WebSocket
         String wsUrl = String.format("ws://%s:%s%s%s",
                 ServerConfig.HOST,
                 ServerConfig.PORT,
@@ -50,35 +57,40 @@ public class KFChessClientApp implements GameEventListener {
 
         client = new ChessClientEndpoint(new URI(wsUrl));
 
+        // Prompt for username
         String username;
-        try{
-            username= AskUserName.askUsername();
+        try {
+            username = AskUserName.askUsername();
         } catch (Exception e) {
             username = null;
         }
+
         if (username == null || username.isBlank()) {
-            username = "Anonymous - "+(playerId !=-1? PlayerConstants.COLORS_NAME[playerId]:"");
+            username = "Anonymous - " + (playerId != -1 ? PlayerConstants.COLORS_NAME[playerId] : "");
         }
 
-        // שליחת שם השחקן
+        // Send player name to server
         client.sendCommand(EventType.SET_NAME, username);
 
+        // Initialize waiting dialog
         waitDialog = new WaitDialog();
         waitDialog.setOnCloseAction(() -> {
             shutdown();
             System.exit(0);
         });
 
+        // Initialize game controller
         controller = new GameController(client, new ObjectMapper());
         controller.addListener(this);
         controller.startListening();
 
-        // המתנה לקבלת PlayerId בצורה אסינכרונית
+        // Show initial waiting message
         SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for player ID from server..."));
 
+        // Wait asynchronously for playerId
         playerIdLatch.await(60, TimeUnit.SECONDS);
 
-        if (playerId == -1) { // בדיקה סופית אחרי ההמתנה
+        if (playerId == -1) {
             SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(
                     "Error: Did not receive player ID from server."));
             shutdown();
@@ -89,6 +101,8 @@ public class KFChessClientApp implements GameEventListener {
             SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for the game to start..."));
         }
     }
+
+    // ------------------- Event Listener Callbacks -------------------
 
     @Override
     public void onWaitMessage(String message) {
@@ -103,6 +117,7 @@ public class KFChessClientApp implements GameEventListener {
 
         playerIdLatch.countDown();
 
+        // If game init was received before playerId, process it now
         if (pendingGameDTO != null) {
             pendingGameDTO = null;
             SwingUtilities.invokeLater(this::onGameInit);
@@ -117,19 +132,25 @@ public class KFChessClientApp implements GameEventListener {
     @Override
     public void onGameInit() {
         gameStarted = true;
+
+        // Close waiting dialog
         SwingUtilities.invokeLater(() -> waitDialog.close());
 
+        // Initialize and display the game UI
         SwingUtilities.invokeLater(this::initializeGameUI);
     }
+
+    // ------------------- UI Initialization -------------------
 
     private void initializeGameUI() {
         JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1) +
                 " - " + controller.getModel().getPlayerById(playerId).getName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
+        // Get the GamePanel from controller
         GamePanel gamePanel = (GamePanel) controller.getGamePanel();
-
         frame.add(gamePanel);
+
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -137,8 +158,11 @@ public class KFChessClientApp implements GameEventListener {
         gamePanel.setFocusable(true);
         gamePanel.requestFocusInWindow();
 
+        // Start the main game loop
         controller.startRunGame();
     }
+
+    // ------------------- Shutdown -------------------
 
     public void shutdown() {
         try {
@@ -149,11 +173,14 @@ public class KFChessClientApp implements GameEventListener {
         }
     }
 
+    // ------------------- Main Entry Point -------------------
+
     public static void main(String[] args) {
         new Thread(() -> {
             try {
                 new KFChessClientApp();
-                // שמירה על התהליך פעיל עד סגירה ידנית
+
+                // Keep process alive until manual exit
                 synchronized (KFChessClientApp.class) {
                     KFChessClientApp.class.wait();
                 }

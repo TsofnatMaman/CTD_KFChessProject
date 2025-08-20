@@ -2,13 +2,20 @@ package endpoint.view;
 
 import javax.swing.*;
 
+/**
+ * Utility class to prompt the user for their name using a Swing dialog.
+ */
 public class AskUserName {
+
     /**
-     * Ask the user for their name, or null if cancelled.
+     * Displays a modal input dialog asking the user for their name.
+     *
+     * @return The entered username, "Anonymous" if blank, or null if cancelled.
+     * @throws Exception If interrupted while waiting for the Swing thread.
      */
     public static String askUsername() throws Exception {
-        final String[] result = new String[1];
-        final boolean[] cancelled = {false};
+        final String[] result = new String[1];      // Stores the entered name
+        final boolean[] cancelled = {false};        // Tracks if the dialog was cancelled
 
         Runnable prompt = () -> {
             String input = (String) JOptionPane.showInputDialog(
@@ -20,15 +27,19 @@ public class AskUserName {
                     null,
                     null
             );
-            if (input == null) { // Cancel or close
+
+            if (input == null) { // User cancelled the dialog
                 cancelled[0] = true;
                 return;
             }
+
+            // Use default "Anonymous" if input is blank
             result[0] = input.trim().isEmpty()
                     ? utils.ConfigLoader.getMessage("anonymous.name", "Anonymous")
                     : input.trim();
         };
 
+        // Run on the Event Dispatch Thread (EDT) for Swing safety
         if (SwingUtilities.isEventDispatchThread()) {
             prompt.run();
         } else {
