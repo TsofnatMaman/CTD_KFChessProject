@@ -42,6 +42,8 @@ public class Board implements IBoard {
      */
     public final BoardConfig boardConfig;
 
+    public final int IS_NO_TARGET = -1;
+
     /**
      * Constructs the board with the given configuration and players.
      *
@@ -53,7 +55,7 @@ public class Board implements IBoard {
         this.boardGrid = new IPiece[(int) bc.gridDimension().getWidth()][(int) bc.gridDimension().getHeight()];
         this.isTarget = new int[boardGrid.length][boardGrid[0].length];
         for (int[] row : isTarget) {
-            Arrays.fill(row, -1);
+            Arrays.fill(row, IS_NO_TARGET);
         }
         this.players = players;
         initializeFromPlayers();
@@ -88,7 +90,7 @@ public class Board implements IBoard {
 
     @Override
     public boolean hasPieceOrIsTarget(Position pos) {
-        return hasPiece(pos) || isTarget[pos.getRow()][pos.getCol()] != -1;
+        return hasPiece(pos) || isTarget[pos.getRow()][pos.getCol()] != IS_NO_TARGET;
     }
 
     /**
@@ -155,7 +157,7 @@ public class Board implements IBoard {
                     }
 
                     boardGrid[targetPos.getRow()][targetPos.getCol()] = piece;
-                    isTarget[targetPos.getRow()][targetPos.getCol()] = -1;
+                    isTarget[targetPos.getRow()][targetPos.getCol()] = IS_NO_TARGET;
 
                     if (piece.getType() == EPieceType.P &&
                             (targetPos.getRow() == 0 || targetPos.getRow() == boardConfig.gridDimension().getWidth() - 1)) {
