@@ -2,6 +2,7 @@ package endpoint.launch;
 
 import org.glassfish.tyrus.server.Server;
 import constants.ServerConfig;
+import server.ChessServerEndpoint;
 
 /**
  * Entry point for launching the WebSocket server for the chess game.

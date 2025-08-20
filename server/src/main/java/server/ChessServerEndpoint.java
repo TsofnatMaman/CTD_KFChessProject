@@ -1,17 +1,16 @@
-package endpoint.launch;
+package server;
 
-import board.BoardConfig;
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import constants.Messages;
 import constants.ServerConfig;
-import constants.GameConstants;
 import dto.*;
 import game.Game;
 import interfaces.IGame;
 import interfaces.IPlayer;
 import player.PlayerFactory;
+import board.BoardConfig;
+import constants.GameConstants;
+import constants.Messages;
 
 import javax.websocket.*;
 import javax.websocket.server.ServerEndpoint;
@@ -25,21 +24,22 @@ import java.util.logging.Logger;
 
 /**
  * WebSocket server endpoint for real-time chess game.
- * Manages connections, messages, and game initialization.
+ * Handles player connections, ID assignment, game initialization,
+ * player selections, and setting player names.
  */
 @ServerEndpoint(ServerConfig.SERVER_ENDPOINT)
 public class ChessServerEndpoint {
 
     private static final Logger LOGGER = Logger.getLogger(ChessServerEndpoint.class.getName());
-    private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
     private static final ObjectMapper mapper = new ObjectMapper();
-    private static volatile IGame game = null;
 
+    private static final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
+    private static final List<String> playerNames = Collections.synchronizedList(
+            new ArrayList<>(List.of("Player1", "Player2"))
+    );
+
+    private static volatile IGame game = null;
     private static final int MAX_PLAYERS = GameConstants.MAX_PLAYERS;
-    private static final List<String> playersName = Collections.synchronizedList(new ArrayList<>(List.of(
-            Messages.get(Messages.Key.PLAYER_1_NAME),
-            Messages.get(Messages.Key.PLAYER_2_NAME)
-    )));
 
     // ---------------------- Connection Handling ----------------------
 
@@ -55,6 +55,10 @@ public class ChessServerEndpoint {
         sessionPlayerIds.put(session, playerId);
         logInfo("Client connected: %s, assigned playerId: %d", session.getId(), playerId);
 
+        // שליחת Player ID ללקוח
+        sendMessage(session, new Message<>(EventType.PLAYER_ID, playerId));
+
+        // אם יש עדיין מקום לשחקן נוסף, שלח הודעת המתנה
         if (sessionPlayerIds.size() < MAX_PLAYERS) {
             sendMessage(session, new Message<>(EventType.WAIT, Messages.get(Messages.Key.WAIT_MESSAGE)));
         }
@@ -69,7 +73,8 @@ public class ChessServerEndpoint {
     @OnError
     public void onError(Session session, Throwable throwable) {
         LOGGER.log(Level.SEVERE,
-                String.format("Session error for %s: %s", session != null ? session.getId() : "unknown",
+                String.format("Session error for %s: %s",
+                        session != null ? session.getId() : "unknown",
                         throwable.getMessage()), throwable);
     }
 
@@ -81,7 +86,8 @@ public class ChessServerEndpoint {
         if (playerId == null) return;
 
         try {
-            Message<JsonNode> genericMsg = mapper.readValue(message, new TypeReference<>() {});
+            Message<JsonNode> genericMsg = mapper.readValue(message, mapper.getTypeFactory()
+                    .constructParametricType(Message.class, JsonNode.class));
             handleMessageByType(genericMsg, session, playerId);
         } catch (Exception e) {
             LOGGER.log(Level.SEVERE, "Failed to process message", e);
@@ -90,31 +96,37 @@ public class ChessServerEndpoint {
 
     private void handleMessageByType(Message<JsonNode> msg, Session session, int playerId) throws IOException {
         switch (msg.type()) {
+            case SET_NAME -> handleSetName(msg.data(), playerId);
             case PLAYER_SELECTED -> handlePlayerSelected(msg.data(), playerId);
-            case SET_NAME -> handleSetName(msg.data(), playerId, session);
-            default -> LOGGER.warning("Unknown message type: " + msg.data());
+            default -> LOGGER.warning("Unknown message type: " + msg.type());
         }
     }
 
-    private void handlePlayerSelected(JsonNode data, int playerId) throws IOException {
-        if (game == null) return;
-
-        PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);
-        if (cmd.playerId() != playerId) { // security check
-            LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
-            return;
-        }
-
-        game.handleSelection(cmd.playerId(), cmd.selection());
-        broadcastMessage(new Message<>(EventType.PLAYER_SELECTED, cmd));
-    }
-
-    private void handleSetName(JsonNode data, int playerId, Session session) {
+    private void handleSetName(JsonNode data, int playerId) {
         String name = data.asText("");
-        playersName.set(playerId, name);
+        playerNames.set(playerId, name);
         logInfo("Set name for player %d: %s", playerId, name);
 
+        // אם כל השחקנים התחברו והגדירו שם, אתחל את המשחק
         initializeGameIfReady();
+    }
+
+    private void handlePlayerSelected(JsonNode data, int playerId) {
+        if (game == null) return;
+
+        try {
+            PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);
+            if (cmd.playerId() != playerId) {
+                LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
+                return;
+            }
+
+            game.handleSelection(cmd.playerId(), cmd.selection());
+            broadcastMessage(new Message<>(EventType.PLAYER_SELECTED, cmd));
+
+        } catch (Exception e) {
+            LOGGER.log(Level.SEVERE, "Failed to handle PLAYER_SELECTED", e);
+        }
     }
 
     // ---------------------- Game Initialization ----------------------
@@ -135,7 +147,7 @@ public class ChessServerEndpoint {
         );
 
         IPlayer[] players = PlayerFactory.createPlayers(
-                new String[]{playersName.get(0), playersName.get(1)},
+                new String[]{playerNames.get(0), playerNames.get(1)},
                 boardConfig
         );
 
