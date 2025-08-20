@@ -8,22 +8,22 @@ import java.util.function.Predicate;
  * a move is valid under specific circumstances.
  */
 public enum ECondition {
-    /** Validates that the target square is empty */
+
+    /** Validates that the target square is empty (non-capture move) */
     NON_CAPTURE(d -> d.board.getPiece(d.to) == null),
-    
+
     /** Validates that the piece hasn't moved from its starting position */
     FIRST_TIME(d -> d.pieceFrom.isFirstMove()),
-    
+
     /** Validates that the target square contains a piece that can be captured */
     CAPTURE(d -> d.board.getPiece(d.to) != null);
 
-    
     /** The predicate used to test the condition */
     private final Predicate<Data> condition;
 
     /**
      * Constructs a condition with the specified validation predicate.
-     * 
+     *
      * @param condition The predicate that defines the move validation logic
      */
     ECondition(Predicate<Data> condition) {
@@ -32,9 +32,9 @@ public enum ECondition {
 
     /**
      * Tests if a move is valid under this condition.
-     * 
+     *
      * @param data The move data to validate
-     * @return true if the move is valid under this condition, false otherwise
+     * @return true if the move satisfies this condition, false otherwise
      */
     public boolean isCanMove(Data data) {
         return condition.test(data);

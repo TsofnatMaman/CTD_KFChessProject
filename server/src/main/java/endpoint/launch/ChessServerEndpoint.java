@@ -23,6 +23,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+/**
+ * WebSocket server endpoint for real-time chess game.
+ * Manages connections, messages, and game initialization.
+ */
 @ServerEndpoint(ServerConfig.SERVER_ENDPOINT)
 public class ChessServerEndpoint {
 
@@ -52,8 +56,7 @@ public class ChessServerEndpoint {
         logInfo("Client connected: %s, assigned playerId: %d", session.getId(), playerId);
 
         if (sessionPlayerIds.size() < MAX_PLAYERS) {
-            sendMessage(session, new Message<>(EventType.WAIT,
-                    Messages.get(Messages.Key.WAIT_MESSAGE)));
+            sendMessage(session, new Message<>(EventType.WAIT, Messages.get(Messages.Key.WAIT_MESSAGE)));
         }
     }
 
@@ -74,7 +77,6 @@ public class ChessServerEndpoint {
 
     @OnMessage
     public void onMessage(String message, Session session) {
-        System.out.println(message);
         Integer playerId = sessionPlayerIds.get(session);
         if (playerId == null) return;
 
@@ -95,11 +97,10 @@ public class ChessServerEndpoint {
     }
 
     private void handlePlayerSelected(JsonNode data, int playerId) throws IOException {
-        logInfo(data.toString());
         if (game == null) return;
 
         PlayerSelectedDTO cmd = mapper.treeToValue(data, PlayerSelectedDTO.class);
-        if (cmd.playerId() != playerId) {
+        if (cmd.playerId() != playerId) { // security check
             LOGGER.severe(Messages.get(Messages.Key.PLAYER_ID_MISMATCH_ERROR, playerId));
             return;
         }
@@ -120,7 +121,6 @@ public class ChessServerEndpoint {
 
     private void initializeGameIfReady() {
         synchronized (ChessServerEndpoint.class) {
-            //for one player - commented this line
             if (sessionPlayerIds.size() < MAX_PLAYERS || game != null) return;
             createGame();
             sendInitialGameStateToAll();

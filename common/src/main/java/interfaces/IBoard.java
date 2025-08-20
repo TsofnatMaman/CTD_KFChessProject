@@ -11,14 +11,24 @@ import java.util.List;
  */
 public interface IBoard extends Serializable {
 
+    /**
+     * Checks if a piece exists at the given position.
+     * @param pos The position to check
+     * @return true if a piece exists, false otherwise
+     */
     boolean hasPiece(Position pos);
 
+    /**
+     * Checks if a piece exists or the position is a valid target.
+     * @param pos The position to check
+     * @return true if occupied or valid target
+     */
     boolean hasPieceOrIsTarget(Position pos);
 
     /**
      * Gets the piece at the specified position.
      * @param pos The position object
-     * @return The piece or null
+     * @return The piece or null if none
      */
     IPiece getPiece(Position pos);
 
@@ -93,5 +103,10 @@ public interface IBoard extends Serializable {
      */
     BoardConfig getBoardConfig();
 
+    /**
+     * Returns all legal moves from the given selected position.
+     * @param selectedPosition The position of the selected piece
+     * @return List of positions that are legal moves
+     */
     List<Position> getLegalMoves(Position selectedPosition);
 }

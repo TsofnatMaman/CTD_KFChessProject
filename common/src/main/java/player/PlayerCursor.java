@@ -16,55 +16,41 @@ public class PlayerCursor implements IPlayerCursor {
 
     /**
      * Constructs a PlayerCursor for selecting pieces.
-     * @param pos The initial position of the cursor
+     *
+     * @param pos   The initial position of the cursor
      * @param color The color used to draw the cursor
      */
     public PlayerCursor(Position pos, Color color) {
-        // Extracted board size to GameConstants
         ROWS = constants.GameConstants.BOARD_ROWS;
         COLS = constants.GameConstants.BOARD_COLS;
         this.pos = pos;
         this.color = color;
     }
 
-    /**
-     * Moves the cursor up by one row if possible.
-     */
+    // --- Cursor movement ---
+
     @Override
     public void moveUp() {
         if (pos.getRow() > 0) pos.reduceOneRow();
     }
 
-    /**
-     * Moves the cursor down by one row if possible.
-     */
     @Override
     public void moveDown() {
-        if (pos.getRow() < ROWS-1) pos.addOneRow();
+        if (pos.getRow() < ROWS - 1) pos.addOneRow();
     }
 
-    /**
-     * Moves the cursor left by one column if possible.
-     */
     @Override
     public void moveLeft() {
         if (pos.getCol() > 0) pos.reduceOneCol();
     }
 
-    /**
-     * Moves the cursor right by one column if possible.
-     */
     @Override
     public void moveRight() {
-        if (pos.getCol() < COLS-1) pos.addOneCol();
+        if (pos.getCol() < COLS - 1) pos.addOneCol();
     }
 
-    /**
-     * Draws the cursor on the board panel.
-     * @param g Graphics context
-     * @param panelWidth Width of the panel
-     * @param panelHeight Height of the panel
-     */
+    // --- Drawing ---
+
     @Override
     public void draw(Graphics g, int panelWidth, int panelHeight) {
         int squareWidth = panelWidth / COLS;
@@ -73,19 +59,16 @@ public class PlayerCursor implements IPlayerCursor {
         int x = pos.getCol() * squareWidth;
         int y = pos.getRow() * squareHeight;
 
-        Graphics2D g2d = (Graphics2D) g;  // Convert to Graphics2D
-
+        Graphics2D g2d = (Graphics2D) g;
         g2d.setColor(color);
-        g2d.setStroke(new BasicStroke(3));  // Use thicker stroke for cursor
+        g2d.setStroke(new BasicStroke(3));
         g2d.drawRect(x, y, squareWidth, squareHeight);
     }
 
-    /**
-     * Gets the current position of the cursor.
-     * @return The position object
-     */
+    // --- Getters ---
+
     @Override
-    public Position getPosition(){
+    public Position getPosition() {
         return pos;
     }
 
@@ -93,4 +76,10 @@ public class PlayerCursor implements IPlayerCursor {
     public Color getColor() {
         return color;
     }
+
+    @Override
+    public String toString() {
+        return "Cursor at row=" + pos.getRow() + ", col=" + pos.getCol();
+    }
+
 }

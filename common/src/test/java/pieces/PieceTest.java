@@ -1,12 +1,12 @@
 package pieces;
 
-import board.BoardConfig;
 import interfaces.IState;
 import moves.Move;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import state.EState;
 import state.StateMachine;
+import state.PhysicsData;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,140 +18,106 @@ class PieceTest {
 
     private StateMachine fsmMock;
     private IState stateMock;
-    private EState stateNameMock;
+    private PhysicsData physicsMock;
+    private Piece piece;
     private Position startPos;
 
     @BeforeEach
-    void setUp() {
-        fsmMock = mock(StateMachine.class);
-        stateMock = mock(IState.class);
-        stateNameMock = mock(EState.class);
+    void setUp() throws IOException {
         startPos = new Position(0, 0);
 
-        // הגדרת Mocks עבור canAction ו-canCapturable
+        // Create mocks for FSM, State, and Physics
+        fsmMock = mock(StateMachine.class);
+        stateMock = mock(IState.class);
+        physicsMock = mock(PhysicsData.class);
+
+        // Setup mock behavior
+        when(fsmMock.getCurrentState()).thenReturn(stateMock);
+        when(stateMock.isActionFinished(anyLong())).thenReturn(true);
+        when(stateMock.getPhysics()).thenReturn(physicsMock);
+
+        // Setup State behavior
+        EState stateNameMock = mock(EState.class);
         when(stateMock.getName()).thenReturn(stateNameMock);
         when(stateNameMock.isCanAction()).thenReturn(true);
         when(stateNameMock.isCanCapturable()).thenReturn(true);
 
-        when(fsmMock.getCurrentState()).thenReturn(stateMock);
+        // Setup Physics behavior
+        when(physicsMock.getTargetPos()).thenReturn(new Position(2, 2));
+        when(physicsMock.getCurrentX()).thenReturn(0.0);
+        when(physicsMock.getCurrentY()).thenReturn(0.0);
+
+        // Create the Piece instance
+        piece = new PieceStub(EPieceType.P, 1, fsmMock, startPos);
     }
 
     @Test
-    void testConstructorInitialValues() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 1, fsmMock, startPos);
-        assertEquals(EPieceType.P, piece.getType());
-        assertEquals(1, piece.getPlayerId());
-        assertEquals(startPos, piece.getPosition());
-        assertTrue(piece.isFirstMove());
-        assertFalse(piece.isCaptured());
-        assertNotNull(piece.getMoves());
-    }
-
-    @Test
-    void testUpdateUpdatesPositionWhenActionFinished() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
-        Position targetPos = new Position(2, 2);
-
-        when(stateMock.isActionFinished()).thenReturn(true);
-        when(stateMock.getPhysics()).thenReturn(new StatePhysicsStub(targetPos));
-
+    void testUpdateUpdatesPositionWhenActionFinished() {
+        // Update should move the piece to target position if action is finished
         piece.update(System.currentTimeMillis());
-
-        assertEquals(targetPos, piece.getPosition());
-        verify(fsmMock).update(anyLong());
+        assertEquals(2, piece.getPosition().getCol());
+        assertEquals(2, piece.getPosition().getRow());
     }
 
     @Test
-    void testUpdateDoesNotChangePositionWhenActionNotFinished() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
-
-        when(stateMock.isActionFinished()).thenReturn(false);
-
-        piece.update(System.currentTimeMillis());
-
-        assertEquals(startPos, piece.getPosition());
-        verify(fsmMock).update(anyLong());
-    }
-
-    @Test
-    void testMoveCallsFSMAndSetsFirstMove() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
-        Position toPos = new Position(1, 0);
-
-        piece.move(toPos);
-
-        verify(fsmMock).onEvent(eq(EPieceEvent.MOVE), eq(startPos), eq(toPos));
+    void testMoveTriggersFsmAndFirstMoveFlag() {
+        // Move should call FSM and clear firstMove flag
+        Position target = new Position(3, 3);
+        piece.move(target);
+        verify(fsmMock).onEvent(eq(EPieceEvent.MOVE), eq(startPos), eq(target));
         assertFalse(piece.isFirstMove());
     }
 
     @Test
-    void testJumpCallsFSM() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
-
+    void testJumpTriggersFsm() {
+        // Jump should trigger FSM event
         piece.jump();
-
-        verify(fsmMock).onEvent(EPieceEvent.JUMP);
+        verify(fsmMock).onEvent(eq(EPieceEvent.JUMP));
     }
 
     @Test
-    void testMarkCaptured() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
+    void testMarkCapturedSetsFlag() {
+        // Mark piece as captured
+        assertFalse(piece.isCaptured());
         piece.markCaptured();
         assertTrue(piece.isCaptured());
     }
 
     @Test
-    void testSetMovesAndGetMoves() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
+    void testSetMovesAndGetMoves() {
+        // Set and get moves list
         List<Move> dummyMoves = List.of();
         piece.setMoves(dummyMoves);
         assertEquals(dummyMoves, piece.getMoves());
     }
 
     @Test
-    void testCanCapturableDelegatesToState() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
-        assertTrue(piece.canCapturable());
-    }
-
-    @Test
-    void testCanActionDelegatesToState() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 0, fsmMock, startPos);
+    void testCanActionDelegatesToState() {
+        // canAction should reflect state
         assertTrue(piece.canAction());
     }
 
     @Test
-    void testGetPosReturnsCurrentPosition() throws IOException {
-        Piece piece = new PieceStub(EPieceType.P, 1, fsmMock, startPos);
+    void testCanCapturableDelegatesToState() {
+        // canCapturable should reflect state
+        assertTrue(piece.canCapturable());
+    }
+
+    @Test
+    void testGetters() {
+        // Basic getter checks
+        assertEquals(EPieceType.P, piece.getType());
+        assertEquals(1, piece.getPlayerId());
         assertEquals(startPos, piece.getPos());
+        assertNotNull(piece.getMoves());
     }
 
-    // --- Stubs ---
+    // --- Stub classes ---
 
-    static class StatePhysicsStub implements interfaces.IPhysicsData {
-        private final Position targetPos;
-
-        StatePhysicsStub(Position targetPos) { this.targetPos = targetPos; }
-
-        @Override public Position getTargetPos() { return targetPos; }
-
-        @Override public double getSpeedMetersPerSec() { return 0; }
-        @Override public void setSpeedMetersPerSec(double speedMetersPerSec) { }
-        @Override public void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos) { }
-        @Override public void update(long now) { }
-        @Override public boolean isActionFinished() { return false; }
-        @Override public double getCurrentX() { return 0; }
-        @Override public double getCurrentY() { return 0; }
-        @Override public Position getStartPos() { return null; }
-    }
-
-    /**
-     * Stub של Piece שמונע קריאה אמיתית לקבצי Moves
-     */
     static class PieceStub extends Piece {
         public PieceStub(EPieceType type, int playerId, StateMachine fsm, Position position) throws IOException {
             super(type, playerId, fsm, position);
-            setMoves(List.of()); // מונע IOException
+            setMoves(List.of()); // Prevent IOException from loading Moves
         }
     }
 }

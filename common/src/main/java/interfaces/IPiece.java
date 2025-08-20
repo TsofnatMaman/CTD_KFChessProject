@@ -8,68 +8,89 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Interface for piece operations.
+ * Interface representing a game piece and its operations.
  */
 public interface IPiece extends Serializable {
 
     /**
-     * Gets the player index for this piece.
-     * @return The player index
+     * Gets the player index that owns this piece.
+     * @return Player index
      */
     int getPlayer();
 
     /**
-     * Gets the type of the piece.
-     * @return The piece type
+     * Gets the type of this piece.
+     * @return Piece type
      */
     EPieceType getType();
 
     /**
-     * Updates the piece's state.
+     * Updates the piece's internal state and position.
+     * @param now Current time in milliseconds
      */
     void update(long now);
 
     /**
-     * Moves the piece to a new position.
-     * @param to The target position
+     * Moves the piece to a target position.
+     * @param to Target board position
      */
     void move(Position to);
 
     /**
-     * Performs a jump action for the piece.
+     * Performs a jump action for this piece.
      */
     void jump();
 
     /**
-     * Returns true if the piece is captured.
-     * @return true if captured, false otherwise
+     * Checks if this piece has been captured.
+     * @return True if captured, false otherwise
      */
     boolean isCaptured();
 
     /**
-     * Marks the piece as captured.
+     * Marks this piece as captured.
      */
     void markCaptured();
 
     /**
-     * Gets the legal moves for the piece.
-     * @return The Moves object
+     * Retrieves the list of legal moves for this piece.
+     * @return List of Move objects
      */
     List<Move> getMoves();
 
+    /**
+     * Sets the legal moves for this piece.
+     * @param moves List of Move objects
+     */
     void setMoves(List<Move> moves);
 
     /**
-     * Returns true if the piece can move over other pieces.
-     * @return true if can move over, false otherwise
+     * Determines if this piece can capture or move over other pieces.
+     * @return True if can capture, false otherwise
      */
     boolean canCapturable();
 
+    /**
+     * Gets the current board position of this piece.
+     * @return Current position
+     */
     Position getPos();
 
+    /**
+     * Returns true if this piece has not moved yet.
+     * @return True if first move, false otherwise
+     */
     boolean isFirstMove();
 
+    /**
+     * Gets the current state of this piece in the state machine.
+     * @return Current IState object
+     */
     IState getCurrentState();
 
+    /**
+     * Determines if the piece can perform an action.
+     * @return True if can act, false otherwise
+     */
     boolean canAction();
 }

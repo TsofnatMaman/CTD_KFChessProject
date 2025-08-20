@@ -9,18 +9,28 @@ import java.util.Optional;
 
 /**
  * Represents the state of a chess piece, including its physics and graphics data.
- * This class manages the state transitions, updates, and provides access to the
+ * This class manages state transitions, updates, and provides access to the
  * current physics and graphics information for a piece.
  */
 public class State implements IState {
+
+    /** Name/type of the state (IDLE, MOVE, JUMP, etc.) */
     private final EState name;
+
+    /** Physics data for movement */
     private final IPhysicsData physics;
+
+    /** Graphics data for animations */
     private final IGraphicsData graphics;
 
+    /** Starting position for the current action */
     private Position startPos;
-    private Position targetPos;
-    private final BoardConfig bc;
 
+    /** Target position for the current action */
+    private Position targetPos;
+
+    /** Board configuration */
+    private final BoardConfig bc;
 
     /**
      * Constructs a new State for a chess piece.
@@ -63,16 +73,18 @@ public class State implements IState {
      * Updates the physics and graphics for the current state.
      *
      * @param now The current time in nanoseconds
-     * @return An Optional containing EPieceEvent.DONE if the action is finished, otherwise empty
+     * @return Optional containing EPieceEvent.DONE if the action is finished
      */
     @Override
     public Optional<EPieceEvent> update(long now) {
         if (graphics != null) graphics.update(now);
         if (physics != null) physics.update(now);
-        if (isActionFinished()) {
+
+        if (isActionFinished(now)) {
             startPos = targetPos;
             return Optional.of(EPieceEvent.DONE);
         }
+
         return Optional.empty();
     }
 
@@ -82,35 +94,23 @@ public class State implements IState {
      * @return true if finished, false otherwise
      */
     @Override
-    public boolean isActionFinished() {
-        return physics.isActionFinished();
+    public boolean isActionFinished(long now) {
+        return physics.isActionFinished(now);
     }
 
-    /**
-     * Gets the physics data for the state.
-     *
-     * @return The physics data
-     */
+    /** Gets the physics data for this state. */
     @Override
     public IPhysicsData getPhysics() {
         return physics;
     }
 
-    /**
-     * Gets the graphics data for the state.
-     *
-     * @return The graphics data
-     */
+    /** Gets the graphics data for this state. */
     @Override
     public IGraphicsData getGraphics() {
         return graphics;
     }
 
-    /**
-     * Gets the name of the state.
-     *
-     * @return The state name (EState)
-     */
+    /** Gets the name/type of this state. */
     @Override
     public EState getName() {
         return name;

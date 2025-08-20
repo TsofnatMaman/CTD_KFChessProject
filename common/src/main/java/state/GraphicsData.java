@@ -8,52 +8,39 @@ import interfaces.IGraphicsData;
 import java.awt.image.BufferedImage;
 
 /**
- * Represents the graphics data used for piece animation, including frame management and timing.
- * This class handles the animation state for graphical objects, such as chess pieces.
+ * Handles the graphics and animation data for a piece.
+ * Manages frames, timing, and provides access to current frame for rendering.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GraphicsData implements IGraphicsData {
-    /**
-     * The array of animation frames (images). Not serialized.
-     */
+
+    /** Array of animation frames (images). Not serialized. */
     @JsonIgnore
     private BufferedImage[] frames;
 
-    /**
-     * The total number of frames in the animation.
-     */
+    /** Total number of frames in the animation. */
     private int totalFrames;
 
-    /**
-     * The current frame index being displayed.
-     */
+    /** Current frame index being displayed. */
     private int currentFrame;
 
-    /**
-     * The number of frames to display per second.
-     */
+    /** Frames per second for the animation. */
     @JsonProperty("frames_per_sec")
     private double framesPerSec;
 
-    /**
-     * The timestamp (in nanoseconds) of the last frame update.
-     */
+    /** Timestamp in nanoseconds of the last frame update. */
     private long lastFrameTimeNanos;
 
-
-    /**
-     * Default constructor. Initializes the animation to the first frame and sets the last frame time to now.
-     */
-    public GraphicsData(){
-        currentFrame=0;
+    /** Default constructor initializing to first frame and current time. */
+    public GraphicsData() {
+        this.currentFrame = 0;
         this.lastFrameTimeNanos = System.nanoTime();
     }
 
     /**
-     * Constructs a GraphicsData object for piece animation.
-     *
-     * @param frames       Array of animation frames (BufferedImage)
-     * @param framesPerSec Number of frames to display per second
+     * Constructs GraphicsData with given frames and frame rate.
+     * @param frames Array of BufferedImage frames
+     * @param framesPerSec Frames per second
      */
     public GraphicsData(BufferedImage[] frames, double framesPerSec) {
         this.frames = frames;
@@ -63,10 +50,7 @@ public class GraphicsData implements IGraphicsData {
         this.lastFrameTimeNanos = System.nanoTime();
     }
 
-    /**
-     * Resets the animation to the first frame and updates the last frame time.
-     * Should be called when switching to a new animation state.
-     */
+    /** Resets animation to first frame and updates last frame time. */
     @Override
     public void reset() {
         this.currentFrame = 0;
@@ -74,86 +58,63 @@ public class GraphicsData implements IGraphicsData {
     }
 
     /**
-     * Updates the animation frame based on the elapsed time since the last update.
-     *
-     * @param now The current time in nanoseconds
+     * Updates animation based on elapsed time.
+     * @param now Current time in nanoseconds
      */
     @Override
     public void update(long now) {
         double elapsedSec = (now - lastFrameTimeNanos) / 1_000_000_000.0;
         if (elapsedSec >= 1.0 / framesPerSec) {
-            currentFrame = (currentFrame+1)%totalFrames;
+            currentFrame = (currentFrame + 1) % totalFrames;
             lastFrameTimeNanos = now;
         }
     }
 
-    /**
-     * Returns the current frame number (index).
-     *
-     * @return The current frame index
-     */
+    /** Returns current frame index. */
     @Override
     public int getCurrentNumFrame() {
         return currentFrame;
     }
 
-    /**
-     * Returns the total number of frames in the animation.
-     *
-     * @return The total number of frames
-     */
+    /** Returns total number of frames. */
     @Override
     public int getTotalFrames() {
         return totalFrames;
     }
 
-    /**
-     * Returns the number of frames per second for the animation.
-     *
-     * @return Frames per second
-     */
+    /** Returns animation frame rate in frames per second. */
     @Override
     public double getFramesPerSec() {
         return framesPerSec;
     }
 
-    /**
-     * Returns the current frame image as a BufferedImage.
-     *
-     * @return The current frame as BufferedImage
-     */
+    /** Returns the current frame image. */
     @Override
     public BufferedImage getCurrentFrame() {
         return frames[currentFrame];
     }
 
-    /**
-     * Returns the current frame index.
-     *
-     * @return The current frame index
-     */
+    /** Returns the current frame index (duplicate of getCurrentNumFrame). */
     @Override
-    public int getCurrentFrameIdx(){
+    public int getCurrentFrameIdx() {
         return currentFrame;
     }
 
-    /**
-     * Sets the array of animation frames.
-     *
-     * @param frames The array of BufferedImage frames
-     */
+    /** Sets the animation frames array. */
     @Override
     public void setFrames(BufferedImage[] frames) {
         this.frames = frames;
     }
 
-    /**
-     * Sets the total number of frames in the animation.
-     *
-     * @param totalFrames The total number of frames
-     */
+    /** Sets the total number of frames. */
     @Override
     public void setTotalFrames(int totalFrames) {
         this.totalFrames = totalFrames;
+    }
+
+    /** Sets the timestamp of the last frame update in nanoseconds. */
+    @Override
+    public void setLastFrameTimeNanos(long nanos) {
+        this.lastFrameTimeNanos = nanos;
     }
 }

@@ -20,6 +20,7 @@ import java.util.List;
  * Represents a player in the game, holding pieces and managing actions.
  */
 public class Player implements IPlayer {
+
     private final int id;
     private String name;
     private Position pending;
@@ -34,6 +35,7 @@ public class Player implements IPlayer {
      */
     Player(int id, String name, Color color, List<IPiece> initialPieces) {
         if (initialPieces == null) throw new IllegalArgumentException("initialPieces cannot be null");
+
         this.id = id;
         this.name = Objects.requireNonNull(name);
         this.color = color == null ? Color.WHITE : color;
@@ -47,6 +49,7 @@ public class Player implements IPlayer {
         }
     }
 
+    // ===== Getters =====
     @Override
     public List<IPiece> getPieces() {
         return Collections.unmodifiableList(pieces);
@@ -62,12 +65,14 @@ public class Player implements IPlayer {
         return name;
     }
 
-    private Position getPendingFrom() {
-        return pending == null ? null : pending.copy(); // defensive copy
+    @Override
+    public int getScore() {
+        return score;
     }
 
-    private void setPendingFrom(Position pending) {
-        this.pending = pending == null ? null : pending.copy();
+    @Override
+    public Color getColor() {
+        return color;
     }
 
     @Override
@@ -75,9 +80,25 @@ public class Player implements IPlayer {
         return isFailed;
     }
 
+    // ===== Setters =====
+    @Override
+    public void setName(String name) {
+        this.name = Objects.requireNonNull(name);
+    }
+
+    private Position getPendingFrom() {
+        return pending == null ? null : pending.copy();
+    }
+
+    private void setPendingFrom(Position pending) {
+        this.pending = pending == null ? null : pending.copy();
+    }
+
+    // ===== Game Actions =====
     @Override
     public void markPieceCaptured(IPiece p) {
         if (p == null) return;
+
         p.markCaptured();
         score -= p.getType().getScore();
         if (p.getType() == EPieceType.K) {
@@ -95,30 +116,27 @@ public class Player implements IPlayer {
                 return Optional.empty();
             }
 
-            if (board.hasPiece(selected)
-                    && piece.canAction()) {
+            if (board.hasPiece(selected) && piece.canAction()) {
                 setPendingFrom(selected);
             } else {
                 LogUtils.logDebug("Cannot choose piece at " + selected + " for player " + id);
             }
+
         } else {
             setPendingFrom(null);
+
             if (previous.equals(selected)) {
                 IPiece piece = board.getPiece(selected);
                 if (piece != null) {
                     return Optional.of(new JumpCommand(piece, board));
                 }
+
             } else {
                 return Optional.of(new MoveCommand(previous, selected.copy(), board));
             }
         }
 
         return Optional.empty();
-    }
-
-    @Override
-    public int getScore() {
-        return score;
     }
 
     /**
@@ -128,11 +146,9 @@ public class Player implements IPlayer {
     public IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc) {
         if (piece == null) throw new IllegalArgumentException("piece cannot be null");
 
-        // Remove old piece
         pieces.remove(piece);
         score -= piece.getType().getScore();
 
-        // Build new queen piece at the target position
         IPiece queen = PiecesFactory.createPieceByCode(
                 EPieceType.Q,
                 id,
@@ -151,12 +167,26 @@ public class Player implements IPlayer {
     }
 
     @Override
-    public Color getColor() {
-        return color;
+    public String toString() {
+        long activePieces = pieces.stream().filter(p -> !p.isCaptured()).count();
+
+        return String.format(
+                "Player{id=%d, name='%s', color=%s, score=%d, failed=%b, activePieces=%d}",
+                id,
+                name,
+                colorToString(color),
+                score,
+                isFailed,
+                activePieces
+        );
     }
 
-    @Override
-    public void setName(String name) {
-        this.name = Objects.requireNonNull(name);
+    /**
+     * Converts a Color object to a readable string.
+     */
+    private String colorToString(Color c) {
+        if (c == null) return "null";
+        return String.format("RGB(%d,%d,%d)", c.getRed(), c.getGreen(), c.getBlue());
     }
+
 }

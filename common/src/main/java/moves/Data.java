@@ -6,23 +6,26 @@ import pieces.Position;
 
 /**
  * Container class for move validation data.
- * Holds the board state, moving piece, and target position
- * for validating move conditions.
+ * Holds references to the game board, the piece being moved, and the target position.
+ * Useful for move and jump condition checks.
  */
 public class Data {
-    /** The game board reference */
+
+    /** Reference to the current game board */
     public final IBoard board;
-    /** The piece being moved */
+
+    /** The piece attempting to move */
     public final IPiece pieceFrom;
+
     /** The target position for the move */
     public final Position to;
 
     /**
      * Constructs a new Data object for move validation.
-     * 
-     * @param board The current game board
+     *
+     * @param board     The current game board
      * @param fromPiece The piece that is attempting to move
-     * @param to The target position for the move
+     * @param to        The target position for the move
      */
     public Data(IBoard board, IPiece fromPiece, Position to) {
         this.board = board;

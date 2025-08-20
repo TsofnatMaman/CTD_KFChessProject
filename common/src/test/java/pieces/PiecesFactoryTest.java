@@ -21,29 +21,29 @@ class PiecesFactoryTest {
         mockConfig = mock(BoardConfig.class);
         pos = new Position(0, 0);
 
-        // מוקט את כל הפונקציות שה־PhysicsData/StateMachine קוראים להן
+        // Mock the config dimensions used by PhysicsData / StateMachine
         when(mockConfig.physicsDimension()).thenReturn(new Dimension(100, 100));
-        when(mockConfig.gridDimension()).thenReturn(new Dimension(8, 8)); // זה דרוש
+        when(mockConfig.gridDimension()).thenReturn(new Dimension(8, 8));
     }
 
     @Test
     void testCreatePieceByCodeReturnsPieceWhenAllResourcesPresent() {
-        // כאן נצטרך מוקט סטטי של GraphicsLoader כדי להחזיר sprites
+        // Mock the static method of GraphicsLoader to return sprites
         try (var mocked = mockStatic(GraphicsLoader.class)) {
             mocked.when(() -> GraphicsLoader.loadAllSprites(any(), anyInt(), any()))
                     .thenReturn(new BufferedImage[]{new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)});
 
-            // נשתמש בקוד שמאוד סביר שיש לו תיקיה /pieces/P/... או נמחקו כל הבדיקות
+            // Call the factory method
             Piece piece = PiecesFactory.createPieceByCode(EPieceType.P, 0, pos, mockConfig);
 
-            // יכול להיות null אם אין תיקיה, אז כאן רק בדיקה שמודול לא נופל
-            // אפשר לבדוק שהוא לא זורק Exception
+            // Assert: method does not throw, and returns a Piece or null if folder missing
+            assertTrue(piece == null || piece instanceof Piece);
         }
     }
 
     @Test
     void testCreatePieceByCodeThrowsRuntimeExceptionOnException() {
-        // מוקט BoardConfig שמחזיר null, כדי לבדוק Exception
+        // Mock a BoardConfig that returns null physicsDimension to trigger exception
         BoardConfig badConfig = mock(BoardConfig.class);
         when(badConfig.physicsDimension()).thenReturn(null);
 
@@ -55,14 +55,14 @@ class PiecesFactoryTest {
 
     @Test
     void testCreatePieceByCodeHandlesMissingConfigJson() {
+        // Even if config JSON is missing, the method should not throw NPE
         try (var mocked = mockStatic(GraphicsLoader.class)) {
             mocked.when(() -> GraphicsLoader.loadAllSprites(any(), anyInt(), any()))
                     .thenReturn(new BufferedImage[]{new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB)});
 
-            // השתמש בקוד פיקטיבי שיגרום לחוסר config.json
             Piece piece = PiecesFactory.createPieceByCode(EPieceType.P, 0, pos, mockConfig);
 
-            // הציפייה: הפונקציה לא זורקת NPE, פשוט מחזירה null
+            // Expectation: it either returns null or a valid Piece, but does not throw
             assertTrue(piece == null || piece instanceof Piece);
         }
     }

@@ -6,15 +6,19 @@ import java.io.PrintWriter;
 
 /**
  * Utility class for logging debug messages to a file.
+ * Appends messages to the file specified in config.properties (default: debug.log).
  */
 public class LogUtils {
+
     /**
      * Appends a debug message to the application's log file.
-     * @param message the message to log
+     *
+     * @param message The message to log
      */
     public static void logDebug(String message) {
-        // Extracted log file name to config.properties
+        // Get log file from config, fallback to "debug.log"
         String logFile = ConfigLoader.getConfig("log.file", "debug.log");
+
         try (PrintWriter out = new PrintWriter(new FileWriter(logFile, true))) {
             out.println(message);
         } catch (IOException e) {

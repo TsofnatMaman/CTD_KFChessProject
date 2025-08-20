@@ -8,6 +8,7 @@ class PositionTest {
 
     @Test
     void testConstructorAndGetters() {
+        // Constructor should set row and column correctly
         Position pos = new Position(3, 5);
         assertEquals(3, pos.getRow());
         assertEquals(5, pos.getCol());
@@ -15,6 +16,7 @@ class PositionTest {
 
     @Test
     void testDxDy() {
+        // dx and dy should compute differences correctly
         Position a = new Position(3, 5);
         Position b = new Position(1, 2);
 
@@ -24,6 +26,7 @@ class PositionTest {
 
     @Test
     void testEqualsAndHashCode() {
+        // equals and hashCode should behave consistently
         Position a = new Position(2, 4);
         Position b = new Position(2, 4);
         Position c = new Position(3, 4);
@@ -36,6 +39,7 @@ class PositionTest {
 
     @Test
     void testAddMethod() {
+        // add method should create new Position with summed values
         Position a = new Position(1, 1);
         Position b = a.add(2, 3);
         assertEquals(3, b.getRow());
@@ -44,14 +48,16 @@ class PositionTest {
 
     @Test
     void testCopy() {
+        // copy should create a new equal object
         Position a = new Position(4, 7);
         Position b = a.copy();
         assertEquals(a, b);
-        assertNotSame(a, b); // חייב להיות אובייקט חדש
+        assertNotSame(a, b);
     }
 
     @Test
     void testRowColumnManipulations() {
+        // increment and decrement row/col methods
         Position pos = new Position(5, 5);
 
         pos.addOneRow();
@@ -67,9 +73,9 @@ class PositionTest {
 
     @Test
     void testToStringFormat() {
+        // toString should include row and column numbers
         Position pos = new Position(2, 3);
         String str = pos.toString();
-        // בדיקה בסיסית שהפורמט נכון עם הספייס/סימן מ-constants
         assertTrue(str.contains(Integer.toString(pos.getRow())));
         assertTrue(str.contains(Integer.toString(pos.getCol())));
     }

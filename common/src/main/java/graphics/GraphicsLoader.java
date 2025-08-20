@@ -1,32 +1,44 @@
 package graphics;
 
 import state.EState;
+import pieces.EPieceType;
+import utils.LogUtils;
 
 import javax.imageio.ImageIO;
-import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.*;
 
-import pieces.EPieceType;
-import utils.LogUtils;
-
+/**
+ * Utility class for loading and caching piece sprite images.
+ * Supports loading individual frames or all frames for a given piece type, player, and state.
+ */
 public class GraphicsLoader {
 
-    private static final Map<String, Image> cache = new HashMap<>();
+    /** Cache to avoid reloading the same image multiple times. */
+    private static final Map<String, BufferedImage> cache = new HashMap<>();
 
     /**
-     * Loads a single sprite image by piece type, state, and frame index (1-based).
+     * Loads a single sprite image by piece type, player, state, and frame index (1-based).
+     *
+     * @param pieceType The type of piece
+     * @param player    Player index (0 or 1)
+     * @param stateName The state of the piece
+     * @param frameIndex Frame number (1-based)
+     * @return BufferedImage of the sprite, or null if failed
      */
     public static BufferedImage loadSprite(EPieceType pieceType, int player, EState stateName, int frameIndex) {
-        String path = String.format("/pieces/%s/states/%s/sprites/sprites%d/%d.png", pieceType.getVal(), stateName, player, frameIndex);
+        String path = String.format("/pieces/%s/states/%s/sprites/sprites%d/%d.png",
+                pieceType.getVal(), stateName, player, frameIndex);
 
         if (cache.containsKey(path)) {
-            return (BufferedImage) cache.get(path);
+            return cache.get(path);
         }
 
         try {
-            BufferedImage image = ImageIO.read(Objects.requireNonNull(GraphicsLoader.class.getResourceAsStream(path)));
+            BufferedImage image = ImageIO.read(
+                    Objects.requireNonNull(GraphicsLoader.class.getResourceAsStream(path))
+            );
             cache.put(path, image);
             return image;
         } catch (IOException | IllegalArgumentException | NullPointerException e) {
@@ -36,22 +48,30 @@ public class GraphicsLoader {
     }
 
     /**
-     * Loads all sprite frames in sequence (1,2,3,...) until the next file does not exist.
+     * Loads all sequential sprite frames for a given piece type, player, and state.
+     * Continues until a frame file does not exist.
+     *
+     * @param pieceType The type of piece
+     * @param player    Player index (0 or 1)
+     * @param stateName The state of the piece
+     * @return Array of BufferedImages containing all loaded frames
+     * @throws RuntimeException if no frames were successfully loaded
      */
     public static BufferedImage[] loadAllSprites(EPieceType pieceType, int player, EState stateName) {
         List<BufferedImage> sprites = new ArrayList<>();
-        // Extracted initial frame index to config.properties (if needed)
-        int index = 1;
+        int frameIndex = 1;
 
         while (true) {
-            BufferedImage sprite = loadSprite(pieceType, player, stateName, index);
+            BufferedImage sprite = loadSprite(pieceType, player, stateName, frameIndex);
             if (sprite == null) break;
             sprites.add(sprite);
-            index++;
+            frameIndex++;
         }
 
-        if(sprites.isEmpty())
-            throw new RuntimeException("failed to load piece images");
+        if (sprites.isEmpty()) {
+            throw new RuntimeException("Failed to load piece images for: "
+                    + pieceType + " player: " + player + " state: " + stateName);
+        }
 
         return sprites.toArray(new BufferedImage[0]);
     }

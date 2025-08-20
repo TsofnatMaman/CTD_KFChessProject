@@ -3,13 +3,20 @@ package constants;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
+/**
+ * Utility class for accessing localized messages from resources/messages.properties.
+ * Provides default fallback values for missing keys and supports formatting with arguments.
+ */
 public final class Messages {
 
-    private static final String BUNDLE_NAME = "messages"; // resources/messages.properties
+    private static final String BUNDLE_NAME = "messages"; // path to messages.properties
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-    private Messages() {}
+    private Messages() {} // prevent instantiation
 
+    /**
+     * Enum containing message keys and their default values.
+     */
     public enum Key {
         CLIENT_CONNECTED_LOG("client.connected.log", "Client connected: "),
         ASSIGNED_PLAYERID_LOG("assigned.playerId.log", " | assigned playerId: "),
@@ -44,6 +51,14 @@ public final class Messages {
         }
     }
 
+    /**
+     * Retrieves the message string for the given key, formatted with optional arguments.
+     * Falls back to the default value if the key is missing or formatting fails.
+     *
+     * @param key the message key
+     * @param args optional arguments for formatting
+     * @return the formatted message string
+     */
     public static String get(Key key, Object... args) {
         String pattern;
         try {
@@ -51,6 +66,7 @@ public final class Messages {
         } catch (MissingResourceException e) {
             pattern = key.defaultValue();
         }
+
         if (args != null && args.length > 0) {
             try {
                 return String.format(pattern, args);
@@ -58,6 +74,7 @@ public final class Messages {
                 return pattern; // fallback if formatting fails
             }
         }
+
         return pattern;
     }
 }

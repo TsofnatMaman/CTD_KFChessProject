@@ -23,30 +23,32 @@ import java.util.Optional;
 import java.util.Queue;
 
 /**
- * Main game logic and state management.
- * Handles command execution, player turns, and win condition.
+ * Main game class. Handles game loop, player turns, command execution, and win detection.
  */
 public class Game implements IGame {
+
     private final IPlayer[] players;
-    /** Queue of commands to be executed. */
     private final Queue<ICommand> commandQueue;
-    /** The board instance for the game. */
     private final IBoard board;
 
     private Timer timer;
-
     private long startTimeNano;
     private volatile boolean running;
 
+    /**
+     * Constructs a new game with the given board configuration and players.
+     *
+     * @param bc      Board configuration
+     * @param players Array of players
+     */
     public Game(BoardConfig bc, IPlayer[] players) {
         this.board = new Board(bc, players);
         this.players = players;
         this.commandQueue = new LinkedList<>();
         this.running = false;
-
-        // startTimeNano will be set when run() is invoked, not here.
         this.startTimeNano = 0;
 
+        // Initialize loggers for game events
         new MovesLogger();
         new JumpsLogger();
         new CapturedLogger();
@@ -54,16 +56,16 @@ public class Game implements IGame {
     }
 
     /**
-     * Adds a command to the queue.
+     * Adds a command to the queue for execution.
      *
-     * @param cmd The command to add
+     * @param cmd Command to execute
      */
     private void addCommand(ICommand cmd) {
         commandQueue.add(cmd);
     }
 
     /**
-     * Executes all commands in the queue.
+     * Executes all commands currently in the queue.
      */
     @Override
     public void update() {
@@ -73,6 +75,12 @@ public class Game implements IGame {
         }
     }
 
+    /**
+     * Retrieves a player by their ID.
+     *
+     * @param id Player ID
+     * @return IPlayer instance
+     */
     @Override
     public IPlayer getPlayerById(int id) {
         if (id < 0 || id >= players.length) {
@@ -81,22 +89,17 @@ public class Game implements IGame {
         return players[id];
     }
 
-    /**
-     * Gets the game board.
-     *
-     * @return The board instance
-     */
     @Override
     public IBoard getBoard() {
         return board;
     }
 
     /**
-     * Handles selection for the given player.
-     * Adds the resulting command to the queue if not null.
+     * Handles a selection made by a player at a given position.
+     * If a valid command is returned, it is added to the command queue.
      *
-     * @param player   The player making a selection
-     * @param selected The selected position
+     * @param player   The player making the selection
+     * @param selected Selected position
      */
     @Override
     public void handleSelection(IPlayer player, Position selected) {
@@ -110,21 +113,23 @@ public class Game implements IGame {
     }
 
     /**
-     * Returns the winning player, or null if no winner yet.
+     * Checks for a winner. Returns the winning player or null if no winner yet.
+     *
+     * @return Winning IPlayer or null
      */
     @Override
     public IPlayer win() {
-        if (board.getPlayers()[0].isFailed())
-            return players[1];
-        if (board.getPlayers()[1].isFailed())
-            return players[0];
+        if (board.getPlayers()[0].isFailed()) return players[1];
+        if (board.getPlayers()[1].isFailed()) return players[0];
         return null;
     }
 
+    /**
+     * Starts the game loop using a Swing Timer.
+     */
     @Override
     public void run() {
         if (timer == null) {
-            // set running before starting timer to avoid race in elapsed time queries
             timer = new Timer(GameConstants.GAME_LOOP_MS, e -> tick());
         }
         if (!running) {
@@ -135,21 +140,31 @@ public class Game implements IGame {
     }
 
     /**
-     * Single tick of the game loop. Separated to allow deterministic unit testing.
+     * Single tick of the game loop.
+     * Updates commands, the board, and publishes game events.
      */
     private void tick() {
         IPlayer winner = win();
         if (winner == null) {
             update();
             board.updateAll();
-            EventPublisher.getInstance().publish(EGameEvent.GAME_UPDATE, new GameEvent(EGameEvent.GAME_UPDATE, null));
+            EventPublisher.getInstance().publish(
+                    EGameEvent.GAME_UPDATE,
+                    new GameEvent(EGameEvent.GAME_UPDATE, null)
+            );
         } else {
-            EventPublisher.getInstance().publish(EGameEvent.GAME_ENDED, new GameEvent(EGameEvent.GAME_ENDED, null));
+            EventPublisher.getInstance().publish(
+                    EGameEvent.GAME_ENDED,
+                    new GameEvent(EGameEvent.GAME_ENDED, null)
+            );
             stopGameLoop();
             LogUtils.logDebug("Game Over. Winner: Player " + winner.getName());
         }
     }
 
+    /**
+     * Stops the game loop.
+     */
     private void stopGameLoop() {
         if (timer != null && timer.isRunning()) {
             timer.stop();
@@ -167,7 +182,6 @@ public class Game implements IGame {
         if (startTimeNano == 0) return 0;
         return (System.nanoTime() - startTimeNano) / 1_000_000;
     }
-
 
     @Override
     public IPlayer[] getPlayers() {

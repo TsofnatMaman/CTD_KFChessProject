@@ -4,15 +4,20 @@ package state;
  * Enum representing possible states for a piece.
  */
 public enum EState {
-    /** Idle state, can perform actions, cannot move over. */
+
+    /** Idle state: can perform actions, cannot move over other pieces. */
     IDLE("idle", true, true),
-    /** Jump state, cannot perform actions, cannot move over. */
+
+    /** Jump state: cannot perform actions, cannot move over. */
     JUMP("jump", false, false),
-    /** Move state, cannot perform actions, can move over. */
+
+    /** Move state: cannot perform actions, cannot move over. */
     MOVE("move", false, false),
-    /** Long rest state, cannot perform actions, can move over. */
+
+    /** Long rest state: cannot perform actions, can move over. */
     LONG_REST("long_rest", false, true),
-    /** Short rest state, cannot perform actions, can move over. */
+
+    /** Short rest state: cannot perform actions, can move over. */
     SHORT_REST("short_rest", false, true);
 
     private final String name;
@@ -21,18 +26,20 @@ public enum EState {
 
     /**
      * Constructs an EState enum value.
-     * @param name State name
-     * @param canAction Whether the state allows actions
-     * @param canCapturable Whether the state allows moving over
+     *
+     * @param name          State name
+     * @param canAction     Whether the state allows performing actions
+     * @param canCapturable Whether pieces can be captured or moved over in this state
      */
-    EState(String name, boolean canAction, boolean canCapturable){
+    EState(String name, boolean canAction, boolean canCapturable) {
         this.name = name;
         this.canAction = canAction;
         this.canCapturable = canCapturable;
     }
 
     /**
-     * Returns the name of the state.
+     * Returns the string name of the state.
+     *
      * @return State name
      */
     @Override
@@ -41,27 +48,30 @@ public enum EState {
     }
 
     /**
-     * Returns true if the state allows actions.
-     * @return true if can perform actions
+     * Returns true if this state allows performing actions.
+     *
+     * @return true if actions are allowed
      */
-    public boolean isCanAction(){
+    public boolean isCanAction() {
         return canAction;
     }
 
     /**
-     * Returns true if the state allows moving over.
-     * @return true if can move over
+     * Returns true if this state allows pieces to be captured or moved over.
+     *
+     * @return true if capturable/movable over
      */
     public boolean isCanCapturable() {
         return canCapturable;
     }
 
     /**
-     * Gets the EState value from a string (case-insensitive).
+     * Converts a string to the corresponding EState value (case-insensitive).
+     *
      * @param s State name string
      * @return EState value
      */
-    public static EState getValueOf(String s){
+    public static EState getValueOf(String s) {
         return EState.valueOf(s.toUpperCase());
     }
 }

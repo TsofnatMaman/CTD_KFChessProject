@@ -6,19 +6,26 @@ import pieces.Position;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for PlayerSelectedDTO.
+ * Ensures correct construction, equality, string representation, and JSON serialization.
+ */
 class PlayerSelectedDTOTest {
 
     @Test
     void testCreationAndGetters() {
+        // Create DTO with player ID and selection position
         Position pos = new Position(3, 5);
         PlayerSelectedDTO dto = new PlayerSelectedDTO(1, pos);
 
+        // Verify getters
         assertEquals(1, dto.playerId());
         assertEquals(pos, dto.selection());
     }
 
     @Test
     void testEqualsAndHashCode() {
+        // Two DTOs with identical content should be equal
         Position pos1 = new Position(2, 4);
         Position pos2 = new Position(2, 4);
 
@@ -31,6 +38,7 @@ class PlayerSelectedDTOTest {
 
     @Test
     void testToString() {
+        // Verify string representation includes playerId and selection
         Position pos = new Position(6, 7);
         PlayerSelectedDTO dto = new PlayerSelectedDTO(2, pos);
 
@@ -41,6 +49,7 @@ class PlayerSelectedDTOTest {
 
     @Test
     void testNullSelection() {
+        // DTO should handle null selection gracefully
         PlayerSelectedDTO dto = new PlayerSelectedDTO(3, null);
         assertEquals(3, dto.playerId());
         assertNull(dto.selection());
@@ -48,6 +57,7 @@ class PlayerSelectedDTOTest {
 
     @Test
     void testJsonSerializationAndDeserialization() throws Exception {
+        // Verify DTO can be serialized and deserialized using Jackson
         ObjectMapper mapper = new ObjectMapper();
         Position pos = new Position(4, 1);
         PlayerSelectedDTO original = new PlayerSelectedDTO(9, pos);

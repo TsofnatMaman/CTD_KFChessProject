@@ -4,29 +4,42 @@ import java.io.InputStream;
 import java.util.Properties;
 
 /**
- * Central utility for loading configuration and message properties with safe defaults.
  * Utility class for loading configuration and message properties from resource files.
- * Provides access to application configuration and localized messages.
+ * Provides safe access with default fallback values.
  */
 public class ConfigLoader {
-    /** Application configuration properties. */
+
+    /** Application configuration properties */
     private static final Properties config = new Properties();
-    /** Localized message properties. */
+
+    /** Localized message properties */
     private static final Properties messages = new Properties();
 
+    // Static initializer: load properties once
     static {
+        // Load config.properties
         try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (in != null) config.load(in);
+            if (in != null) {
+                config.load(in);
+            }
         } catch (Exception ignored) {}
+
+        // Load messages.properties
         try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream("messages.properties")) {
-            if (in != null) messages.load(in);
+            if (in != null) {
+                messages.load(in);
+            }
         } catch (Exception e) {
             LogUtils.logDebug(e.getMessage());
         }
     }
 
     /**
-     * Gets a config value with fallback default.
+     * Gets a configuration value with a default fallback.
+     *
+     * @param key          Property key
+     * @param defaultValue Value returned if key not found
+     * @return Config value or default
      */
     public static String getConfig(String key, String defaultValue) {
         if (key == null) return defaultValue;
@@ -34,7 +47,11 @@ public class ConfigLoader {
     }
 
     /**
-     * Gets a message value with fallback default.
+     * Gets a message value with a default fallback.
+     *
+     * @param key          Property key
+     * @param defaultValue Value returned if key not found
+     * @return Message value or default
      */
     public static String getMessage(String key, String defaultValue) {
         if (key == null) return defaultValue;

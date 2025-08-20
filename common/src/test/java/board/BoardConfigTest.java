@@ -7,8 +7,14 @@ import java.awt.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/**
+ * Unit tests for BoardConfig class.
+ */
 class BoardConfigTest {
 
+    /**
+     * Test constructor and getter methods.
+     */
     @Test
     void testConstructorAndGetters() {
         Dimension grid = new Dimension(8, 8);
@@ -22,18 +28,27 @@ class BoardConfigTest {
         assertEquals(physics, config.physicsDimension());
     }
 
+    /**
+     * Test that isInBounds correctly identifies valid and invalid positions.
+     */
     @Test
     void testIsInBounds() {
         BoardConfig config = new BoardConfig(new Dimension(8, 8), new Dimension(0, 0), new Dimension(0, 0));
 
+        // Valid positions
         assertTrue(config.isInBounds(0, 0));
         assertTrue(config.isInBounds(7, 7));
+
+        // Invalid positions
         assertFalse(config.isInBounds(-1, 0));
         assertFalse(config.isInBounds(0, -1));
         assertFalse(config.isInBounds(8, 0));
         assertFalse(config.isInBounds(0, 8));
     }
 
+    /**
+     * Test that getPlayerOf correctly maps rows to player IDs.
+     */
     @Test
     void testGetPlayerOf() {
         assertEquals(0, BoardConfig.getPlayerOf(0));
@@ -42,10 +57,17 @@ class BoardConfigTest {
         assertEquals(1, BoardConfig.getPlayerOf(7));
     }
 
+    /**
+     * Test JSON serialization and deserialization using Jackson.
+     */
     @Test
     void testJsonSerialization() throws Exception {
         ObjectMapper mapper = new ObjectMapper();
-        BoardConfig config = new BoardConfig(new Dimension(8, 8), new Dimension(400, 400), new Dimension(800, 800));
+        BoardConfig config = new BoardConfig(
+                new Dimension(8, 8),
+                new Dimension(400, 400),
+                new Dimension(800, 800)
+        );
 
         String json = mapper.writeValueAsString(config);
         BoardConfig deserialized = mapper.readValue(json, BoardConfig.class);

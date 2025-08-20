@@ -13,6 +13,10 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+/**
+ * Unit tests for PieceView.
+ * Validates the correct scaling and filtering of pieces when converting from game state to view.
+ */
 class PieceViewTest {
 
     private IPiece mockPiece;
@@ -23,6 +27,7 @@ class PieceViewTest {
 
     @BeforeEach
     void setup() {
+        // Mock a piece, its state, graphics, and physics
         mockPiece = mock(IPiece.class);
         mockState = mock(IState.class);
         mockGraphics = mock(IGraphicsData.class);
@@ -36,10 +41,9 @@ class PieceViewTest {
         BufferedImage dummyImage = new BufferedImage(10, 10, BufferedImage.TYPE_INT_ARGB);
         when(mockGraphics.getCurrentFrame()).thenReturn(dummyImage);
 
-        Dimension physicsDim = new Dimension(100, 200);
-        Dimension panelDim = new Dimension(400, 800);
-        when(mockBoardConfig.physicsDimension()).thenReturn(physicsDim);
-        when(mockBoardConfig.panelDimension()).thenReturn(panelDim);
+        // Mock board config dimensions for scaling
+        when(mockBoardConfig.physicsDimension()).thenReturn(new Dimension(100, 200));
+        when(mockBoardConfig.panelDimension()).thenReturn(new Dimension(400, 800));
     }
 
     @Test
@@ -50,9 +54,10 @@ class PieceViewTest {
 
         PieceView view = PieceView.from(mockPiece, mockBoardConfig);
 
+        // Verify that physics coordinates are correctly scaled to panel dimensions
         assertNotNull(view.frame());
-        assertEquals(200.0, view.x(), 0.001); // (50/100)*400
-        assertEquals(400.0, view.y(), 0.001); // (100/200)*800
+        assertEquals(200.0, view.x(), 0.001); // (50 / 100) * 400
+        assertEquals(400.0, view.y(), 0.001); // (100 / 200) * 800
     }
 
     @Test
@@ -62,6 +67,7 @@ class PieceViewTest {
 
         PieceView view = PieceView.from(mockPiece, mockBoardConfig);
 
+        // Zero physics coordinates should map to zero panel coordinates
         assertEquals(0.0, view.x());
         assertEquals(0.0, view.y());
     }
@@ -73,20 +79,21 @@ class PieceViewTest {
 
         PieceView view = PieceView.from(mockPiece, mockBoardConfig);
 
-        assertEquals(400.0, view.x()); // מקסימום סקייל
+        // Max physics coordinates should map to max panel dimensions
+        assertEquals(400.0, view.x());
         assertEquals(800.0, view.y());
     }
 
     @Test
     void testToPieceViews_FiltersCaptured() {
+        // Create captured and alive pieces
         IPiece capturedPiece = mock(IPiece.class);
         when(capturedPiece.isCaptured()).thenReturn(true);
 
-        IPiece alivePiece = mockPiece;
-        when(alivePiece.isCaptured()).thenReturn(false);
+        when(mockPiece.isCaptured()).thenReturn(false);
 
         IPlayer mockPlayer = mock(IPlayer.class);
-        when(mockPlayer.getPieces()).thenReturn(List.of(capturedPiece, alivePiece));
+        when(mockPlayer.getPieces()).thenReturn(List.of(capturedPiece, mockPiece));
 
         IBoard mockBoard = mock(IBoard.class);
         when(mockBoard.getPlayers()).thenReturn(new IPlayer[]{mockPlayer});
@@ -97,14 +104,16 @@ class PieceViewTest {
 
         List<PieceView> result = PieceView.toPieceViews(mockBoard);
 
-        assertEquals(1, result.size(), "רק הכלי שלא נלכד אמור להופיע");
+        // Only the alive piece should be included
+        assertEquals(1, result.size());
         PieceView view = result.get(0);
-        assertEquals((10.0/100.0)*400, view.x(), 0.001);
-        assertEquals((20.0/200.0)*800, view.y(), 0.001);
+        assertEquals((10.0 / 100.0) * 400, view.x(), 0.001);
+        assertEquals((20.0 / 200.0) * 800, view.y(), 0.001);
     }
 
     @Test
     void testToPieceViews_MultiplePlayers() {
+        // Two pieces for two players, ensure both are converted
         IPiece piece1 = mock(IPiece.class);
         IPiece piece2 = mock(IPiece.class);
         when(piece1.isCaptured()).thenReturn(false);
@@ -142,6 +151,7 @@ class PieceViewTest {
         List<PieceView> result = PieceView.toPieceViews(mockBoard);
 
         assertEquals(2, result.size());
+        // Verify that both pieces are scaled correctly
         assertTrue(result.stream().anyMatch(v -> v.x() == 200.0 && v.y() == 400.0));
         assertTrue(result.stream().anyMatch(v -> v.x() == 100.0 && v.y() == 200.0));
     }
