@@ -134,7 +134,8 @@ public class Board implements IBoard {
         long now = System.nanoTime();
 
         for (IPlayer player : players) {
-            for (IPiece piece : player.getPieces()) {
+            for (int i=0; i<player.getPieces().size(); i++) {
+                IPiece piece = player.getPieces().get(i);
                 if (piece.isCaptured()) continue;
 
                 if (piece.getCurrentState().isActionFinished(now)) {
@@ -244,7 +245,7 @@ public class Board implements IBoard {
 
     @Override
     public List<Position> getLegalMoves(Position selectedPosition) {
-        if (!isInBounds(selectedPosition)) return List.of();
+        if (selectedPosition == null || !isInBounds(selectedPosition)) return List.of();
         IPiece piece = getPiece(selectedPosition);
         if (piece == null || piece.isCaptured()) return List.of();
 

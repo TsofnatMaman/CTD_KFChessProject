@@ -50,13 +50,14 @@ public class Main {
             // ------------------ Board Panel ------------------
             BoardPanel bp = new BoardPanel(game.getBoard(), pc1, pc2);
 
-            // ------------------ Controller ------------------
-            Controller controller = new Controller(game, bp);
-            bp.setController(controller);
 
             // ------------------ Game View ------------------
             GamePanel gameView = new GamePanel(bp, Arrays.stream(players).map(PlayerInfoPanel::new).toList());
             frame.setContentPane(gameView);
+
+            // ------------------ Controller ------------------
+            Controller controller = new Controller(game, gameView);
+            bp.setController(controller);
 
             // ------------------ Frame Settings ------------------
             frame.pack();

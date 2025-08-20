@@ -7,7 +7,6 @@ import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
-import game.Game;
 import interfaces.IGame;
 import pieces.Position;
 import utils.LogUtils;
