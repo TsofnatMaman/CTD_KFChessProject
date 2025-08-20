@@ -173,4 +173,3 @@ mvn test
 - Kung-Fu Chess (community / wiki pages summarizing behavior): https://chess.fandom.com/wiki/Kung_Fu_Chess  
 - Chess.com article (overview & discussion): https://www.chess.com/blog/Jasmin_Ocelli/kung-fu-chess  
 - Community implementations (examples): https://www.kfchess.com, https://kungfuchess.org
-

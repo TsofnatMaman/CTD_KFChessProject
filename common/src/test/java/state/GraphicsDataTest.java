@@ -24,7 +24,7 @@ class GraphicsDataTest {
     }
 
     @Test
-    void testResetResetsFrameAndTime() throws InterruptedException {
+    void testResetResetsFrameAndTime() {
         // Force an update to advance frame
         graphicsData.update(System.nanoTime() + 1_000_000_000L);
         graphicsData.reset();

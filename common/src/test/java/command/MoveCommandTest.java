@@ -22,7 +22,6 @@ class MoveCommandTest {
     private IBoard board;
     private Position from;
     private Position to;
-    private Piece piece;
 
     @BeforeEach
     void setUp() {
@@ -31,7 +30,7 @@ class MoveCommandTest {
         from = new Position(0, 0);
         to = new Position(1, 1);
 
-        piece = mock(Piece.class);
+        Piece piece = mock(Piece.class);
         when(piece.getPlayer()).thenReturn(42);
         when(board.getPiece(from)).thenReturn(piece);
 

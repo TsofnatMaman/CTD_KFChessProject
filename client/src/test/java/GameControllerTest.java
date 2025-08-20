@@ -3,13 +3,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import endpoint.controller.GameController;
 import endpoint.controller.IGameUI;
 import events.EGameEvent;
-import events.EventPublisher;
 import events.GameEvent;
 import interfaces.IGame;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import endpoint.launch.ChessClientEndpoint;
-import viewUtils.BaseBoardPanel;
 
 import static org.mockito.Mockito.*;
 
@@ -30,7 +28,7 @@ public class GameControllerTest {
     }
 
     @Test
-    void startStopListening_and_runLoop_handlesInterruptGracefully() throws Exception {
+    void startStopListening_and_runLoop_handlesInterruptGracefully()  {
         // start listening (will create a thread that polls - but we will interrupt)
         controller.startListening();
         controller.stopListening();

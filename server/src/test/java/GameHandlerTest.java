@@ -1,6 +1,4 @@
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import dto.EventType;
 import dto.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -8,7 +6,6 @@ import server.GameHandler;
 import server.Messaging;
 
 import javax.websocket.CloseReason;
-import javax.websocket.RemoteEndpoint;
 import javax.websocket.Session;
 
 import java.io.IOException;

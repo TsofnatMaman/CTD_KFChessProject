@@ -58,6 +58,11 @@ public class GameHandler {
     public void handleClose(Session session, CloseReason reason) {
         sessionPlayerIds.remove(session);
         logInfo("Client disconnected: %s, reason: %s", session.getId(), reason);
+
+        if(sessionPlayerIds.isEmpty()){
+            logInfo("Server closed. all players leave");
+            System.exit(0);
+        }
     }
 
     public void handleError(Session session, Throwable throwable) {
@@ -82,7 +87,7 @@ public class GameHandler {
         }
     }
 
-    private void handleMessageByType(Message<JsonNode> msg, Session session, int playerId) throws IOException {
+    private void handleMessageByType(Message<JsonNode> msg, Session session, int playerId) {
         switch (msg.type()) {
             case SET_NAME -> handleSetName(msg.data(), playerId);
             case PLAYER_SELECTED -> handlePlayerSelected(msg.data(), playerId);
@@ -117,7 +122,7 @@ public class GameHandler {
 
     private void initializeGameIfReady() {
         synchronized (this) {
-//            if (sessionPlayerIds.size() < GameConstants.MAX_PLAYERS || game != null) return;
+            if (sessionPlayerIds.size() < GameConstants.MAX_PLAYERS || game != null) return;
             createGame();
             sendInitialGameStateToAll();
         }

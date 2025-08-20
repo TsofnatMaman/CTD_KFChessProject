@@ -2,7 +2,6 @@ package player;
 
 import board.BoardConfig;
 import org.junit.jupiter.api.Test;
-import player.PlayerFactory;
 import interfaces.IPlayer;
 
 import java.awt.*;

@@ -188,8 +188,8 @@ public class Board implements IBoard {
         Data data = new Data(this, fromPiece, to);
 
         boolean isLegal = moves.stream()
-                .anyMatch(m -> m.getDx() == dx && m.getDy() == dy &&
-                        (m.getCondition() == null || Arrays.stream(m.getCondition())
+                .anyMatch(m -> m.dx() == dx && m.dy() == dy &&
+                        (m.condition() == null || Arrays.stream(m.condition())
                                 .allMatch(c -> c.isCanMove(data))));
 
         if (!isLegal) return false;
@@ -251,8 +251,8 @@ public class Board implements IBoard {
 
         return piece.getMoves().stream()
                 .filter(move -> BoardRulesEngine.isMoveLegal(this, selectedPosition,
-                        selectedPosition.add(move.getDx(), move.getDy())))
-                .map(move -> selectedPosition.add(move.getDx(), move.getDy()))
+                        selectedPosition.add(move.dx(), move.dy())))
+                .map(move -> selectedPosition.add(move.dx(), move.dy()))
                 .toList();
     }
 }

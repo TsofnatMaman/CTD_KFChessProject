@@ -19,8 +19,6 @@ import static org.mockito.Mockito.*;
 class PieceViewTest {
 
     private IPiece mockPiece;
-    private IState mockState;
-    private IGraphicsData mockGraphics;
     private IPhysicsData mockPhysics;
     private BoardConfig mockBoardConfig;
 
@@ -28,8 +26,8 @@ class PieceViewTest {
     void setup() {
         // Mock a piece, its state, graphics, and physics
         mockPiece = mock(IPiece.class);
-        mockState = mock(IState.class);
-        mockGraphics = mock(IGraphicsData.class);
+        IState mockState = mock(IState.class);
+        IGraphicsData mockGraphics = mock(IGraphicsData.class);
         mockPhysics = mock(IPhysicsData.class);
         mockBoardConfig = mock(BoardConfig.class);
 

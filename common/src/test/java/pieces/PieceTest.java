@@ -17,8 +17,6 @@ import static org.mockito.Mockito.*;
 class PieceTest {
 
     private StateMachine fsmMock;
-    private IState stateMock;
-    private PhysicsData physicsMock;
     private Piece piece;
     private Position startPos;
 
@@ -28,8 +26,8 @@ class PieceTest {
 
         // Create mocks for FSM, State, and Physics
         fsmMock = mock(StateMachine.class);
-        stateMock = mock(IState.class);
-        physicsMock = mock(PhysicsData.class);
+        IState stateMock = mock(IState.class);
+        PhysicsData physicsMock = mock(PhysicsData.class);
 
         // Setup mock behavior
         when(fsmMock.getCurrentState()).thenReturn(stateMock);

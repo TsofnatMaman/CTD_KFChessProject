@@ -24,10 +24,10 @@ class MovesTest {
         // Basic check of the first Move object
         Move firstMove = moves.get(0);
         assertNotNull(firstMove, "First Move should not be null");
-        assertTrue(firstMove.getDx() != 0 || firstMove.getDy() != 0, "Move should have non-zero delta");
+        assertTrue(firstMove.dx() != 0 || firstMove.dy() != 0, "Move should have non-zero delta");
 
-        if (firstMove.getCondition() != null) {
-            for (ECondition cond : firstMove.getCondition()) {
+        if (firstMove.condition() != null) {
+            for (ECondition cond : firstMove.condition()) {
                 assertNotNull(cond, "Each condition should not be null");
             }
         }
@@ -46,8 +46,8 @@ class MovesTest {
         // Verify that conditions are correctly parsed to ECondition
         List<Move> moves = Moves.createMovesList(EPieceType.R, 0);
         for (Move m : moves) {
-            if (m.getCondition() != null) {
-                for (ECondition c : m.getCondition()) {
+            if (m.condition() != null) {
+                for (ECondition c : m.condition()) {
                     assertTrue(c instanceof ECondition, "Parsed condition should be an instance of ECondition");
                 }
             }

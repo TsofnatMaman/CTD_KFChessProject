@@ -108,7 +108,7 @@ class StateMachineTest {
             stateMachine.update(now);
 
             // Verify that EventPublisher instance was accessed
-            publisherMock.verify(() -> EventPublisher.getInstance(), atLeastOnce());
+            publisherMock.verify(EventPublisher::getInstance, atLeastOnce());
 
             // Verify that the proper event was published
             verify(fakePublisher).publish(eq(EGameEvent.PIECE_END_MOVED), any(GameEvent.class));

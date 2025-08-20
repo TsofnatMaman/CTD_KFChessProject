@@ -15,7 +15,6 @@ class PhysicsDataTest {
     private BoardConfig bc;
     private Position startPos;
     private Position targetPos;
-    private long startTime;
 
     @BeforeEach
     void setup() {
@@ -32,7 +31,7 @@ class PhysicsDataTest {
         startPos = new Position(0, 0);
         targetPos = new Position(1, 0); // one cell to the right
 
-        startTime = 0;
+        long startTime = 0;
         // Reset PhysicsData with start and target positions
         physics.reset(EState.IDLE, startPos, targetPos, bc, startTime);
     }

@@ -16,9 +16,9 @@ class MoveTest {
         Move move = new Move(1, -2, conditions);
 
         // Assert
-        assertEquals(1, move.getDx());
-        assertEquals(-2, move.getDy());
-        assertArrayEquals(conditions, move.getCondition());
+        assertEquals(1, move.dx());
+        assertEquals(-2, move.dy());
+        assertArrayEquals(conditions, move.condition());
     }
 
     @Test

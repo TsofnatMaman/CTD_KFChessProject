@@ -1,5 +1,4 @@
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.Message;
 import org.junit.jupiter.api.Test;
 import server.Messaging;
