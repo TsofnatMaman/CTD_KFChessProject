@@ -13,12 +13,12 @@ public class LoadPieces {
     /**
      * Number of rows on the board.
      */
-    public static final int ROWS = constants.GameConstants.BOARD_ROWS;
+    public static final int ROWS = constants.BoardConstants.BOARD_ROWS;
 
     /**
      * Number of columns on the board.
      */
-    public static final int COLS = constants.GameConstants.BOARD_COLS;
+    public static final int COLS = constants.BoardConstants.BOARD_COLS;
 
     /**
      * Static matrix holding piece codes for the board.

@@ -1,6 +1,8 @@
 package local.launch;
 
 import board.BoardConfig;
+import constants.BoardConstants;
+import constants.GameConstants;
 import game.GameFactory;
 import game.GameLoop;
 import interfaces.IGame;
@@ -45,9 +47,9 @@ public class Main {
 
             // ------------------ Board ------------------
             BoardConfig boardConfig = new BoardConfig(
-                    new Dimension(8, 8),     // logical grid (rows × cols)
-                    new Dimension(700, 700), // display size in pixels
-                    new Dimension(500, 500)  // logical board size
+                    new Dimension(BoardConstants.BOARD_ROWS, BoardConstants.BOARD_COLS),     // logical grid (rows × cols)
+                    new Dimension(BoardConstants.BOARD_PANEL_WIDTH, BoardConstants.BOARD_PANEL_HEIGHT), // display size in pixels
+                    new Dimension(BoardConstants.BOARD_WIDTH_M, BoardConstants.BOARD_HEIGHT_M)  // logical board size
             );
 
             // ------------------ Players ------------------

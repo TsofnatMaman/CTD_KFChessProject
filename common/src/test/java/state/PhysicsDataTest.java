@@ -1,6 +1,7 @@
 package state;
 
 import board.BoardConfig;
+import constants.GameConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pieces.Position;
@@ -41,7 +42,7 @@ class PhysicsDataTest {
         // Calculate the distance in physics units
         double dx = targetPos.dx(startPos) * (bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
         // Compute time needed to reach target
-        long enoughTime = (long) ((dx / physics.getSpeedMetersPerSec()) * 1_000_000_000L);
+        long enoughTime = (long) ((dx / physics.getSpeedMetersPerSec()) * GameConstants.NANOS_IN_SECOND);
 
         physics.update(enoughTime);
 

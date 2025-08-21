@@ -3,6 +3,7 @@ package server;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import constants.BoardConstants;
 import constants.GameConstants;
 import constants.Messages;
 import dto.*;
@@ -225,10 +226,10 @@ public class GameHandler {
      */
     private void createGame() {
         BoardConfig boardConfig = new BoardConfig(
-                new Dimension(GameConstants.BOARD_SIZE, GameConstants.BOARD_SIZE),
-                new Dimension(GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE,
-                        GameConstants.SQUARE_SIZE * GameConstants.BOARD_SIZE),
-                new Dimension(500, 500) // window size
+                new Dimension(BoardConstants.BOARD_ROWS, BoardConstants.BOARD_COLS),
+                new Dimension(BoardConstants.SQUARE_SIZE * BoardConstants.BOARD_ROWS,
+                        BoardConstants.SQUARE_SIZE * BoardConstants.BOARD_COLS),
+                new Dimension(BoardConstants.BOARD_WIDTH_M, BoardConstants.BOARD_HEIGHT_M) // window size
         );
 
         // Create players with assigned names

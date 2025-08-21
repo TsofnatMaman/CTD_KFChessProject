@@ -39,7 +39,7 @@ public class PlayerFactory {
 
         // Iterate over all starting rows assigned to this player
         for (int startRow : BoardConfig.rowsOfPlayer.get(id)) {
-            for (int col = 0; col < constants.GameConstants.BOARD_COLS; col++) {
+            for (int col = 0; col < constants.BoardConstants.BOARD_COLS; col++) {
 
                 // Get the string code for the piece at this position
                 String pieceCodeStr = game.LoadPieces.board[startRow][col];

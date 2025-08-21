@@ -1,5 +1,6 @@
 package state;
 
+import constants.GameConstants;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +27,7 @@ class GraphicsDataTest {
     @Test
     void testResetResetsFrameAndTime() {
         // Force an update to advance frame
-        graphicsData.update(System.nanoTime() + 1_000_000_000L);
+        graphicsData.update(System.nanoTime() + GameConstants.NANOS_IN_SECOND);
         graphicsData.reset();
         // After reset, the current frame should be 0
         assertEquals(0, graphicsData.getCurrentNumFrame());

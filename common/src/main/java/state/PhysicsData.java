@@ -3,6 +3,7 @@ package state;
 import board.BoardConfig;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import constants.GameConstants;
 import interfaces.IPhysicsData;
 import pieces.Position;
 
@@ -13,33 +14,51 @@ import pieces.Position;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PhysicsData implements IPhysicsData {
 
-    /** Movement speed in meters per second. */
+    /**
+     * Movement speed in meters per second.
+     */
     @JsonProperty("speed_m_per_sec")
     private double speedMetersPerSec;
 
-    /** Duration of the action in seconds; -1 means use speed-based calculation. */
+    /**
+     * Duration of the action in seconds; -1 means use speed-based calculation.
+     */
     @JsonProperty("action_time")
     private double actionTime;
 
-    /** Current X position in pixels. */
+    /**
+     * Current X position in pixels.
+     */
     private double currentX;
 
-    /** Current Y position in pixels. */
+    /**
+     * Current Y position in pixels.
+     */
     private double currentY;
 
-    /** Starting board position. */
+    /**
+     * Starting board position.
+     */
     private Position startPos;
 
-    /** Target board position. */
+    /**
+     * Target board position.
+     */
     private Position targetPos;
 
-    /** Board configuration reference. */
+    /**
+     * Board configuration reference.
+     */
     private BoardConfig bc;
 
-    /** Start time of the movement in nanoseconds. */
+    /**
+     * Start time of the movement in nanoseconds.
+     */
     private long startTimeNanos;
 
-    /** Default constructor; actionTime initialized to -1. */
+    /**
+     * Default constructor; actionTime initialized to -1.
+     */
     public PhysicsData() {
         actionTime = -1;
     }
@@ -66,10 +85,10 @@ public class PhysicsData implements IPhysicsData {
     /**
      * Resets the physics for a new movement.
      *
-     * @param state Current piece state
-     * @param startPos Starting position
-     * @param to Target position
-     * @param bc Board configuration
+     * @param state          Current piece state
+     * @param startPos       Starting position
+     * @param to             Target position
+     * @param bc             Board configuration
      * @param startTimeNanos Movement start time in nanoseconds
      */
     @Override
@@ -87,10 +106,12 @@ public class PhysicsData implements IPhysicsData {
         updatePosition(now);
     }
 
-    /** Updates current position based on elapsed time and speed. */
+    /**
+     * Updates current position based on elapsed time and speed.
+     */
     private void updatePosition(long now) {
         double speed = getSpeedMetersPerSec();
-        double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
+        double elapsedSec = (double) (now - startTimeNanos) / GameConstants.NANOS_IN_SECOND;
 
         double dx = targetPos.dx(startPos) * (bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
         double dy = targetPos.dy(startPos) * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
@@ -105,17 +126,19 @@ public class PhysicsData implements IPhysicsData {
         currentY = (startPos.getRow() * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight())) + dy * t;
     }
 
-    /** Returns true if the movement/action is finished. */
+    /**
+     * Returns true if the movement/action is finished.
+     */
     @Override
     public boolean isActionFinished(long now) {
         if (actionTime != -1) {
             long elapsedNanos = now - startTimeNanos;
-            return elapsedNanos >= (long) (actionTime * 1_000_000_000L);
+            return elapsedNanos >= (long) (actionTime * GameConstants.NANOS_IN_SECOND);
         }
 
         if (speedMetersPerSec == 0) return false;
 
-        double elapsedSec = (now - startTimeNanos) / 1_000_000_000.0;
+        double elapsedSec = (double) (now - startTimeNanos) / GameConstants.NANOS_IN_SECOND;
         double dx = targetPos.dx(startPos) * (bc.physicsDimension().getWidth() / bc.gridDimension().getWidth());
         double dy = targetPos.dy(startPos) * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight());
         double totalDistance = Math.sqrt(dx * dx + dy * dy);

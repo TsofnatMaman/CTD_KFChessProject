@@ -4,25 +4,24 @@
 
 1. [Overview](#overview)
 2. [Quick links (jump to code)](#quick-links-jump-to-code)
-3. [Overview](#overview-1)
-4. [What is Kung-Fu Chess (rules & references)](#what-is-kung-fu-chess-rules--references)
-5. [How the Kung-Fu rules map to this codebase](#how-the-kung-fu-rules-map-to-this-codebase)
+3. [What is Kung-Fu Chess (rules & references)](#what-is-kung-fu-chess-rules--references)
+4. [How the Kung-Fu rules map to this codebase](#how-the-kung-fu-rules-map-to-this-codebase)
 
     1. [No turns — server authoritative, asynchronous input](#no-turns-—-server-authoritative-asynchronous-input)
     2. [One moving piece per request; cooldowns via State](#one-moving-piece-per-request-cooldowns-via-state)
     3. [JUMP action — exact mapping](#jump-action-—-exact-mapping)
     4. [Animation & timing consistency](#animation--timing-consistency)
-6. [Build & run](#build--run)
+5. [Build & run](#build--run)
 
     1. [Requirements](#requirements)
     2. [Build](#build)
     3. [Run server](#run-server)
     4. [Run client(s)](#run-clients)
     5. [Local dev mode (no server)](#local-dev-mode-no-server)
-7. [Configuration & resources](#configuration--resources)
-8. [Message shapes (recommended)](#message-shapes-recommended)
-9. [Tests (what to add / expand)](#tests-what-to-add--expand)
-10. [References & further reading](#references--further-reading)
+6. [Configuration & resources](#configuration--resources)
+7. [Message shapes (recommended)](#message-shapes-recommended)
+8. [Tests (what to add / expand)](#tests-what-to-add--expand)
+9. [References & further reading](#references--further-reading)
 
 ---
 

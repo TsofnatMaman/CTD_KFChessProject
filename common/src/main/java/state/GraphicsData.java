@@ -3,6 +3,7 @@ package state;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import constants.GameConstants;
 import interfaces.IGraphicsData;
 
 import java.awt.image.BufferedImage;
@@ -65,7 +66,7 @@ public class GraphicsData implements IGraphicsData {
      */
     @Override
     public void update(long now) {
-        double elapsedSec = (now - lastFrameTimeNanos) / 1_000_000_000.0;
+        double elapsedSec = (double) (now - lastFrameTimeNanos) / GameConstants.NANOS_IN_SECOND;
         if (elapsedSec >= 1.0 / framesPerSec) {
             currentFrame = (currentFrame + 1) % totalFrames;
             lastFrameTimeNanos = now;
