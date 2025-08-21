@@ -3,7 +3,7 @@ package constants;
 import java.awt.event.KeyEvent;
 
 public final class KeyConstants {
-    private KeyConstants() {} // לא ניתן ליצור מופע
+    private KeyConstants() {}
 
     public static final String UP = "UP";
     public static final String DOWN = "DOWN";
@@ -16,7 +16,6 @@ public final class KeyConstants {
     public static final String S = "S";
     public static final String D = "D";
 
-    // Map קבוע מה־KeyEvent ל־String אחיד
     public static String fromKeyCode(int keyCode) {
         return switch (keyCode) {
             case KeyEvent.VK_UP -> UP;

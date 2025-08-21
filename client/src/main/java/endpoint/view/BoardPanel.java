@@ -33,18 +33,9 @@ public class BoardPanel extends BaseBoardPanel {
         super(board);
         this.cursor = cursor;
 
-        keyManager = new KeyManager();
+        keyManager = new KeyManager(this);
 
         initKeyBindings();
-        addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                String key = KeyConstants.fromKeyCode(e.getKeyCode());
-                if (key != null) {
-                    keyManager.handleKey(key);
-                }
-            }
-        });
 
         Color base = cursor.getColor();
         selectColor = new Color(base.getRed(), base.getGreen(), base.getBlue(), 128);
@@ -54,7 +45,7 @@ public class BoardPanel extends BaseBoardPanel {
         // Controller for player  (arrows + Enter)
         CursorController.KeyBindings playerKey = new CursorController.KeyBindings(KeyConstants.UP, KeyConstants.DOWN, KeyConstants.LEFT, KeyConstants.RIGHT, KeyConstants.ENTER);
 
-        CursorController cursorController = new CursorController(cursor, this, playerKey, keyManager);
+        CursorController cursorController = new CursorController(cursor, playerKey, keyManager);
         cursorController.setOnPlayerAction(pos -> {
             if(onPlayerAction != null)
                 onPlayerAction.accept(pos);

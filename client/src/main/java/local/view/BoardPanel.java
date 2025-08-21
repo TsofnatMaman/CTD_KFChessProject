@@ -1,6 +1,7 @@
 package local.view;
 
 import constants.KeyConstants;
+import player.PlayerCursor;
 import viewUtils.board.CursorController;
 import interfaces.IBoard;
 import interfaces.IPlayerCursor;
@@ -10,6 +11,7 @@ import viewUtils.board.BaseBoardPanel;
 import viewUtils.board.KeyManager;
 import viewUtils.board.SelectionRenderer;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.Collections;
@@ -38,21 +40,13 @@ public class BoardPanel extends BaseBoardPanel {
         this.cursor1 = cursor1;
         this.cursor2 = cursor2;
 
-        keyManager = new KeyManager();
+        keyManager = new KeyManager(this);
 
         initKeyBindings();
-        addKeyListener(new java.awt.event.KeyAdapter() {
-            @Override
-            public void keyPressed(KeyEvent e) {
-                String key = KeyConstants.fromKeyCode(e.getKeyCode());
-                if (key != null) {
-                    keyManager.handleKey(key);
-                }
-            }
-        });
 
         setFocusable(true);
         requestFocusInWindow();
+
     }
 
     public void setController(Controller controller) {
@@ -68,19 +62,18 @@ public class BoardPanel extends BaseBoardPanel {
     protected void initKeyBindings() {
         // Controller for player 1 (arrows + Enter)
         CursorController.KeyBindings player1Keys = new CursorController.KeyBindings(KeyConstants.UP, KeyConstants.DOWN, KeyConstants.LEFT, KeyConstants.RIGHT, KeyConstants.ENTER);
-
-        CursorController cursorController1 = new CursorController(cursor1, this, player1Keys, keyManager);
-        cursorController1.setOnPlayerAction(pos -> {
-            if (controller != null)
-                controller.handlePlayerMove(0, pos);
-        });
+        setCursorController(0,cursor1, player1Keys);
 
         // Controller for player 2 (WASD + Space)
         CursorController.KeyBindings player2Keys = new CursorController.KeyBindings(KeyConstants.W, KeyConstants.S, KeyConstants.A, KeyConstants.D, KeyConstants.SPACE);
-        CursorController cursorController2 = new CursorController(cursor2, this, player2Keys, keyManager);
-        cursorController2.setOnPlayerAction(pos -> {
+        setCursorController(1,cursor2, player2Keys);
+    }
+
+    private void setCursorController(int playerId, IPlayerCursor playerCursor, CursorController.KeyBindings keys){
+        CursorController cursorController = new CursorController(playerCursor, keys, keyManager);
+        cursorController.setOnPlayerAction(pos -> {
             if (controller != null)
-                controller.handlePlayerMove(1, pos);
+                controller.handlePlayerMove(playerId, pos);
         });
     }
 

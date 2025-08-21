@@ -12,7 +12,7 @@ public class CursorController {
     private Consumer<Position> onPlayerAction;
     private final KeyBindings keys;
 
-    public CursorController(IPlayerCursor cursor, JComponent boardComponent, KeyBindings keys, KeyManager km) {
+    public CursorController(IPlayerCursor cursor, KeyBindings keys, KeyManager km) {
         this.cursor = cursor;
         this.keys = keys;
         km.registerController(this);
