@@ -35,13 +35,19 @@ public class JumpCommand implements ICommand {
      */
     @Override
     public void execute() {
-        if (!board.isJumpLegal(piece)) return;
+        try {
+            board.jump(piece);
 
-        board.jump(piece);
-
-        EventPublisher.getInstance()
-                .publish(EGameEvent.PIECE_JUMP,
-                        new GameEvent(EGameEvent.PIECE_JUMP,
-                                new ActionData(piece.getPlayer(), "piece " + piece + " jumping")));
+            EventPublisher.getInstance()
+                    .publish(EGameEvent.PIECE_JUMP,
+                            new GameEvent(EGameEvent.PIECE_JUMP,
+                                    new ActionData(piece.getPlayer(), "piece " + piece + " jumping")));
+        } catch (IllegalCmdException e){
+            String message = "Illegal jump " + piece;
+            EventPublisher.getInstance()
+                    .publish(EGameEvent.ILLEGAL_CMD,
+                            new GameEvent(EGameEvent.ILLEGAL_CMD,
+                                    new ActionData(piece.getPlayer(), message)));
+        }
     }
 }

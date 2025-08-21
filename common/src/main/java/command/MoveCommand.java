@@ -1,6 +1,5 @@
 package command;
 
-import board.BoardRulesEngine;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
@@ -45,23 +44,25 @@ public class MoveCommand implements ICommand {
      */
     @Override
     public void execute() {
-        if (!BoardRulesEngine.isMoveLegal(board, from, to)) {
-            String message = "Illegal move from " + from + " to " + to;
+        String message;
+
+        if(board.getBoardRulesEngine().isMoveLegal(board, from, to)) {
+            message = Utils.getName(from) + " --> " + Utils.getName(to);
+            ActionData actionData = new ActionData(board.getPiece(from).getPlayer(), message);
+            EventPublisher.getInstance()
+                    .publish(EGameEvent.PIECE_START_MOVED,
+                            new GameEvent(EGameEvent.PIECE_START_MOVED,
+                                    actionData));
+
+            board.move(from, to);
+        } else {
+            message = "Illegal move from " + from + " to " + to;
             EventPublisher.getInstance()
                     .publish(EGameEvent.ILLEGAL_CMD,
                             new GameEvent(EGameEvent.ILLEGAL_CMD,
                                     new ActionData(board.getPiece(from).getPlayer(), message)));
-            LogUtils.logDebug(message);
-            return;
         }
 
-        String message = Utils.getName(from) + " --> " + Utils.getName(to);
-        EventPublisher.getInstance()
-                .publish(EGameEvent.PIECE_START_MOVED,
-                        new GameEvent(EGameEvent.PIECE_START_MOVED,
-                                new ActionData(board.getPiece(from).getPlayer(), message)));
         LogUtils.logDebug(message);
-
-        board.move(from, to);
     }
 }

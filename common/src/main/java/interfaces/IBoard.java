@@ -59,21 +59,6 @@ public interface IBoard extends Serializable {
     boolean isInBounds(Position p);
 
     /**
-     * Checks if a move from one position to another is legal.
-     * @param from The starting position
-     * @param to The target position
-     * @return true if legal, false otherwise
-     */
-    boolean isMoveLegal(Position from, Position to);
-
-    /**
-     * Checks if a jump action is legal for the given piece.
-     * @param p The piece object
-     * @return true if jump is legal, false otherwise
-     */
-    boolean isJumpLegal(IPiece p);
-
-    /**
      * Performs a jump action for the given piece.
      * @param p The piece object
      */
@@ -109,4 +94,12 @@ public interface IBoard extends Serializable {
      * @return List of positions that are legal moves
      */
     List<Position> getLegalMoves(Position selectedPosition);
+
+    int getTarget(Position pos);
+
+    void setGrid(Position pos, IPiece piece);
+
+    void setIsNoTarget(Position pos);
+
+    IBoardEngine getBoardRulesEngine();
 }

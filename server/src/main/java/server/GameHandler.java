@@ -6,6 +6,7 @@ import constants.GameConstants;
 import constants.Messages;
 import dto.*;
 import game.Game;
+import game.GameFactory;
 import game.GameLoop;
 import interfaces.IGame;
 import interfaces.IGameLoop;
@@ -143,7 +144,7 @@ public class GameHandler {
                 boardConfig
         );
 
-        game = new Game(boardConfig, players);
+        game = GameFactory.createNewGame(boardConfig, players);
 
         IGameLoop gameLoop = new GameLoop(game);
         gameLoop.run();

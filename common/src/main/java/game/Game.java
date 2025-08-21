@@ -1,11 +1,5 @@
 package game;
 
-import board.Board;
-import board.BoardConfig;
-import events.listeners.CapturedLogger;
-import events.listeners.GameEndLogger;
-import events.listeners.JumpsLogger;
-import events.listeners.MovesLogger;
 import interfaces.ICommand;
 import interfaces.IBoard;
 import interfaces.IGame;
@@ -18,6 +12,7 @@ import java.util.Queue;
 
 /**
  * Main game class. Handles game loop, player turns, command execution, and win detection.
+ * The board and players are injected into this class.
  */
 public class Game implements IGame {
 
@@ -29,23 +24,18 @@ public class Game implements IGame {
     private volatile boolean running;
 
     /**
-     * Constructs a new game with the given board configuration and players.
+     * Constructs a new game instance.
+     * The board and players are provided by a factory.
      *
-     * @param bc      Board configuration
-     * @param players Array of players
+     * @param board   The game board instance.
+     * @param players The array of players.
      */
-    public Game(BoardConfig bc, IPlayer[] players) {
-        this.board = new Board(bc, players);
+    public Game(IBoard board, IPlayer[] players) {
+        this.board = board;
         this.players = players;
         this.commandQueue = new LinkedList<>();
         this.running = false;
         this.startTimeNano = 0;
-
-        // Initialize loggers for game events
-        new MovesLogger();
-        new JumpsLogger();
-        new CapturedLogger();
-        new GameEndLogger();
     }
 
     /**

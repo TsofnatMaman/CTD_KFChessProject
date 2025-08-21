@@ -2,6 +2,7 @@ package local.launch;
 
 import board.BoardConfig;
 import game.Game;
+import game.GameFactory;
 import game.GameLoop;
 import interfaces.IGame;
 import interfaces.IGameLoop;
@@ -47,7 +48,7 @@ public class Main {
             PlayerCursor pc2 = new PlayerCursor(new Position(0,0), players[1].getColor());
 
             // ------------------ Game ------------------
-            IGame game = new Game(boardConfig, players);
+            IGame game = GameFactory.createNewGame(boardConfig, players);
 
             // ------------------ Board Panel ------------------
             BoardPanel bp = new BoardPanel(game.getBoard(), pc1, pc2);

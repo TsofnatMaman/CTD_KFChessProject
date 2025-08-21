@@ -3,6 +3,7 @@ package endpoint.controller;
 import dto.*;
 import endpoint.view.BoardPanel;
 import game.Game;
+import game.GameFactory;
 import interfaces.IGame;
 import interfaces.IPlayer;
 import interfaces.IPlayerCursor;
@@ -35,7 +36,7 @@ public class GameHelper {
                 .map(p -> PlayerDTO.to(p, dto.getBoardConfig()))
                 .toArray(IPlayer[]::new);
 
-        return new Game(dto.getBoardConfig(), players);
+        return GameFactory.createNewGame(dto.getBoardConfig(), players);
     }
 
     /**
