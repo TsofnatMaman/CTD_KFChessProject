@@ -1,9 +1,11 @@
 package server;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.Message;
 
 import javax.websocket.Session;
+import java.io.IOException;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -17,10 +19,14 @@ import java.util.logging.Logger;
  */
 public class Messaging {
 
-    /** Shared Jackson mapper for serializing messages into JSON. */
+    /**
+     * Shared Jackson mapper for serializing messages into JSON.
+     */
     private static final ObjectMapper MAPPER = new ObjectMapper();
 
-    /** Logger for reporting errors or warnings during message sending. */
+    /**
+     * Logger for reporting errors or warnings during message sending.
+     */
     private static final Logger LOGGER = Logger.getLogger(Messaging.class.getName());
 
     /**
@@ -35,7 +41,7 @@ public class Messaging {
         try {
             // Serialize message to JSON and send to client
             session.getBasicRemote().sendText(MAPPER.writeValueAsString(message));
-        } catch (Exception e) {
+        } catch (IOException e) {
             LOGGER.log(Level.WARNING,
                     "Failed to send message to session " + session.getId(), e);
         }

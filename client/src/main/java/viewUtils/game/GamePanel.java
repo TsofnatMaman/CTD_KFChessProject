@@ -29,16 +29,24 @@ import java.util.Objects;
  */
 public class GamePanel extends JPanel implements IGameUI {
 
-    /** Reference to the board panel displaying the chess board. */
+    /**
+     * Reference to the board panel displaying the chess board.
+     */
     private final BaseBoardPanel boardPanel;
 
-    /** List of player info panels (typically 2 players). */
+    /**
+     * List of player info panels (typically 2 players).
+     */
     private final List<PlayerInfoPanel> playerPanels;
 
-    /** Background image displayed behind all UI components. */
+    /**
+     * Background image displayed behind all UI components.
+     */
     private final Image backgroundImage;
 
-    /** Timer panel displayed at the top of the panel. */
+    /**
+     * Timer panel displayed at the top of the panel.
+     */
     private final TimerPanel timerPanel;
 
     /**
@@ -63,14 +71,6 @@ public class GamePanel extends JPanel implements IGameUI {
         initUI();
 
         LogUtils.logDebug("GamePanel initialized");
-
-        KeyboardFocusManager.getCurrentKeyboardFocusManager()
-                .addPropertyChangeListener("focusOwner", (evt) -> {
-                    Component newFocusOwner = (Component) evt.getNewValue();
-                    if (newFocusOwner != null) {
-                        System.out.println("New Focus Owner: " + newFocusOwner.getClass().getName());
-                    }
-                });
     }
 
     // ----------- UI Initialization -----------

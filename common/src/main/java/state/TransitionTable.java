@@ -3,6 +3,7 @@ package state;
 import pieces.EPieceEvent;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.HashMap;
@@ -15,7 +16,9 @@ import java.util.Map;
  */
 public class TransitionTable {
 
-    /** Map of current state → (event → next state) */
+    /**
+     * Map of current state → (event → next state)
+     */
     private final Map<EState, Map<EPieceEvent, EState>> table = new HashMap<>();
 
     /**
@@ -42,12 +45,14 @@ public class TransitionTable {
                     add(from, event, to);
                 }
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to load transition table from " + csvResourcePath, e);
         }
     }
 
-    /** Adds a transition from one state to another via an event */
+    /**
+     * Adds a transition from one state to another via an event
+     */
     private void add(EState from, EPieceEvent event, EState to) {
         table.computeIfAbsent(from, k -> new HashMap<>()).put(event, to);
     }

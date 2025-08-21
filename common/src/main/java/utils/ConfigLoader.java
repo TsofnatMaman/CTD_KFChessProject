@@ -1,5 +1,6 @@
 package utils;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
@@ -13,7 +14,8 @@ public final class ConfigLoader {
     private static final Properties messages = new Properties();
 
     // Prevent instantiation
-    private ConfigLoader() {}
+    private ConfigLoader() {
+    }
 
     // Static initializer: load properties once
     static {
@@ -34,7 +36,7 @@ public final class ConfigLoader {
             } else {
                 utils.LogUtils.logDebug("Resource not found: " + resourceName);
             }
-        } catch (Exception e) {
+        } catch (IOException e) {
             utils.LogUtils.logDebug("Failed to load resource " + resourceName + ": " + e.getMessage());
         }
     }

@@ -1,6 +1,7 @@
 package endpoint.view;
 
 import javax.swing.*;
+import java.lang.reflect.InvocationTargetException;
 
 /**
  * Utility class responsible for prompting the user for their username
@@ -16,9 +17,9 @@ public class AskUserName {
      * the input blank, the default name "Anonymous" is used.</p>
      *
      * @return The entered username, "Anonymous" if left blank, or {@code null} if cancelled.
-     * @throws Exception If interrupted while waiting for the Swing thread to execute.
+     * @throws InterruptedException or InvocationTargetException If interrupted while waiting for the Swing thread to execute.
      */
-    public static String askUsername() throws Exception {
+    public static String askUsername() throws InterruptedException, InvocationTargetException {
         final String[] result = new String[1];   // Stores the entered name
         final boolean[] cancelled = {false};     // Tracks if the dialog was cancelled
 

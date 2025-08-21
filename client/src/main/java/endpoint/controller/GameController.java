@@ -29,31 +29,49 @@ import java.util.function.Consumer;
  */
 public class GameController implements Runnable, IEventListener {
 
-    /** The game model representing the current state of the game */
+    /**
+     * The game model representing the current state of the game
+     */
     private IGame model;
 
-    /** The UI panel for displaying the game */
+    /**
+     * The UI panel for displaying the game
+     */
     private IGameUI gamePanel;
 
-    /** The ID of the current player */
+    /**
+     * The ID of the current player
+     */
     private int playerId = -1;
 
-    /** The client endpoint for server communication */
+    /**
+     * The client endpoint for server communication
+     */
     private final ChessClientEndpoint client;
 
-    /** ObjectMapper for JSON serialization/deserialization */
+    /**
+     * ObjectMapper for JSON serialization/deserialization
+     */
     private final ObjectMapper mapper;
 
-    /** Handler for processing player actions */
+    /**
+     * Handler for processing player actions
+     */
     private final PlayerActionHandler playerActionHandler;
 
-    /** Handler for processing server messages */
+    /**
+     * Handler for processing server messages
+     */
     private final ServerMessageHandler serverMessageHandler;
 
-    /** List of listeners for game events */
+    /**
+     * List of listeners for game events
+     */
     private final List<GameEventListener> listeners = new CopyOnWriteArrayList<>();
 
-    /** Thread for listening to server messages */
+    /**
+     * Thread for listening to server messages
+     */
     private Thread listenerThread;
 
     /**
@@ -126,7 +144,7 @@ public class GameController implements Runnable, IEventListener {
             try {
                 String message = client.pollNextMessage(500, TimeUnit.MILLISECONDS);
                 if (message != null) serverMessageHandler.handleMessage(message);
-            } catch (Exception e) {
+            } catch (InterruptedException e) {
                 LogUtils.logDebug("Error in GameController loop: " + e);
             }
         }
@@ -169,12 +187,16 @@ public class GameController implements Runnable, IEventListener {
         }
     }
 
-    /** Adds a listener for game events */
+    /**
+     * Adds a listener for game events
+     */
     public void addListener(GameEventListener listener) {
         listeners.add(listener);
     }
 
-    /** Removes a listener for game events */
+    /**
+     * Removes a listener for game events
+     */
     public void removeListener(GameEventListener listener) {
         listeners.remove(listener);
     }
@@ -243,16 +265,24 @@ public class GameController implements Runnable, IEventListener {
      */
     public interface GameEventListener {
 
-        /** Called when a message needs to be displayed to the player */
+        /**
+         * Called when a message needs to be displayed to the player
+         */
         void onWaitMessage(String message);
 
-        /** Called when the player ID is assigned */
+        /**
+         * Called when the player ID is assigned
+         */
         void onPlayerId(int playerId);
 
-        /** Called when an unknown message type is received */
+        /**
+         * Called when an unknown message type is received
+         */
         void onUnknownMessage(String type);
 
-        /** Called when the game is initialized */
+        /**
+         * Called when the game is initialized
+         */
         void onGameInit();
     }
 }

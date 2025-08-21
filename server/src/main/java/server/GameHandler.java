@@ -1,5 +1,6 @@
 package server;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import constants.GameConstants;
@@ -41,15 +42,21 @@ public class GameHandler {
     private static final Logger LOGGER = Logger.getLogger(GameHandler.class.getName());
     private final ObjectMapper mapper = new ObjectMapper();
 
-    /** Maps connected WebSocket sessions to player IDs. */
+    /**
+     * Maps connected WebSocket sessions to player IDs.
+     */
     private final Map<Session, Integer> sessionPlayerIds = new ConcurrentHashMap<>();
 
-    /** Stores player names in order (synchronized for thread safety). */
+    /**
+     * Stores player names in order (synchronized for thread safety).
+     */
     private final List<String> playerNames = Collections.synchronizedList(
             new ArrayList<>(List.of("Player1", "Player2"))
     );
 
-    /** The current game instance (null until both players have joined). */
+    /**
+     * The current game instance (null until both players have joined).
+     */
     private IGame game = null;
 
     // ---------------------- Connection Handling ----------------------
@@ -137,7 +144,7 @@ public class GameHandler {
 
             // Route message by type
             handleMessageByType(genericMsg, session, playerId);
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
             LOGGER.log(Level.SEVERE, "Failed to process message", e);
         }
     }
@@ -194,7 +201,7 @@ public class GameHandler {
                     sessionPlayerIds.keySet(),
                     new Message<>(EventType.PLAYER_SELECTED, cmd)
             );
-        } catch (Exception e) {
+        } catch (JsonProcessingException e) {
             LOGGER.log(Level.SEVERE, "Failed to handle PLAYER_SELECTED", e);
         }
     }

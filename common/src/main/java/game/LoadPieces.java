@@ -1,9 +1,6 @@
 package game;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 
 /**
  * Utility class to load initial piece codes from a CSV file into a static board matrix.
@@ -13,13 +10,19 @@ import java.io.InputStreamReader;
  */
 public class LoadPieces {
 
-    /** Number of rows on the board. */
+    /**
+     * Number of rows on the board.
+     */
     public static final int ROWS = constants.GameConstants.BOARD_ROWS;
 
-    /** Number of columns on the board. */
+    /**
+     * Number of columns on the board.
+     */
     public static final int COLS = constants.GameConstants.BOARD_COLS;
 
-    /** Static matrix holding piece codes for the board. */
+    /**
+     * Static matrix holding piece codes for the board.
+     */
     public static final String[][] board = new String[ROWS][COLS];
 
     // Load board CSV when the class is loaded
@@ -55,7 +58,7 @@ public class LoadPieces {
                 }
             }
 
-        } catch (Exception e) {
+        } catch (IOException e) {
             throw new RuntimeException("Failed to load board CSV: " + e.getMessage(), e);
         }
     }

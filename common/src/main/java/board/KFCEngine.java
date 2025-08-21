@@ -36,7 +36,7 @@ public class KFCEngine implements IBoardEngine {
      */
     @Override
     public boolean isMoveLegal(IBoard board, Position from, Position to) {
-        if(!board.isInBounds(from) || !board.isInBounds(to)) return false;
+        if (!board.isInBounds(from) || !board.isInBounds(to)) return false;
 
         IPiece fromPiece = board.getPiece(from);
         if (fromPiece == null || !fromPiece.canAction()) return false;
@@ -141,7 +141,7 @@ public class KFCEngine implements IBoardEngine {
      * @param now    Current time in nanoseconds
      */
     @Override
-    public void handleUpdatePiece(IBoard board, IPlayer player, IPiece piece, long now){
+    public void handleUpdatePiece(IBoard board, IPlayer player, IPiece piece, long now) {
         if (piece.isCaptured()) return;
 
         // Only update if current action is finished
@@ -166,7 +166,5 @@ public class KFCEngine implements IBoardEngine {
             board.setIsNoTarget(targetPos);
         }
 
-        // Update piece animation/physics
-        piece.update(now);
     }
 }

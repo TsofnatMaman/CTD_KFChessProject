@@ -3,6 +3,7 @@ package sound;
 import utils.LogUtils;
 
 import javax.sound.sampled.*;
+import java.io.IOException;
 import java.net.URL;
 
 /**
@@ -54,9 +55,11 @@ public class SoundManager {
                 // Load audio data into the clip and start playback
                 clip.open(audioInputStream);
                 clip.start();
+            } catch (UnsupportedAudioFileException | IOException e) {
+                throw new RuntimeException(e);
             }
 
-        } catch (Exception e) {
+        } catch (LineUnavailableException | RuntimeException e) {
             LogUtils.logDebug("Error playing sound '" + fileName + "': " + e.getMessage());
         }
     }

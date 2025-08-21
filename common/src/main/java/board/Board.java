@@ -16,22 +16,34 @@ import java.util.List;
  */
 public class Board implements IBoard {
 
-    /** 2D array representing pieces on the board; null if no piece. */
+    /**
+     * 2D array representing pieces on the board; null if no piece.
+     */
     private final IPiece[][] boardGrid;
 
-    /** 2D array representing target positions; -1 means no target. */
+    /**
+     * 2D array representing target positions; -1 means no target.
+     */
     private final int[][] isTarget;
 
-    /** Array of players participating in the game. */
+    /**
+     * Array of players participating in the game.
+     */
     public final IPlayer[] players;
 
-    /** Configuration of the board (size, grid, etc.). */
+    /**
+     * Configuration of the board (size, grid, etc.).
+     */
     public final BoardConfig boardConfig;
 
-    /** Rules engine for move/jump legality and updates. */
+    /**
+     * Rules engine for move/jump legality and updates.
+     */
     private final IBoardEngine boardRulesEngine;
 
-    /** Constant representing no target. */
+    /**
+     * Constant representing no target.
+     */
     public final int IS_NO_TARGET = -1;
 
     /**
@@ -108,9 +120,12 @@ public class Board implements IBoard {
         long now = System.nanoTime();
 
         for (IPlayer player : players) {
-            for (int i=0; i<player.getPieces().size(); i++) {
+            for (int i = 0; i < player.getPieces().size(); i++) {
                 IPiece piece = player.getPieces().get(i);
                 boardRulesEngine.handleUpdatePiece(this, player, piece, now);
+
+                // Update piece animation/physics
+                piece.update(now);
             }
         }
     }
