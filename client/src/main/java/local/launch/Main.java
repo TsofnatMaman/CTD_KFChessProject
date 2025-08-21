@@ -2,15 +2,17 @@ package local.launch;
 
 import board.BoardConfig;
 import game.Game;
+import game.GameLoop;
 import interfaces.IGame;
+import interfaces.IGameLoop;
 import interfaces.IPlayer;
 import local.controller.Controller;
 import local.view.BoardPanel;
 import pieces.Position;
 import player.PlayerCursor;
 import player.PlayerFactory;
-import viewUtils.GamePanel;
-import viewUtils.PlayerInfoPanel;
+import viewUtils.game.GamePanel;
+import viewUtils.game.PlayerInfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -66,7 +68,9 @@ public class Main {
 
             // ------------------ Start Game ------------------
             System.out.println("Debug: Starting local KFChess game");
-            game.run(); // optional: may run in a separate thread if needed
+
+            IGameLoop gameLoop = new GameLoop(game);
+            gameLoop.run();
         });
     }
 }

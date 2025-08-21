@@ -5,7 +5,7 @@ import pieces.Position;
 /**
  * Interface for game logic and state management.
  */
-public interface IGame extends Runnable {
+public interface IGame {
 
     /**
      * Executes all commands in the queue and updates game state.
@@ -46,12 +46,6 @@ public interface IGame extends Runnable {
     IPlayer win();
 
     /**
-     * Runs the main game loop.
-     */
-    @Override
-    void run();
-
-    /**
      * Gets the start time of the game in nanoseconds.
      * @return Start time in nanoseconds
      */
@@ -75,10 +69,14 @@ public interface IGame extends Runnable {
      */
     boolean isRunning();
 
+    void setRunning(boolean running);
+
     /**
      * Sets the name of a player by ID.
      * @param playerId The player's ID
      * @param name The new name
      */
     void setPlayerName(int playerId, String name);
+
+    void setStartTimeNano(long startTimeNano);
 }

@@ -6,7 +6,9 @@ import constants.GameConstants;
 import constants.Messages;
 import dto.*;
 import game.Game;
+import game.GameLoop;
 import interfaces.IGame;
+import interfaces.IGameLoop;
 import interfaces.IPlayer;
 import player.PlayerFactory;
 import board.BoardConfig;
@@ -142,7 +144,9 @@ public class GameHandler {
         );
 
         game = new Game(boardConfig, players);
-        game.run();
+
+        IGameLoop gameLoop = new GameLoop(game);
+        gameLoop.run();
     }
 
     private void sendInitialGameStateToAll() {

@@ -2,10 +2,6 @@ package game;
 
 import board.Board;
 import board.BoardConfig;
-import constants.GameConstants;
-import events.EGameEvent;
-import events.EventPublisher;
-import events.GameEvent;
 import events.listeners.CapturedLogger;
 import events.listeners.GameEndLogger;
 import events.listeners.JumpsLogger;
@@ -15,9 +11,7 @@ import interfaces.IBoard;
 import interfaces.IGame;
 import interfaces.IPlayer;
 import pieces.Position;
-import utils.LogUtils;
 
-import javax.swing.*;
 import java.util.LinkedList;
 import java.util.Optional;
 import java.util.Queue;
@@ -31,7 +25,6 @@ public class Game implements IGame {
     private final Queue<ICommand> commandQueue;
     private final IBoard board;
 
-    private Timer timer;
     private long startTimeNano;
     private volatile boolean running;
 
@@ -70,6 +63,9 @@ public class Game implements IGame {
     @Override
     public void update() {
         ICommand cmd;
+
+        board.updateAll();
+
         while ((cmd = commandQueue.poll()) != null) {
             cmd.execute();
         }
@@ -124,54 +120,6 @@ public class Game implements IGame {
         return null;
     }
 
-    /**
-     * Starts the game loop using a Swing Timer.
-     */
-    @Override
-    public void run() {
-        if (timer == null) {
-            timer = new Timer(GameConstants.GAME_LOOP_MS, e -> tick());
-        }
-        if (!running) {
-            running = true;
-            startTimeNano = System.nanoTime();
-        }
-        timer.start();
-    }
-
-    /**
-     * Single tick of the game loop.
-     * Updates commands, the board, and publishes game events.
-     */
-    private void tick() {
-        IPlayer winner = win();
-        if (winner == null) {
-            update();
-            board.updateAll();
-            EventPublisher.getInstance().publish(
-                    EGameEvent.GAME_UPDATE,
-                    new GameEvent(EGameEvent.GAME_UPDATE, null)
-            );
-        } else {
-            EventPublisher.getInstance().publish(
-                    EGameEvent.GAME_ENDED,
-                    new GameEvent(EGameEvent.GAME_ENDED, null)
-            );
-            stopGameLoop();
-            LogUtils.logDebug("Game Over. Winner: Player " + winner.getName());
-        }
-    }
-
-    /**
-     * Stops the game loop.
-     */
-    private void stopGameLoop() {
-        if (timer != null && timer.isRunning()) {
-            timer.stop();
-        }
-        running = false;
-    }
-
     @Override
     public long getStartTimeNano() {
         return startTimeNano;
@@ -194,7 +142,17 @@ public class Game implements IGame {
     }
 
     @Override
+    public void setRunning(boolean running) {
+        this.running = running;
+    }
+
+    @Override
     public void setPlayerName(int playerId, String name) {
         getPlayerById(playerId).setName(name);
+    }
+
+    @Override
+    public void setStartTimeNano(long startTimeNano) {
+        this.startTimeNano = startTimeNano;
     }
 }

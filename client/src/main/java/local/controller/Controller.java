@@ -8,8 +8,9 @@ import interfaces.IGame;
 import interfaces.IPiece;
 import local.view.BoardPanel;
 import pieces.Position;
+import sound.EventSoundListener;
 import utils.Utils;
-import viewUtils.GamePanel;
+import viewUtils.game.GamePanel;
 
 import java.util.Collections;
 import java.util.List;
@@ -46,6 +47,9 @@ public class Controller implements IEventListener {
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
+
+        // Initialize sound listener
+        new EventSoundListener();
     }
 
     /**

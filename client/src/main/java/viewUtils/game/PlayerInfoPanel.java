@@ -1,4 +1,4 @@
-package viewUtils;
+package viewUtils.game;
 
 import constants.PlayerConstants;
 import events.EGameEvent;

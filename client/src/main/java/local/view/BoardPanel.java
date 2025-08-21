@@ -1,12 +1,17 @@
 package local.view;
 
+import constants.KeyConstants;
+import viewUtils.board.CursorController;
 import interfaces.IBoard;
 import interfaces.IPlayerCursor;
 import local.controller.Controller;
 import pieces.Position;
-import viewUtils.BaseBoardPanel;
+import viewUtils.board.BaseBoardPanel;
+import viewUtils.board.KeyManager;
+import viewUtils.board.SelectionRenderer;
 
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.util.Collections;
 import java.util.List;
 
@@ -14,6 +19,8 @@ public class BoardPanel extends BaseBoardPanel {
 
     private final IPlayerCursor cursor1;
     private final IPlayerCursor cursor2;
+
+    private final KeyManager keyManager;
 
     private Position selected1 = null;
     private List<Position> legalMoves1 = Collections.emptyList();
@@ -31,49 +38,51 @@ public class BoardPanel extends BaseBoardPanel {
         this.cursor1 = cursor1;
         this.cursor2 = cursor2;
 
-        setFocusable(true);
-        requestFocusInWindow();
+        keyManager = new KeyManager();
 
+        initKeyBindings();
         addKeyListener(new java.awt.event.KeyAdapter() {
             @Override
-            public void keyPressed(java.awt.event.KeyEvent e) {
-                handleKey(e.getKeyCode());
+            public void keyPressed(KeyEvent e) {
+                String key = KeyConstants.fromKeyCode(e.getKeyCode());
+                if (key != null) {
+                    keyManager.handleKey(key);
+                }
             }
         });
+
+        setFocusable(true);
+        requestFocusInWindow();
     }
 
     public void setController(Controller controller) {
         this.controller = controller;
     }
 
-    private void handleKey(int keyCode) {
-        switch (keyCode) {
-            case java.awt.event.KeyEvent.VK_UP -> cursor1.moveUp();
-            case java.awt.event.KeyEvent.VK_DOWN -> cursor1.moveDown();
-            case java.awt.event.KeyEvent.VK_LEFT -> cursor1.moveLeft();
-            case java.awt.event.KeyEvent.VK_RIGHT -> cursor1.moveRight();
-            case java.awt.event.KeyEvent.VK_ENTER -> {
-                if (controller != null)
-                    controller.handlePlayerMove(0, cursor1.getPosition());
-            }
-
-            case java.awt.event.KeyEvent.VK_W -> cursor2.moveUp();
-            case java.awt.event.KeyEvent.VK_S -> cursor2.moveDown();
-            case java.awt.event.KeyEvent.VK_A -> cursor2.moveLeft();
-            case java.awt.event.KeyEvent.VK_D -> cursor2.moveRight();
-            case java.awt.event.KeyEvent.VK_SPACE -> {
-                if (controller != null)
-                    controller.handlePlayerMove(1, cursor2.getPosition());
-            }
-        }
-
-        repaint();
-    }
-
     public void setSelected1(Position pos) { selected1 = pos; }
     public void setLegalMoves1(List<Position> moves) { legalMoves1 = moves; }
     public void setSelected2(Position pos) { selected2 = pos; }
     public void setLegalMoves2(List<Position> moves) { legalMoves2 = moves; }
+
+    @Override
+    protected void initKeyBindings() {
+        // Controller for player 1 (arrows + Enter)
+        CursorController.KeyBindings player1Keys = new CursorController.KeyBindings(KeyConstants.UP, KeyConstants.DOWN, KeyConstants.LEFT, KeyConstants.RIGHT, KeyConstants.ENTER);
+
+        CursorController cursorController1 = new CursorController(cursor1, this, player1Keys, keyManager);
+        cursorController1.setOnPlayerAction(pos -> {
+            if (controller != null)
+                controller.handlePlayerMove(0, pos);
+        });
+
+        // Controller for player 2 (WASD + Space)
+        CursorController.KeyBindings player2Keys = new CursorController.KeyBindings(KeyConstants.W, KeyConstants.S, KeyConstants.A, KeyConstants.D, KeyConstants.SPACE);
+        CursorController cursorController2 = new CursorController(cursor2, this, player2Keys, keyManager);
+        cursorController2.setOnPlayerAction(pos -> {
+            if (controller != null)
+                controller.handlePlayerMove(1, pos);
+        });
+    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -83,29 +92,8 @@ public class BoardPanel extends BaseBoardPanel {
         cursor2.draw(g, getWidth(), getHeight());
 
         Graphics2D g2 = (Graphics2D) g;
-        int cellW = getWidth() / board.getCols();
-        int cellH = getHeight() / board.getRows();
-
-        if (selected1 != null) {
-            g2.setColor(SELECT_COLOR_P1);
-            g2.fillRect(selected1.getCol() * cellW, selected1.getRow() * cellH, cellW, cellH);
-            for (Position move : legalMoves1) {
-                int x = move.getCol() * cellW + cellW/4;
-                int y = move.getRow() * cellH + cellH/4;
-                int w = cellW/2, h = cellH/2;
-                g2.fillOval(x, y, w, h);
-            }
-        }
-
-        if (selected2 != null) {
-            g2.setColor(SELECT_COLOR_P2);
-            g2.fillRect(selected2.getCol() * cellW, selected2.getRow() * cellH, cellW, cellH);
-            for (Position move : legalMoves2) {
-                int x = move.getCol() * cellW + cellW/4;
-                int y = move.getRow() * cellH + cellH/4;
-                int w = cellW/2, h = cellH/2;
-                g2.fillOval(x, y, w, h);
-            }
-        }
+        SelectionRenderer.draw(g2, selected1, legalMoves1, SELECT_COLOR_P1, board.getCols(), board.getRows(), getWidth(), getHeight());
+        SelectionRenderer.draw(g2, selected2, legalMoves2, SELECT_COLOR_P2, board.getCols(), board.getRows(), getWidth(), getHeight());
     }
+
 }

@@ -10,7 +10,7 @@ import endpoint.view.AskUserName;
 import endpoint.view.WaitDialog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import viewUtils.GamePanel;
+import viewUtils.game.GamePanel;
 
 import javax.swing.*;
 import java.net.URI;

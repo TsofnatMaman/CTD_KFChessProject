@@ -1,4 +1,4 @@
-package viewUtils;
+package viewUtils.board;
 
 import board.BoardConfig;
 import dto.PieceView;

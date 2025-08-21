@@ -1,7 +1,7 @@
 package endpoint.controller;
 
 import interfaces.IPlayer;
-import viewUtils.BaseBoardPanel;
+import viewUtils.board.BaseBoardPanel;
 
 /**
  * Interface representing the game UI components and updates.

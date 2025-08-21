@@ -8,8 +8,8 @@ import interfaces.IPlayer;
 import interfaces.IPlayerCursor;
 import player.PlayerCursor;
 import pieces.Position;
-import viewUtils.GamePanel;
-import viewUtils.PlayerInfoPanel;
+import viewUtils.game.GamePanel;
+import viewUtils.game.PlayerInfoPanel;
 
 import java.awt.*;
 import java.util.Arrays;

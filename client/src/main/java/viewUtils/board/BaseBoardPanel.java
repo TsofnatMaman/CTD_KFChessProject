@@ -1,4 +1,4 @@
-package viewUtils;
+package viewUtils.board;
 
 import dto.PieceView;
 import events.EGameEvent;
@@ -12,6 +12,8 @@ import utils.LogUtils;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -32,12 +34,32 @@ public abstract class BaseBoardPanel extends JPanel implements IBoardView, IEven
 
         setFocusable(true);
 
+        setOpaque(false);
+        setDoubleBuffered(true);
+
+        enableBoardFocus();
+
         loadBoardImage();
 
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
     }
 
-    public void initKeyBindings() {}
+
+
+    /**
+     * Ensures the BoardPanel receives keyboard focus on click.
+     */
+    private void enableBoardFocus() {
+        addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                requestFocusInWindow();
+            }
+        });
+        SwingUtilities.invokeLater(this::requestFocusInWindow);
+    }
+
+    protected abstract void initKeyBindings();
 
     private void loadBoardImage() {
         try {

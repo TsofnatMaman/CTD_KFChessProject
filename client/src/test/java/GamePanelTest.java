@@ -1,12 +1,13 @@
+import endpoint.view.BoardPanel;
 import interfaces.IBoard;
 import interfaces.IPlayer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.Assumptions;
 
 import board.BoardConfig;
-import viewUtils.BaseBoardPanel;
-import viewUtils.GamePanel;
-import viewUtils.PlayerInfoPanel;
+import viewUtils.board.BaseBoardPanel;
+import viewUtils.game.GamePanel;
+import viewUtils.game.PlayerInfoPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,7 +45,7 @@ class GamePanelTest {
                 when(board.getBoardConfig()).thenReturn(bc);
 
                 // Concrete lightweight BaseBoardPanel (anonymous subclass)
-                BaseBoardPanel bp = new BaseBoardPanel(board) {};
+                BaseBoardPanel bp = new BoardPanel(board, null) {};
 
                 // Create two real PlayerInfoPanel backed by mocked IPlayer instances
                 IPlayer p1 = mock(IPlayer.class);

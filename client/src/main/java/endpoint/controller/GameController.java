@@ -7,8 +7,11 @@ import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
+import game.GameLoop;
 import interfaces.IGame;
+import interfaces.IGameLoop;
 import pieces.Position;
+import sound.EventSoundListener;
 import utils.LogUtils;
 import utils.Utils;
 
@@ -42,6 +45,9 @@ public class GameController implements Runnable, IEventListener {
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
+
+        // Initialize sound listener
+        new EventSoundListener();
     }
 
     // ------------------- Threads -------------------
@@ -65,7 +71,8 @@ public class GameController implements Runnable, IEventListener {
 
     public void startRunGame() {
         if (model != null && !Thread.currentThread().isInterrupted()) {
-            new Thread(() -> model.run(), "Game-Loop-Thread").start();
+            IGameLoop gameLoop = new GameLoop(model);
+            new Thread(gameLoop, "Game-Loop-Thread").start();
         }
     }
 

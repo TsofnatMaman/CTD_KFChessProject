@@ -1,7 +1,5 @@
 package moves;
 
-import java.util.Objects;
-
 /**
  * Represents a single move with delta x and delta y,
  * and optional conditions that must be satisfied for the move to be valid.

@@ -1,17 +1,15 @@
-package viewUtils;
+package viewUtils.game;
 
 import constants.PlayerConstants;
 import endpoint.controller.IGameUI;
 import interfaces.IPlayer;
-import sound.EventSoundListener;
 import utils.LogUtils;
+import viewUtils.board.BaseBoardPanel;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.util.List;
 import java.util.Objects;
@@ -28,7 +26,7 @@ public class GamePanel extends JPanel implements IGameUI {
     private final BaseBoardPanel boardPanel;
     private final List<PlayerInfoPanel> playerPanels;
     private final Image backgroundImage;
-    private final JLabel timerLabel;
+    private final TimerPanel timerPanel;
 
     /**
      * Constructor receives all UI components and external dependencies.
@@ -47,12 +45,8 @@ public class GamePanel extends JPanel implements IGameUI {
         backgroundImage = loadBackgroundImage("background/background.jpg");
 
         // Initialize UI and timer
-        timerLabel = createTimerLabel();
+        timerPanel = new TimerPanel();
         initUI();
-        boardPanel.initKeyBindings();
-
-        // Initialize sound listener
-        new EventSoundListener();
 
         LogUtils.logDebug("GamePanel initialized");
     }
@@ -65,12 +59,10 @@ public class GamePanel extends JPanel implements IGameUI {
         add(playerPanels.get(1), BorderLayout.EAST);
 
         // Configure and add the board panel
-        boardPanel.setOpaque(false);
-        enableBoardFocus(boardPanel);
         add(boardPanel, BorderLayout.CENTER);
 
         // Add timer at the top
-        add(timerLabel, BorderLayout.NORTH);
+        add(timerPanel, BorderLayout.NORTH);
     }
 
     // ----------- COMPONENT CREATORS -----------
@@ -82,26 +74,6 @@ public class GamePanel extends JPanel implements IGameUI {
             LogUtils.logDebug("Could not load background image: " + e.getMessage());
             return null;
         }
-    }
-
-    private JLabel createTimerLabel() {
-        JLabel label = new JLabel("Time: 00:00");
-        label.setFont(new Font("Arial", Font.BOLD, 18));
-        label.setHorizontalAlignment(SwingConstants.CENTER);
-        return label;
-    }
-
-    /**
-     * Ensures the BoardPanel receives keyboard focus on click.
-     */
-    private void enableBoardFocus(BaseBoardPanel board) {
-        board.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                board.requestFocusInWindow();
-            }
-        });
-        SwingUtilities.invokeLater(board::requestFocusInWindow);
     }
 
     /**
@@ -120,17 +92,17 @@ public class GamePanel extends JPanel implements IGameUI {
         dialog.setVisible(true);
     }
 
+    @Override
+    public void updateTimerLabel(String text) {
+        timerPanel.updateTimerLabel(text);
+    }
+
     /**
      * Called when the board updates (piece moved, captured, etc.)
      */
     @Override
     public void onGameUpdate() {
         boardPanel.update();
-    }
-
-    @Override
-    public void updateTimerLabel(String text) {
-        timerLabel.setText(text);
     }
 
     // ----------- OVERRIDES -----------

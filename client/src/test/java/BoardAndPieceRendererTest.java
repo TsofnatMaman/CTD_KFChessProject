@@ -1,8 +1,8 @@
 import board.BoardConfig;
 import dto.PieceView;
 import org.junit.jupiter.api.Test;
-import viewUtils.BoardRenderer;
-import viewUtils.PieceRenderer;
+import viewUtils.board.BoardRenderer;
+import viewUtils.board.PieceRenderer;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
