@@ -8,20 +8,12 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Interface representing a game piece and its operations.
+ * Represents a game piece and its operations.
  */
 public interface IPiece extends Serializable {
 
-    /**
-     * Gets the player index that owns this piece.
-     * @return Player index
-     */
     int getPlayer();
 
-    /**
-     * Gets the type of this piece.
-     * @return Piece type
-     */
     EPieceType getType();
 
     /**
@@ -31,66 +23,38 @@ public interface IPiece extends Serializable {
     void update(long now);
 
     /**
-     * Moves the piece to a target position.
+     * Moves the piece to a target position on the board (grid coordinates).
      * @param to Target board position
      */
     void move(Position to);
 
-    /**
-     * Performs a jump action for this piece.
-     */
+    /** Performs a jump action for this piece. */
     void jump();
 
-    /**
-     * Checks if this piece has been captured.
-     * @return True if captured, false otherwise
-     */
+    /** Checks if this piece has been captured. */
     boolean isCaptured();
 
-    /**
-     * Marks this piece as captured.
-     */
+    /** Marks this piece as captured. */
     void markCaptured();
 
-    /**
-     * Retrieves the list of legal moves for this piece.
-     * @return List of Move objects
-     */
+    /** Retrieves the list of legal moves for this piece. */
     List<Move> getMoves();
 
-    /**
-     * Sets the legal moves for this piece.
-     * @param moves List of Move objects
-     */
+    /** Sets the legal moves for this piece. */
     void setMoves(List<Move> moves);
 
-    /**
-     * Determines if this piece can capture or move over other pieces.
-     * @return True if can capture, false otherwise
-     */
-    boolean canCapturable();
+    /** Returns true if this piece can be captured by another piece. */
+    boolean isCapturable();
 
-    /**
-     * Gets the current board position of this piece.
-     * @return Current position
-     */
+    /** Gets the current board position of this piece. */
     Position getPos();
 
-    /**
-     * Returns true if this piece has not moved yet.
-     * @return True if first move, false otherwise
-     */
+    /** Returns true if this piece has not moved yet. */
     boolean isFirstMove();
 
-    /**
-     * Gets the current state of this piece in the state machine.
-     * @return Current IState object
-     */
+    /** Gets the current state of this piece in the state machine. */
     IState getCurrentState();
 
-    /**
-     * Determines if the piece can perform an action.
-     * @return True if can act, false otherwise
-     */
+    /** Returns true if the piece can perform an action this turn. */
     boolean canAction();
 }

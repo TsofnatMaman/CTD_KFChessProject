@@ -5,19 +5,19 @@ package state;
  */
 public enum EState {
 
-    /** Idle state: can perform actions, cannot move over other pieces. */
+    /** Idle state: can perform actions, can be captured or moved over. */
     IDLE("idle", true, true),
 
-    /** Jump state: cannot perform actions, cannot move over. */
+    /** Jump state: cannot perform actions, cannot be captured or moved over. */
     JUMP("jump", false, false),
 
-    /** Move state: cannot perform actions, cannot move over. */
+    /** Move state: cannot perform actions, cannot be captured or moved over. */
     MOVE("move", false, false),
 
-    /** Long rest state: cannot perform actions, can move over. */
+    /** Long rest state: cannot perform actions, can be captured or moved over. */
     LONG_REST("long_rest", false, true),
 
-    /** Short rest state: cannot perform actions, can move over. */
+    /** Short rest state: cannot perform actions, can be captured or moved over. */
     SHORT_REST("short_rest", false, true);
 
     private final String name;
@@ -28,7 +28,7 @@ public enum EState {
      * Constructs an EState enum value.
      *
      * @param name          State name
-     * @param canAction     Whether the state allows performing actions
+     * @param canAction     Whether actions can be performed in this state
      * @param canCapturable Whether pieces can be captured or moved over in this state
      */
     EState(String name, boolean canAction, boolean canCapturable) {
@@ -37,30 +37,18 @@ public enum EState {
         this.canCapturable = canCapturable;
     }
 
-    /**
-     * Returns the string name of the state.
-     *
-     * @return State name
-     */
+    /** Returns the state name as a string. */
     @Override
     public String toString() {
         return name;
     }
 
-    /**
-     * Returns true if this state allows performing actions.
-     *
-     * @return true if actions are allowed
-     */
+    /** Returns true if actions are allowed in this state. */
     public boolean isCanAction() {
         return canAction;
     }
 
-    /**
-     * Returns true if this state allows pieces to be captured or moved over.
-     *
-     * @return true if capturable/movable over
-     */
+    /** Returns true if pieces can be captured or moved over in this state. */
     public boolean isCanCapturable() {
         return canCapturable;
     }

@@ -1,7 +1,6 @@
 package local.launch;
 
 import board.BoardConfig;
-import game.Game;
 import game.GameFactory;
 import game.GameLoop;
 import interfaces.IGame;
@@ -20,10 +19,23 @@ import java.awt.*;
 import java.util.Arrays;
 
 /**
- * Entry point for launching a local KFChess game without server.
+ * Entry point for launching a local KFChess game without a server.
+ * <p>
+ * This class sets up the Swing UI, initializes the board, players, controller,
+ * and starts the game loop in local mode.
+ * </p>
  */
 public class Main {
 
+    /**
+     * Application entry point.
+     * <p>
+     * This method initializes the Swing UI, creates the game model, sets up
+     * players, controllers, panels, and starts the local game loop.
+     * </p>
+     *
+     * @param args program arguments (unused)
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
 
@@ -33,8 +45,8 @@ public class Main {
 
             // ------------------ Board ------------------
             BoardConfig boardConfig = new BoardConfig(
-                    new Dimension(8, 8),     // logical grid
-                    new Dimension(700, 700), // display size
+                    new Dimension(8, 8),     // logical grid (rows × cols)
+                    new Dimension(700, 700), // display size in pixels
                     new Dimension(500, 500)  // logical board size
             );
 
@@ -44,34 +56,39 @@ public class Main {
                     boardConfig
             );
 
-            PlayerCursor pc1 = new PlayerCursor(new Position(0,0), players[0].getColor());
-            PlayerCursor pc2 = new PlayerCursor(new Position(0,0), players[1].getColor());
+            // Each player gets a cursor for selection/navigation
+            PlayerCursor pc1 = new PlayerCursor(new Position(0, 0), players[0].getColor());
+            PlayerCursor pc2 = new PlayerCursor(new Position(0, 0), players[1].getColor());
 
             // ------------------ Game ------------------
             IGame game = GameFactory.createNewGame(boardConfig, players);
 
             // ------------------ Board Panel ------------------
-            BoardPanel bp = new BoardPanel(game.getBoard(), pc1, pc2);
-
+            BoardPanel boardPanel = new BoardPanel(game.getBoard(), pc1, pc2);
 
             // ------------------ Game View ------------------
-            GamePanel gameView = new GamePanel(bp, Arrays.stream(players).map(PlayerInfoPanel::new).toList());
+            GamePanel gameView = new GamePanel(
+                    boardPanel,
+                    Arrays.stream(players)
+                            .map(PlayerInfoPanel::new) // one info panel per player
+                            .toList()
+            );
             frame.setContentPane(gameView);
 
             // ------------------ Controller ------------------
             Controller controller = new Controller(game, gameView);
-            bp.setController(controller);
+            boardPanel.setOnPlayerAction(controller::handlePlayerMove);
 
             // ------------------ Frame Settings ------------------
             frame.pack();
-            frame.setLocationRelativeTo(null);
+            frame.setLocationRelativeTo(null); // center window
             frame.setVisible(true);
 
             // ------------------ Start Game ------------------
             System.out.println("Debug: Starting local KFChess game");
 
             IGameLoop gameLoop = new GameLoop(game);
-            gameLoop.run();
+            gameLoop.run(); // start game loop
         });
     }
 }

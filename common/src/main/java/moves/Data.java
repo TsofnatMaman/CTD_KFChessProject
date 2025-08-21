@@ -5,27 +5,34 @@ import interfaces.IPiece;
 import pieces.Position;
 
 /**
- * Container class for move validation data.
- * Holds references to the game board, the piece being moved, and the target position.
- * Useful for move and jump condition checks.
+ * Immutable container class used for move validation.
+ * <p>
+ * This object groups together:
+ * <ul>
+ *   <li>The current game board state</li>
+ *   <li>The piece attempting to move</li>
+ *   <li>The target position of the move</li>
+ * </ul>
+ * It is typically passed to move/jump condition checks to simplify validation logic.
+ * </p>
  */
 public class Data {
 
-    /** Reference to the current game board */
+    /** Reference to the current game board. */
     public final IBoard board;
 
-    /** The piece attempting to move */
+    /** The piece that is attempting to move. */
     public final IPiece pieceFrom;
 
-    /** The target position for the move */
+    /** The target position for the move. */
     public final Position to;
 
     /**
-     * Constructs a new Data object for move validation.
+     * Constructs a new {@code Data} object for move validation.
      *
-     * @param board     The current game board
-     * @param fromPiece The piece that is attempting to move
-     * @param to        The target position for the move
+     * @param board     the current game board
+     * @param fromPiece the piece attempting to move
+     * @param to        the target position for the move
      */
     public Data(IBoard board, IPiece fromPiece, Position to) {
         this.board = board;

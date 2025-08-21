@@ -5,17 +5,26 @@ import java.util.ResourceBundle;
 
 /**
  * Utility class for accessing localized messages from resources/messages.properties.
+ * <p>
  * Provides default fallback values for missing keys and supports formatting with arguments.
+ * </p>
  */
 public final class Messages {
 
-    private static final String BUNDLE_NAME = "messages"; // path to messages.properties
+    /** Name of the resource bundle file (without extension). */
+    private static final String BUNDLE_NAME = "messages";
+
+    /** Loaded resource bundle for accessing message strings. */
     private static final ResourceBundle BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME);
 
-    private Messages() {} // prevent instantiation
+    // Private constructor to prevent instantiation
+    private Messages() {}
 
     /**
      * Enum containing message keys and their default values.
+     * <p>
+     * Use these keys to retrieve localized messages safely.
+     * </p>
      */
     public enum Key {
         CLIENT_CONNECTED_LOG("client.connected.log", "Client connected: "),
@@ -42,10 +51,12 @@ public final class Messages {
             this.defaultValue = defaultValue;
         }
 
+        /** Returns the key string used in the resource bundle. */
         public String key() {
             return key;
         }
 
+        /** Returns the default value if the key is missing in the bundle. */
         public String defaultValue() {
             return defaultValue;
         }
@@ -53,9 +64,11 @@ public final class Messages {
 
     /**
      * Retrieves the message string for the given key, formatted with optional arguments.
-     * Falls back to the default value if the key is missing or formatting fails.
+     * <p>
+     * If the key is missing or formatting fails, falls back to the default value.
+     * </p>
      *
-     * @param key the message key
+     * @param key  the message key
      * @param args optional arguments for formatting
      * @return the formatted message string
      */

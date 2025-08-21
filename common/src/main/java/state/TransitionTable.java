@@ -9,8 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Represents the transition table for piece states.
- * Loads transitions from a CSV resource in the format:
+ * Represents a state transition table for chess pieces.
+ * Transitions are loaded from a CSV file with format:
  * FROM_STATE,EVENT,TO_STATE
  */
 public class TransitionTable {
@@ -19,9 +19,9 @@ public class TransitionTable {
     private final Map<EState, Map<EPieceEvent, EState>> table = new HashMap<>();
 
     /**
-     * Constructs a TransitionTable from a CSV resource.
+     * Constructs a TransitionTable by reading a CSV resource.
      *
-     * @param csvResourcePath path to the CSV file in resources
+     * @param csvResourcePath path to CSV in resources
      */
     public TransitionTable(String csvResourcePath) {
         try (InputStream is = getClass().getResourceAsStream(csvResourcePath)) {
@@ -30,7 +30,7 @@ public class TransitionTable {
             }
             try (BufferedReader br = new BufferedReader(new InputStreamReader(is))) {
 
-                // Skip header line
+                // Skip header
                 String line = br.readLine();
 
                 while ((line = br.readLine()) != null) {
@@ -47,18 +47,17 @@ public class TransitionTable {
         }
     }
 
-    /** Adds a transition to the table */
+    /** Adds a transition from one state to another via an event */
     private void add(EState from, EPieceEvent event, EState to) {
         table.computeIfAbsent(from, k -> new HashMap<>()).put(event, to);
     }
 
     /**
-     * Gets the next state given a current state and event.
+     * Returns the next state given a current state and event.
      *
      * @param from  Current state
-     * @param event Triggering event
-     * @return The next state
-     * @throws IllegalStateException if the transition is invalid
+     * @param event Event that triggers the transition
+     * @return Next state
      */
     public EState next(EState from, EPieceEvent event) {
         Map<EPieceEvent, EState> map = table.get(from);

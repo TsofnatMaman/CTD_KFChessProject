@@ -10,7 +10,8 @@ import java.io.IOException;
 import java.util.List;
 
 /**
- * Represents a chess piece on the board, including its type, owner, position, and state.
+ * Represents a chess piece on the board.
+ * Maintains type, owner, position, and its state machine for animations and actions.
  */
 public class Piece implements IPiece {
 
@@ -23,12 +24,12 @@ public class Piece implements IPiece {
     private boolean isFirstMove;
 
     /**
-     * Constructs a piece with its type, owner, state machine, and starting position.
+     * Constructs a chess piece.
      *
-     * @param type Piece type
-     * @param playerId Owner player ID
-     * @param sm State machine controlling animations and actions
-     * @param position Initial board position
+     * @param type      Piece type
+     * @param playerId  Owner player ID
+     * @param sm        State machine controlling animations and actions
+     * @param position  Initial board position
      * @throws IOException if move definitions cannot be loaded
      */
     public Piece(EPieceType type, int playerId, StateMachine sm, Position position) throws IOException {
@@ -42,21 +43,13 @@ public class Piece implements IPiece {
 
     /* --- Getters and setters --- */
 
-    public Position getPosition() {
+    @Override
+    public Position getPos() {
         return position;
     }
 
     private void setPosition(Position position) {
         this.position = position;
-    }
-
-    public int getPlayerId() {
-        return playerId;
-    }
-
-    @Override
-    public EPieceType getType() {
-        return type;
     }
 
     @Override
@@ -65,8 +58,8 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public Position getPos() {
-        return position;
+    public EPieceType getType() {
+        return type;
     }
 
     @Override
@@ -98,11 +91,11 @@ public class Piece implements IPiece {
         this.wasCaptured = true;
     }
 
-    /* --- State / action methods --- */
+    /* --- State and action methods --- */
 
     @Override
     public void update(long now) {
-        // Update logical position only after animation/action is finished
+        // Update position only after the current action is finished
         if (fsm.getCurrentState().isActionFinished(now)) {
             setPosition(fsm.getCurrentState().getPhysics().getTargetPos());
         }
@@ -131,12 +124,12 @@ public class Piece implements IPiece {
     }
 
     @Override
-    public boolean canCapturable() {
+    public boolean isCapturable() {
         return fsm.getCurrentState().getName().isCanCapturable();
     }
 
     @Override
     public String toString() {
-        return type.toString() + getPlayer();
+        return type.toString() + playerId;
     }
 }

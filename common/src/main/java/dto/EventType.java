@@ -1,9 +1,10 @@
 package dto;
 
 /**
- * Enum representing the different types of events in the game.
+ * Enum representing the different types of game events.
  */
 public enum EventType {
+
     /** Waiting for players or other actions. */
     WAIT,
 

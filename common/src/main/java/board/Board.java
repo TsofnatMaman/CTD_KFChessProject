@@ -8,23 +8,45 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * Board manages the state of pieces, players, and targets,
- * but does not contain move legality logic.
+ * Board class manages the state of all pieces, players, and target squares on the board.
+ * <p>
+ * This class does NOT handle move legality directly; legality checks are delegated
+ * to the {@link IBoardEngine} instance.
+ * </p>
  */
 public class Board implements IBoard {
 
+    /** 2D array representing pieces on the board; null if no piece. */
     private final IPiece[][] boardGrid;
+
+    /** 2D array representing target positions; -1 means no target. */
     private final int[][] isTarget;
+
+    /** Array of players participating in the game. */
     public final IPlayer[] players;
+
+    /** Configuration of the board (size, grid, etc.). */
     public final BoardConfig boardConfig;
+
+    /** Rules engine for move/jump legality and updates. */
     private final IBoardEngine boardRulesEngine;
+
+    /** Constant representing no target. */
     public final int IS_NO_TARGET = -1;
 
+    /**
+     * Constructs a Board with the given configuration, rules engine, and players.
+     *
+     * @param bc          the board configuration
+     * @param rulesEngine the rules engine for move legality
+     * @param players     array of players
+     */
     public Board(BoardConfig bc, IBoardEngine rulesEngine, IPlayer[] players) {
         this.boardConfig = bc;
         this.boardRulesEngine = rulesEngine;
         this.players = players;
 
+        // Initialize board grid and target tracking
         this.boardGrid = new IPiece[(int) bc.gridDimension().getWidth()][(int) bc.gridDimension().getHeight()];
         this.isTarget = new int[boardGrid.length][boardGrid[0].length];
         for (int[] row : isTarget) Arrays.fill(row, IS_NO_TARGET);
@@ -32,6 +54,9 @@ public class Board implements IBoard {
         initializeFromPlayers();
     }
 
+    /**
+     * Places all players' pieces on the board at their starting positions.
+     */
     private void initializeFromPlayers() {
         for (IPlayer p : players) {
             for (IPiece piece : p.getPieces()) {
@@ -62,7 +87,8 @@ public class Board implements IBoard {
 
     @Override
     public void move(Position from, Position to) {
-        if (!boardRulesEngine.isMoveLegal(this, from, to)) throw new IllegalCmdException("Move invalid from "+from+" to "+to);
+        if (!boardRulesEngine.isMoveLegal(this, from, to))
+            throw new IllegalCmdException("Move invalid from " + from + " to " + to);
 
         IPiece piece = getPiece(from);
         boardGrid[from.getRow()][from.getCol()] = null;
@@ -72,7 +98,8 @@ public class Board implements IBoard {
 
     @Override
     public void jump(IPiece piece) {
-        if(!boardRulesEngine.isJumpLegal(this, piece.getPos())) throw new IllegalCmdException(piece.toString());
+        if (!boardRulesEngine.isJumpLegal(this, piece.getPos()))
+            throw new IllegalCmdException(piece.toString());
         piece.jump();
     }
 
@@ -81,12 +108,12 @@ public class Board implements IBoard {
         long now = System.nanoTime();
 
         for (IPlayer player : players) {
-            for (IPiece piece : player.getPieces()) {
+            for (int i=0; i<player.getPieces().size(); i++) {
+                IPiece piece = player.getPieces().get(i);
                 boardRulesEngine.handleUpdatePiece(this, player, piece, now);
             }
         }
     }
-
 
     @Override
     public boolean isInBounds(Position p) {
@@ -125,12 +152,12 @@ public class Board implements IBoard {
     }
 
     @Override
-    public void setGrid(Position pos, IPiece piece){
+    public void setGrid(Position pos, IPiece piece) {
         boardGrid[pos.getRow()][pos.getCol()] = piece;
     }
 
     @Override
-    public void setIsNoTarget(Position pos){
+    public void setIsNoTarget(Position pos) {
         isTarget[pos.getRow()][pos.getCol()] = IS_NO_TARGET;
     }
 

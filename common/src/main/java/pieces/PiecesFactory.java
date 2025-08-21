@@ -19,21 +19,21 @@ import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
 /**
- * Factory for creating chess pieces by type, player ID, and position.
- * Loads all states, physics, and graphics for the piece from resources.
+ * Factory for creating chess pieces by type, player ID, and board position.
+ * Loads all states, physics, and graphics from resources.
  */
 public class PiecesFactory {
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
     /**
-     * Creates a Piece instance with fully initialized states and graphics.
+     * Creates a Piece instance with fully initialized states, graphics, and physics.
      *
      * @param code      Piece type
      * @param playerId  Owner player ID
-     * @param pos       Position on the board
+     * @param pos       Board position
      * @param config    Board configuration
-     * @return Piece instance or null if loading failed
+     * @return Fully initialized Piece instance, or null if loading fails
      */
     public static Piece createPieceByCode(EPieceType code, int playerId, Position pos, BoardConfig config) {
         Map<EState, IState> states = new HashMap<>();
@@ -42,14 +42,11 @@ public class PiecesFactory {
         try {
             ClassLoader cl = PiecesFactory.class.getClassLoader();
             Enumeration<URL> resources = cl.getResources(basePath);
-
             List<String> stateNames = new ArrayList<>();
 
             while (resources.hasMoreElements()) {
                 URL url = resources.nextElement();
-
                 if (url.getProtocol().equals("jar")) {
-                    // in JAR
                     String path = url.getPath();
                     String jarPath = path.substring(5, path.indexOf("!"));
                     try (JarFile jar = new JarFile(jarPath)) {
@@ -58,13 +55,10 @@ public class PiecesFactory {
                                 .filter(name -> name.startsWith(basePath) && name.endsWith("config.json"))
                                 .forEach(name -> {
                                     String[] parts = name.split("/");
-                                    if (parts.length >= 4) {
-                                        stateNames.add(parts[3]); // name of folder state
-                                    }
+                                    if (parts.length >= 4) stateNames.add(parts[3]);
                                 });
                     }
                 } else if (url.getProtocol().equals("file")) {
-                    // normal folder
                     File dir = new File(url.toURI());
                     if (dir.exists() && dir.isDirectory()) {
                         for (File f : Objects.requireNonNull(dir.listFiles(File::isDirectory))) {
@@ -112,17 +106,23 @@ public class PiecesFactory {
                 return null;
             }
 
-            EState initialState = states.containsKey(EState.LONG_REST) ? EState.LONG_REST
+            EState initialState = states.containsKey(EState.LONG_REST)
+                    ? EState.LONG_REST
                     : states.keySet().iterator().next();
 
-            StateMachine sm = new StateMachine(states, new TransitionTable("/" + basePath + "transitions.csv"), initialState, pos);
+            StateMachine sm = new StateMachine(
+                    states,
+                    new TransitionTable("/" + basePath + "transitions.csv"),
+                    initialState,
+                    pos
+            );
+
             return new Piece(code, playerId, sm, pos);
 
         } catch (Exception e) {
-            String mes = "Exception in createPieceByCode: " + e.getMessage();
-            LogUtils.logDebug(mes);
-            throw new RuntimeException(mes, e);
+            String msg = "Exception in createPieceByCode: " + e.getMessage();
+            LogUtils.logDebug(msg);
+            throw new RuntimeException(msg, e);
         }
     }
-
 }

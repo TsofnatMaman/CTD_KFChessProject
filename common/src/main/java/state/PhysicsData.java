@@ -7,17 +7,17 @@ import interfaces.IPhysicsData;
 import pieces.Position;
 
 /**
- * Handles physics data for piece movement, including speed, position, and timing.
- * Manages calculation of piece movement and determines when an action is finished.
+ * Manages physics for piece movement including speed, position, and timing.
+ * Computes piece movement and determines when an action is finished.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PhysicsData implements IPhysicsData {
 
-    /** Speed in meters per second. */
+    /** Movement speed in meters per second. */
     @JsonProperty("speed_m_per_sec")
     private double speedMetersPerSec;
 
-    /** Duration of action in seconds; -1 means use speed-based calculation. */
+    /** Duration of the action in seconds; -1 means use speed-based calculation. */
     @JsonProperty("action_time")
     private double actionTime;
 
@@ -27,10 +27,10 @@ public class PhysicsData implements IPhysicsData {
     /** Current Y position in pixels. */
     private double currentY;
 
-    /** Starting board position of the piece. */
+    /** Starting board position. */
     private Position startPos;
 
-    /** Target board position of the piece. */
+    /** Target board position. */
     private Position targetPos;
 
     /** Board configuration reference. */
@@ -39,38 +39,38 @@ public class PhysicsData implements IPhysicsData {
     /** Start time of the movement in nanoseconds. */
     private long startTimeNanos;
 
-    /** Default constructor, initializes actionTime to -1. */
+    /** Default constructor; actionTime initialized to -1. */
     public PhysicsData() {
         actionTime = -1;
     }
 
     /**
-     * Constructs PhysicsData with specified speed.
+     * Constructor with specified speed.
+     *
      * @param speedMetersPerSec Speed in meters per second
      */
     public PhysicsData(double speedMetersPerSec) {
         this.speedMetersPerSec = speedMetersPerSec;
     }
 
-    /** Gets the speed in meters per second. */
     @Override
     public double getSpeedMetersPerSec() {
         return speedMetersPerSec;
     }
 
-    /** Sets the speed in meters per second. */
     @Override
     public void setSpeedMetersPerSec(double speedMetersPerSec) {
         this.speedMetersPerSec = speedMetersPerSec;
     }
 
     /**
-     * Resets the physics data for a new movement.
-     * @param state Piece state
+     * Resets the physics for a new movement.
+     *
+     * @param state Current piece state
      * @param startPos Starting position
      * @param to Target position
      * @param bc Board configuration
-     * @param startTimeNanos Start time in nanoseconds
+     * @param startTimeNanos Movement start time in nanoseconds
      */
     @Override
     public void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos) {
@@ -82,7 +82,6 @@ public class PhysicsData implements IPhysicsData {
         this.startTimeNanos = startTimeNanos;
     }
 
-    /** Updates the current physics data. */
     @Override
     public void update(long now) {
         updatePosition(now);
@@ -106,7 +105,7 @@ public class PhysicsData implements IPhysicsData {
         currentY = (startPos.getRow() * (bc.physicsDimension().getHeight() / bc.gridDimension().getHeight())) + dy * t;
     }
 
-    /** Checks if movement is finished based on speed or actionTime. */
+    /** Returns true if the movement/action is finished. */
     @Override
     public boolean isActionFinished(long now) {
         if (actionTime != -1) {
@@ -124,25 +123,21 @@ public class PhysicsData implements IPhysicsData {
         return speedMetersPerSec * elapsedSec >= totalDistance;
     }
 
-    /** Gets current X position in pixels. */
     @Override
     public double getCurrentX() {
         return currentX;
     }
 
-    /** Gets current Y position in pixels. */
     @Override
     public double getCurrentY() {
         return currentY;
     }
 
-    /** Gets the starting position of the piece. */
     @Override
     public Position getStartPos() {
         return startPos;
     }
 
-    /** Gets the target position of the piece. */
     @Override
     public Position getTargetPos() {
         return targetPos;

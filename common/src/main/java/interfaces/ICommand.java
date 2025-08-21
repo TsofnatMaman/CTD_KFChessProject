@@ -1,11 +1,13 @@
 package interfaces;
 
 /**
- * Interface for command pattern actions in the game.
+ * Interface representing a command in the game using the Command Pattern.
+ * Commands encapsulate actions that can be executed.
  */
 public interface ICommand {
+
     /**
-     * Executes the command action.
+     * Executes the encapsulated command action.
      */
     void execute();
 }

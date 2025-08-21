@@ -9,46 +9,30 @@ import java.awt.*;
  */
 public interface IPlayerCursor {
 
-    /**
-     * Moves the cursor one row up.
-     */
+    /** Moves the cursor one row up. */
     void moveUp();
 
-    /**
-     * Moves the cursor one row down.
-     */
+    /** Moves the cursor one row down. */
     void moveDown();
 
-    /**
-     * Moves the cursor one column left.
-     */
+    /** Moves the cursor one column left. */
     void moveLeft();
 
-    /**
-     * Moves the cursor one column right.
-     */
+    /** Moves the cursor one column right. */
     void moveRight();
 
     /**
      * Draws the cursor on the game board.
      *
-     * @param g          The graphics context
-     * @param panelWidth The width of the board panel
-     * @param panelHeight The height of the board panel
+     * @param g           The graphics context
+     * @param panelWidth  Width of the board panel in pixels
+     * @param panelHeight Height of the board panel in pixels
      */
     void draw(Graphics g, int panelWidth, int panelHeight);
 
-    /**
-     * Gets the current position of the cursor.
-     *
-     * @return Current cursor position
-     */
+    /** Returns the current position of the cursor. */
     Position getPosition();
 
-    /**
-     * Gets the color of the cursor for rendering.
-     *
-     * @return Cursor color
-     */
+    /** Returns the color of the cursor for rendering purposes. */
     Color getColor();
 }

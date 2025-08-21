@@ -3,37 +3,39 @@ package moves;
 import java.util.function.Predicate;
 
 /**
- * Enum representing different conditions for validating piece moves.
- * Each condition is associated with a predicate that tests whether
- * a move is valid under specific circumstances.
+ * Enum representing various move validation conditions for chess pieces.
+ * <p>
+ * Each enum value encapsulates a {@link Predicate} that determines whether
+ * a move satisfies a specific rule, such as whether it is a capture or a first move.
+ * </p>
  */
 public enum ECondition {
 
-    /** Validates that the target square is empty (non-capture move) */
+    /** Validates that the target square is empty (non-capture move). */
     NON_CAPTURE(d -> d.board.getPiece(d.to) == null),
 
-    /** Validates that the piece hasn't moved from its starting position */
+    /** Validates that the piece has not moved from its starting position (first move). */
     FIRST_TIME(d -> d.pieceFrom.isFirstMove()),
 
-    /** Validates that the target square contains a piece that can be captured */
+    /** Validates that the target square contains a piece that can be captured. */
     CAPTURE(d -> d.board.getPiece(d.to) != null);
 
-    /** The predicate used to test the condition */
+    /** Predicate used to test whether the move satisfies this condition. */
     private final Predicate<Data> condition;
 
     /**
-     * Constructs a condition with the specified validation predicate.
+     * Constructs a move validation condition with the given predicate.
      *
-     * @param condition The predicate that defines the move validation logic
+     * @param condition the predicate defining the validation logic for this condition
      */
     ECondition(Predicate<Data> condition) {
         this.condition = condition;
     }
 
     /**
-     * Tests if a move is valid under this condition.
+     * Tests whether a given move satisfies this condition.
      *
-     * @param data The move data to validate
+     * @param data the move data containing the board, piece, and target position
      * @return true if the move satisfies this condition, false otherwise
      */
     public boolean isCanMove(Data data) {

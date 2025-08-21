@@ -1,21 +1,26 @@
 package moves;
 
 /**
- * Represents a single move with delta x and delta y,
- * and optional conditions that must be satisfied for the move to be valid.
+ * Represents a single move in the game with row and column deltas,
+ * along with optional conditions that must be satisfied for the move to be valid.
+ * <p>
+ * Typically used to define piece movement patterns.
+ * </p>
  *
- * @param dx        Delta row
- * @param dy        Delta column
- * @param condition Conditions that must be satisfied for this move
+ * @param dx        Change in row (delta x)
+ * @param dy        Change in column (delta y)
+ * @param condition Array of conditions that must be satisfied for this move
  */
 public record Move(int dx, int dy, ECondition[] condition) {
+
     /**
-     * Constructs a move with the given delta x and delta y and conditions.
+     * Canonical constructor for the Move record.
      *
      * @param dx        Delta row (change in row)
      * @param dy        Delta column (change in column)
-     * @param condition Array of conditions for this move
+     * @param condition Array of conditions that must be satisfied for this move
      */
     public Move {
+        // Record canonical constructor; logic is handled by fields.
     }
 }

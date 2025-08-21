@@ -16,24 +16,27 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Controller class for handling player moves in a local KFChess game.
- *
- * <p>This class tracks piece selection and legal moves for two players,
- * and updates the BoardPanel accordingly.</p>
+ * Controller class responsible for handling player moves and interactions
+ * in a local KFChess game. It listens to game events, manages piece selections,
+ * legal moves, and updates the {@link BoardPanel} and {@link GamePanel}.
  */
 public class Controller implements IEventListener {
 
+    /** Reference to the game model */
     private final IGame model;
+
+    /** Reference to the game UI panel */
     private final GamePanel gamePanel;
 
-    /** Selected positions for player 0 and 1 */
+    /** Selected positions for player 0 and player 1 */
     private final Position[] selected = new Position[2];
 
-    /** Legal moves for the currently selected piece for each player */
+    /** Legal moves for the currently selected piece of each player */
+    @SuppressWarnings("unchecked") // Safe because array is only used with List<Position>
     private final List<Position>[] legalMoves = new List[2];
 
     /**
-     * Constructs a Controller instance.
+     * Constructs a new {@code Controller} instance and subscribes to relevant game events.
      *
      * @param game the game model
      * @param gamePanel the UI panel representing the game
@@ -41,46 +44,49 @@ public class Controller implements IEventListener {
     public Controller(IGame game, GamePanel gamePanel) {
         this.model = game;
         this.gamePanel = gamePanel;
+
+        // Initialize legal moves as empty lists for both players
         legalMoves[0] = Collections.emptyList();
         legalMoves[1] = Collections.emptyList();
 
+        // Subscribe to relevant game events
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_ENDED, this);
         EventPublisher.getInstance().subscribe(EGameEvent.GAME_UPDATE, this);
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_END_MOVED, this);
 
-        // Initialize sound listener
+        // Initialize sound listener for event-driven sounds
         new EventSoundListener();
     }
 
     /**
-     * Handles a player move based on the selected position.
+     * Handles a move attempt from a player.
      * <p>
-     * If no piece is currently selected, it attempts to select a piece at the given position.
-     * If a piece is already selected, it checks if the target position is a legal move
-     * and moves the piece. Afterwards, it resets the selection and updates the UI.
+     * If no piece is currently selected, this method tries to select a piece
+     * at the given position (if it belongs to the player and can act).
+     * If a piece is already selected, it attempts to move it or reset the selection.
+     * Afterwards, it updates the UI with the current selection and legal moves.
      * </p>
      *
      * @param playerId the ID of the player (0 or 1)
-     * @param pos the position to select or move to
+     * @param pos the board position being selected or moved to
      */
     public void handlePlayerMove(int playerId, Position pos) {
         IPiece piece = model.getBoard().getPiece(pos);
 
         if (selected[playerId] == null) {
-            // Select a piece if it belongs to the player and can act
+            // Selecting a piece
             if (piece != null && piece.getPlayer() == playerId && piece.canAction()) {
                 selected[playerId] = pos.copy();
                 legalMoves[playerId] = model.getBoard().getLegalMoves(pos);
             }
         } else {
-            // Reset selection and legal moves after a move or cancellation
+            // Resetting selection after a move or cancellation
             selected[playerId] = null;
             legalMoves[playerId] = Collections.emptyList();
         }
 
-        BoardPanel boardPanel = (BoardPanel)gamePanel.getBoardPanel();
-
-        // Update the UI with the current selection and legal moves
+        // Update board panel with current selection and legal moves
+        BoardPanel boardPanel = (BoardPanel) gamePanel.getBoardPanel();
         if (playerId == 0) {
             boardPanel.setSelected1(selected[0]);
             boardPanel.setLegalMoves1(legalMoves[0]);
@@ -89,21 +95,32 @@ public class Controller implements IEventListener {
             boardPanel.setLegalMoves2(legalMoves[1]);
         }
 
+        // Notify the model and repaint UI
         model.handleSelection(playerId, pos);
         boardPanel.repaint();
     }
 
+    /**
+     * Handles subscribed game events and updates the UI accordingly.
+     *
+     * @param event the game event received
+     */
     @Override
     public void onEvent(GameEvent event) {
         switch (event.type()) {
-            case GAME_ENDED -> gamePanel.onWin(model.win());
+            case GAME_ENDED ->
+                    gamePanel.onWin(model.win());
+
             case GAME_UPDATE -> {
                 gamePanel.onGameUpdate();
                 gamePanel.updateTimerLabel(Utils.formatElapsedTime(model.getElapsedMillis()));
             }
+
             case PIECE_END_MOVED -> {
-                ((BoardPanel)gamePanel.getBoardPanel()).setLegalMoves1(model.getBoard().getLegalMoves(selected[0]));
-                ((BoardPanel)gamePanel.getBoardPanel()).setLegalMoves2(model.getBoard().getLegalMoves(selected[1]));
+                // Update legal moves for both players after a piece has finished moving
+                BoardPanel boardPanel = (BoardPanel) gamePanel.getBoardPanel();
+                boardPanel.setLegalMoves1(model.getBoard().getLegalMoves(selected[0]));
+                boardPanel.setLegalMoves2(model.getBoard().getLegalMoves(selected[1]));
             }
         }
     }

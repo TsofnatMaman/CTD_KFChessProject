@@ -17,7 +17,11 @@ import java.util.*;
 import java.util.List;
 
 /**
- * Represents a player in the game, holding pieces and managing actions.
+ * Represents a player in the chess game.
+ * <p>
+ * Each player has an ID, name, color, pieces, and score.
+ * The player can select pieces, execute moves, handle promotions, and track captured pieces.
+ * </p>
  */
 public class Player implements IPlayer {
 
@@ -25,13 +29,17 @@ public class Player implements IPlayer {
     private String name;
     private Position pending;
     private final Color color;
-
     private final List<IPiece> pieces;
     private int score;
     private boolean isFailed;
 
     /**
      * Constructs a Player with explicit ID, name, color, and initial pieces.
+     *
+     * @param id            the player ID
+     * @param name          the player name
+     * @param color         the player's color
+     * @param initialPieces list of initial pieces
      */
     Player(int id, String name, Color color, List<IPiece> initialPieces) {
         if (initialPieces == null) throw new IllegalArgumentException("initialPieces cannot be null");
@@ -50,6 +58,7 @@ public class Player implements IPlayer {
     }
 
     // ===== Getters =====
+
     @Override
     public List<IPiece> getPieces() {
         return Collections.unmodifiableList(pieces);
@@ -81,6 +90,7 @@ public class Player implements IPlayer {
     }
 
     // ===== Setters =====
+
     @Override
     public void setName(String name) {
         this.name = Objects.requireNonNull(name);
@@ -95,6 +105,13 @@ public class Player implements IPlayer {
     }
 
     // ===== Game Actions =====
+
+    /**
+     * Marks a piece as captured and updates score.
+     * If the captured piece is a King, marks the player as failed.
+     *
+     * @param p the piece to mark as captured
+     */
     @Override
     public void markPieceCaptured(IPiece p) {
         if (p == null) return;
@@ -106,6 +123,17 @@ public class Player implements IPlayer {
         }
     }
 
+    /**
+     * Handles the player's selection on the board.
+     * <p>
+     * First click selects a piece; second click either moves or jumps the piece.
+     * Returns an ICommand representing the move or jump if valid.
+     * </p>
+     *
+     * @param board    the game board
+     * @param selected the position selected by the player
+     * @return an optional command to execute, empty if selection is invalid
+     */
     @Override
     public Optional<ICommand> handleSelection(IBoard board, Position selected) {
         Position previous = getPendingFrom();
@@ -140,7 +168,12 @@ public class Player implements IPlayer {
     }
 
     /**
-     * Replaces the given piece with a queen (promotion) and updates score.
+     * Replaces a pawn with a queen (promotion) at the given position and updates score.
+     *
+     * @param piece     the piece to promote
+     * @param targetPos the target position for the new queen
+     * @param bc        the board configuration
+     * @return the new queen piece
      */
     @Override
     public IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc) {
@@ -182,11 +215,13 @@ public class Player implements IPlayer {
     }
 
     /**
-     * Converts a Color object to a readable string.
+     * Converts a Color object to a readable RGB string.
+     *
+     * @param c the color to convert
+     * @return string representation of the color
      */
     private String colorToString(Color c) {
         if (c == null) return "null";
         return String.format("RGB(%d,%d,%d)", c.getRed(), c.getGreen(), c.getBlue());
     }
-
 }

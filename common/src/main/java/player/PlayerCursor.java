@@ -7,15 +7,20 @@ import java.awt.*;
 
 /**
  * Represents a player's cursor for selecting pieces on the board.
+ * <p>
+ * Tracks the cursor position, allows movement within board boundaries,
+ * and provides a method to draw the cursor on a panel.
+ * </p>
  */
 public class PlayerCursor implements IPlayerCursor {
+
     private final Position pos;
     private final Color color;
     public final int ROWS;
     public final int COLS;
 
     /**
-     * Constructs a PlayerCursor for selecting pieces.
+     * Constructs a PlayerCursor with an initial position and color.
      *
      * @param pos   The initial position of the cursor
      * @param color The color used to draw the cursor
@@ -27,7 +32,7 @@ public class PlayerCursor implements IPlayerCursor {
         this.color = color;
     }
 
-    // --- Cursor movement ---
+    // ===== Cursor Movement =====
 
     @Override
     public void moveUp() {
@@ -49,8 +54,15 @@ public class PlayerCursor implements IPlayerCursor {
         if (pos.getCol() < COLS - 1) pos.addOneCol();
     }
 
-    // --- Drawing ---
+    // ===== Drawing =====
 
+    /**
+     * Draws the cursor as a rectangle on the panel.
+     *
+     * @param g           the Graphics object used for drawing
+     * @param panelWidth  width of the panel
+     * @param panelHeight height of the panel
+     */
     @Override
     public void draw(Graphics g, int panelWidth, int panelHeight) {
         int squareWidth = panelWidth / COLS;
@@ -65,7 +77,7 @@ public class PlayerCursor implements IPlayerCursor {
         g2d.drawRect(x, y, squareWidth, squareHeight);
     }
 
-    // --- Getters ---
+    // ===== Getters =====
 
     @Override
     public Position getPosition() {
@@ -81,5 +93,4 @@ public class PlayerCursor implements IPlayerCursor {
     public String toString() {
         return "Cursor at row=" + pos.getRow() + ", col=" + pos.getCol();
     }
-
 }

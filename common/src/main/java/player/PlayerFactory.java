@@ -86,8 +86,14 @@ public class PlayerFactory {
      * @return Array of IPlayer instances
      */
     public static IPlayer[] createPlayers(String[] names, BoardConfig bc) {
-        return java.util.stream.IntStream.range(0, names.length)
-                .mapToObj(i -> createPlayer(i, names[i], bc))
-                .toArray(IPlayer[]::new);
+        if (names == null || names.length < 2) {
+            throw new IllegalArgumentException("At least two player names are required");
+        }
+
+        IPlayer[] players = new IPlayer[names.length];
+        for (int i = 0; i < names.length; i++) {
+            players[i] = createPlayer(i, names[i], bc);
+        }
+        return players;
     }
 }

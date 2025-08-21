@@ -4,15 +4,17 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * A simple modal dialog displaying a message and an indeterminate progress bar,
- * used to indicate waiting for an opponent or other game events.
+ * A simple modal-like dialog with a message and an indeterminate progress bar.
+ * <p>
+ * Typically used while waiting for an opponent or for asynchronous game events.
+ * </p>
  */
 public class WaitDialog {
 
-    private JDialog dialog;
-    private JLabel label;
-    private JProgressBar progressBar;
-    private Runnable onCloseAction;
+    private JDialog dialog;            // The Swing dialog
+    private JLabel label;              // Message label
+    private JProgressBar progressBar;  // Indeterminate progress indicator
+    private Runnable onCloseAction;    // Callback for when the dialog is closed
 
     /**
      * Sets an action to execute when the dialog is closed.
@@ -24,7 +26,10 @@ public class WaitDialog {
     }
 
     /**
-     * Shows the dialog with the given message or updates it if already visible.
+     * Shows the dialog with the given message, or updates it if already visible.
+     * <p>
+     * This method is thread-safe and ensures execution on the Event Dispatch Thread (EDT).
+     * </p>
      *
      * @param message The message to display.
      */
@@ -36,17 +41,25 @@ public class WaitDialog {
         }
     }
 
-    // Internal method to safely create or update the dialog on the EDT
+    /**
+     * Internal method for creating or updating the dialog (must run on EDT).
+     *
+     * @param message The message to display.
+     */
     private void internalShowOrUpdate(String message) {
         if (dialog == null) {
-            // Initialize components
+            // Initialize label with wrapped + escaped HTML
             label = new JLabel(wrapHtml(escapeHtml(message)), SwingConstants.CENTER);
+
+            // Initialize progress bar (indeterminate)
             progressBar = new JProgressBar();
             progressBar.setIndeterminate(true);
 
+            // Create dialog window
             dialog = new JDialog((Frame) null, "Waiting for opponent", false);
             dialog.setLayout(new BorderLayout(10, 10));
 
+            // Main content panel with padding
             JPanel content = new JPanel(new BorderLayout(5, 5));
             content.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             content.add(label, BorderLayout.CENTER);
@@ -58,7 +71,7 @@ public class WaitDialog {
             dialog.setLocationRelativeTo(null);
             dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
 
-            // Handle window close event
+            // Hook for close action
             dialog.addWindowListener(new java.awt.event.WindowAdapter() {
                 @Override
                 public void windowClosing(java.awt.event.WindowEvent e) {
@@ -70,7 +83,7 @@ public class WaitDialog {
 
             dialog.setVisible(true);
         } else {
-            // Update existing dialog
+            // Update message in existing dialog
             label.setText(wrapHtml(escapeHtml(message)));
             if (!dialog.isVisible()) {
                 dialog.setVisible(true);
@@ -89,6 +102,9 @@ public class WaitDialog {
         }
     }
 
+    /**
+     * Internal method to dispose and cleanup resources.
+     */
     private void internalClose() {
         if (dialog != null) {
             dialog.dispose();
@@ -98,12 +114,22 @@ public class WaitDialog {
         }
     }
 
-    // Helper to wrap text in HTML for center alignment
+    /**
+     * Wraps text in HTML for center alignment in JLabel.
+     *
+     * @param s Text to wrap
+     * @return HTML-wrapped string
+     */
     private static String wrapHtml(String s) {
         return "<html><div style='text-align:center;'>" + s + "</div></html>";
     }
 
-    // Escapes HTML special characters and converts newlines to <br/>
+    /**
+     * Escapes HTML special characters and replaces newlines with &lt;br/&gt;.
+     *
+     * @param s Input text
+     * @return Escaped HTML string
+     */
     private static String escapeHtml(String s) {
         if (s == null) return "";
         return s.replace("&", "&amp;")

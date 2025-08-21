@@ -11,26 +11,26 @@ import java.util.Map;
 import java.util.Optional;
 
 /**
- * Manages the states of a chess piece, including transitions and event handling.
+ * StateMachine manages a piece's states, transitions, and event publishing.
  */
 public class StateMachine {
 
-    /** Map of EState → IState instances */
+    /** Map of EState → IState */
     private final Map<EState, IState> mapState;
 
-    /** Table defining valid transitions between states */
+    /** Transition table defining valid state changes */
     private final TransitionTable transitionTable;
 
-    /** Current active state */
+    /** Currently active state */
     private IState currentState;
 
     /**
-     * Constructs a StateMachine with initial states and transitions.
+     * Constructs a StateMachine.
      *
-     * @param mapState  Map of all states
+     * @param mapState   Map of all states
      * @param transitions Transition table
-     * @param initState Initial state
-     * @param initPos   Initial position of the piece
+     * @param initState  Initial state
+     * @param initPos    Initial position of the piece
      */
     public StateMachine(Map<EState, IState> mapState, TransitionTable transitions, EState initState, Position initPos) {
         this.transitionTable = transitions;
@@ -40,9 +40,9 @@ public class StateMachine {
     }
 
     /**
-     * Handles a piece event, updating state and publishing events if needed.
+     * Processes a piece event and transitions to the next state.
      *
-     * @param event The piece event
+     * @param event Piece event
      * @param from  Starting position
      * @param to    Target position
      */
@@ -60,9 +60,9 @@ public class StateMachine {
     }
 
     /**
-     * Handles a piece event using the current state's target position for from/to.
+     * Processes an event using current state's target position for from/to.
      *
-     * @param event The piece event
+     * @param event Piece event
      */
     public void onEvent(EPieceEvent event) {
         Position target = currentState.getPhysics().getTargetPos();
@@ -70,7 +70,7 @@ public class StateMachine {
     }
 
     /**
-     * Updates the current state based on elapsed time.
+     * Updates the current state, checks for finished actions, and triggers events.
      *
      * @param now Current time in nanoseconds
      */
@@ -83,7 +83,7 @@ public class StateMachine {
         event.ifPresent(this::onEvent);
     }
 
-    /** Returns the current active state. */
+    /** Returns the currently active state. */
     public IState getCurrentState() {
         return currentState;
     }

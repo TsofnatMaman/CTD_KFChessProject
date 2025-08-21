@@ -13,28 +13,16 @@ import java.util.Optional;
  */
 public interface IPlayer extends Serializable {
 
-    /**
-     * Gets the list of pieces currently owned by this player.
-     * @return List of IPiece objects
-     */
+    /** Returns the list of pieces currently owned by this player. */
     List<IPiece> getPieces();
 
-    /**
-     * Gets the unique player ID.
-     * @return Player ID
-     */
+    /** Returns the unique player ID. */
     int getId();
 
-    /**
-     * Gets the player's display name.
-     * @return Player name
-     */
+    /** Returns the player's display name. */
     String getName();
 
-    /**
-     * Checks if the player has failed or lost (e.g., their king was captured).
-     * @return True if player has failed, false otherwise
-     */
+    /** Returns true if the player has failed or lost (e.g., key piece captured). */
     boolean isFailed();
 
     /**
@@ -51,14 +39,11 @@ public interface IPlayer extends Serializable {
      */
     Optional<ICommand> handleSelection(IBoard board, Position selected);
 
-    /**
-     * Gets the player's current score.
-     * @return Player score
-     */
+    /** Returns the player's current score. */
     int getScore();
 
     /**
-     * Replaces a pawn with a queen or another promotion piece.
+     * Promotes a pawn to a queen or another promotion piece.
      * @param piece The piece to promote
      * @param targetPos Target position for the new piece
      * @param bc Board configuration
@@ -66,15 +51,9 @@ public interface IPlayer extends Serializable {
      */
     IPiece replacePToQ(IPiece piece, Position targetPos, BoardConfig bc);
 
-    /**
-     * Gets the player's color for rendering purposes.
-     * @return Player color
-     */
+    /** Returns the player's color for rendering purposes. */
     Color getColor();
 
-    /**
-     * Sets the player's display name.
-     * @param name New name
-     */
+    /** Sets the player's display name. */
     void setName(String name);
 }

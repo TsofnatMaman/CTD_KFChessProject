@@ -8,39 +8,40 @@ import interfaces.IGraphicsData;
 import java.awt.image.BufferedImage;
 
 /**
- * Handles the graphics and animation data for a piece.
- * Manages frames, timing, and provides access to current frame for rendering.
+ * Manages graphics and animation data for a piece.
+ * Handles frame updates, timing, and provides the current frame for rendering.
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GraphicsData implements IGraphicsData {
 
-    /** Array of animation frames (images). Not serialized. */
+    /** Array of animation frames (not serialized). */
     @JsonIgnore
     private BufferedImage[] frames;
 
     /** Total number of frames in the animation. */
     private int totalFrames;
 
-    /** Current frame index being displayed. */
+    /** Current frame index. */
     private int currentFrame;
 
-    /** Frames per second for the animation. */
+    /** Frames per second for animation. */
     @JsonProperty("frames_per_sec")
     private double framesPerSec;
 
     /** Timestamp in nanoseconds of the last frame update. */
     private long lastFrameTimeNanos;
 
-    /** Default constructor initializing to first frame and current time. */
+    /** Default constructor initializing frame index and timestamp. */
     public GraphicsData() {
         this.currentFrame = 0;
         this.lastFrameTimeNanos = System.nanoTime();
     }
 
     /**
-     * Constructs GraphicsData with given frames and frame rate.
+     * Constructs GraphicsData with specified frames and frame rate.
+     *
      * @param frames Array of BufferedImage frames
-     * @param framesPerSec Frames per second
+     * @param framesPerSec Animation speed in frames per second
      */
     public GraphicsData(BufferedImage[] frames, double framesPerSec) {
         this.frames = frames;
@@ -50,7 +51,7 @@ public class GraphicsData implements IGraphicsData {
         this.lastFrameTimeNanos = System.nanoTime();
     }
 
-    /** Resets animation to first frame and updates last frame time. */
+    /** Resets animation to first frame and updates timestamp. */
     @Override
     public void reset() {
         this.currentFrame = 0;
@@ -58,7 +59,8 @@ public class GraphicsData implements IGraphicsData {
     }
 
     /**
-     * Updates animation based on elapsed time.
+     * Updates the animation based on elapsed time.
+     *
      * @param now Current time in nanoseconds
      */
     @Override
@@ -70,19 +72,19 @@ public class GraphicsData implements IGraphicsData {
         }
     }
 
-    /** Returns current frame index. */
+    /** Returns the current frame index. */
     @Override
     public int getCurrentNumFrame() {
         return currentFrame;
     }
 
-    /** Returns total number of frames. */
+    /** Returns the total number of frames. */
     @Override
     public int getTotalFrames() {
         return totalFrames;
     }
 
-    /** Returns animation frame rate in frames per second. */
+    /** Returns the animation frame rate. */
     @Override
     public double getFramesPerSec() {
         return framesPerSec;
@@ -94,13 +96,13 @@ public class GraphicsData implements IGraphicsData {
         return frames[currentFrame];
     }
 
-    /** Returns the current frame index (duplicate of getCurrentNumFrame). */
+    /** Returns the current frame index (duplicate method). */
     @Override
     public int getCurrentFrameIdx() {
         return currentFrame;
     }
 
-    /** Sets the animation frames array. */
+    /** Sets the frames array for animation. */
     @Override
     public void setFrames(BufferedImage[] frames) {
         this.frames = frames;
@@ -112,7 +114,7 @@ public class GraphicsData implements IGraphicsData {
         this.totalFrames = totalFrames;
     }
 
-    /** Sets the timestamp of the last frame update in nanoseconds. */
+    /** Sets the last frame update timestamp in nanoseconds. */
     @Override
     public void setLastFrameTimeNanos(long nanos) {
         this.lastFrameTimeNanos = nanos;

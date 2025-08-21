@@ -21,32 +21,51 @@ import java.util.logging.Logger;
 
 /**
  * Main client application for KFChess.
- * Handles UI initialization, server communication, and game start.
+ *
+ * <p>This class initializes the UI, manages the WebSocket connection to the server,
+ * handles incoming events, and starts the game once all prerequisites are met.</p>
  */
 public class KFChessClientApp implements GameEventListener {
 
     private static final Logger logger = Logger.getLogger(KFChessClientApp.class.getName());
 
+    /** WebSocket client endpoint */
     private ChessClientEndpoint client;
+
+    /** Game controller for handling game logic and events */
     private GameController controller;
 
+    /** Player ID assigned by the server */
     private volatile int playerId = -1;
+
+    /** Latch to wait for player ID before proceeding */
     private final CountDownLatch playerIdLatch = new CountDownLatch(1);
 
+    /** Flag indicating whether the game has started */
     private boolean gameStarted = false;
+
+    /** Waiting dialog displayed before the game starts */
     private WaitDialog waitDialog;
+
+    /** Holds a pending game initialization DTO if received before player ID */
     private volatile GameDTO pendingGameDTO = null;
 
+    /**
+     * Constructs and initializes the KFChess client application.
+     *
+     * @throws Exception if initialization or connection fails
+     */
     public KFChessClientApp() throws Exception {
         initUIAndConnect();
 
-        // Keep WebSocket alive even if UI is closed
+        // Ensure WebSocket closes properly on application exit
         Runtime.getRuntime().addShutdownHook(new Thread(this::shutdown));
     }
 
     /**
-     * Initializes the WebSocket connection, sends player name,
-     * and shows a waiting dialog until the game starts.
+     * Initializes the UI, connects to the server, and sends the player name.
+     *
+     * @throws Exception if WebSocket connection or player ID retrieval fails
      */
     private void initUIAndConnect() throws Exception {
         String wsUrl = String.format("ws://%s:%s%s%s",
@@ -57,7 +76,7 @@ public class KFChessClientApp implements GameEventListener {
 
         client = new ChessClientEndpoint(new URI(wsUrl));
 
-        // Prompt for username
+        // Prompt user for a username
         String username;
         try {
             username = AskUserName.askUsername();
@@ -69,7 +88,7 @@ public class KFChessClientApp implements GameEventListener {
             username = "Anonymous - " + (playerId != -1 ? PlayerConstants.COLORS_NAME[playerId] : "");
         }
 
-        // Send player name to server
+        // Send player name to the server
         client.sendCommand(EventType.SET_NAME, username);
 
         // Initialize waiting dialog
@@ -85,20 +104,22 @@ public class KFChessClientApp implements GameEventListener {
         controller.startListening();
 
         // Show initial waiting message
-        SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for player ID from server..."));
+        SwingUtilities.invokeLater(() ->
+                waitDialog.showOrUpdate("Waiting for player ID from server..."));
 
-        // Wait asynchronously for playerId
+        // Wait asynchronously for player ID
         playerIdLatch.await(60, TimeUnit.SECONDS);
 
         if (playerId == -1) {
-            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate(
-                    "Error: Did not receive player ID from server."));
+            SwingUtilities.invokeLater(() ->
+                    waitDialog.showOrUpdate("Error: Did not receive player ID from server."));
             shutdown();
             throw new RuntimeException("Failed to receive playerId from server");
         }
 
         if (!gameStarted) {
-            SwingUtilities.invokeLater(() -> waitDialog.showOrUpdate("Waiting for the game to start..."));
+            SwingUtilities.invokeLater(() ->
+                    waitDialog.showOrUpdate("Waiting for the game to start..."));
         }
     }
 
@@ -117,7 +138,7 @@ public class KFChessClientApp implements GameEventListener {
 
         playerIdLatch.countDown();
 
-        // If game init was received before playerId, process it now
+        // Process pending game init if received before playerId
         if (pendingGameDTO != null) {
             pendingGameDTO = null;
             SwingUtilities.invokeLater(this::onGameInit);
@@ -142,12 +163,15 @@ public class KFChessClientApp implements GameEventListener {
 
     // ------------------- UI Initialization -------------------
 
+    /**
+     * Initializes and displays the main game window with the GamePanel.
+     */
     private void initializeGameUI() {
         JFrame frame = new JFrame("KFCHESS - Player " + (playerId + 1) +
                 " - " + controller.getModel().getPlayerById(playerId).getName());
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // Get the GamePanel from controller
+        // Add GamePanel to the frame
         GamePanel gamePanel = (GamePanel) controller.getGamePanel();
         frame.add(gamePanel);
 
@@ -155,15 +179,15 @@ public class KFChessClientApp implements GameEventListener {
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
 
-        gamePanel.setFocusable(true);
-        gamePanel.requestFocusInWindow();
-
         // Start the main game loop
         controller.startRunGame();
     }
 
     // ------------------- Shutdown -------------------
 
+    /**
+     * Safely shuts down the application by stopping listeners and closing the WebSocket.
+     */
     public void shutdown() {
         try {
             if (controller != null) controller.stopListening();
@@ -175,6 +199,11 @@ public class KFChessClientApp implements GameEventListener {
 
     // ------------------- Main Entry Point -------------------
 
+    /**
+     * Launches the KFChess client application.
+     *
+     * @param args command-line arguments (ignored)
+     */
     public static void main(String[] args) {
         new Thread(() -> {
             try {

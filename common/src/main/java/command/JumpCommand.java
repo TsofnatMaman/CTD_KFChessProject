@@ -8,21 +8,24 @@ import interfaces.*;
 
 /**
  * Command representing a jump action for a piece on the board.
- * Implements the ICommand interface for execution.
+ * <p>
+ * Implements {@link ICommand} to encapsulate the jump operation,
+ * allowing it to be executed, and triggering the appropriate game events.
+ * </p>
  */
 public class JumpCommand implements ICommand {
 
-    /** The piece performing the jump. */
+    /** The piece that will perform the jump. */
     private final IPiece piece;
 
-    /** The board on which the jump is executed. */
+    /** The board on which the jump will be executed. */
     private final IBoard board;
 
     /**
-     * Constructs a JumpCommand for the specified piece and board.
+     * Constructs a new {@code JumpCommand} for a specific piece on a board.
      *
-     * @param piece the piece to jump
-     * @param board the board instance
+     * @param piece the piece to perform the jump
+     * @param board the board instance where the jump occurs
      */
     public JumpCommand(IPiece piece, IBoard board) {
         this.piece = piece;
@@ -30,19 +33,26 @@ public class JumpCommand implements ICommand {
     }
 
     /**
-     * Executes the jump action if it is legal.
-     * Publishes a PIECE_JUMP event upon successful execution.
+     * Executes the jump action.
+     * <p>
+     * If the jump is legal, the {@link EGameEvent#PIECE_JUMP} event is published.
+     * If the jump is illegal, the {@link EGameEvent#ILLEGAL_CMD} event is published
+     * instead, with details about the offending piece and player.
+     * </p>
      */
     @Override
     public void execute() {
         try {
+            // Attempt to perform the jump on the board
             board.jump(piece);
 
+            // Publish a successful jump event
             EventPublisher.getInstance()
                     .publish(EGameEvent.PIECE_JUMP,
                             new GameEvent(EGameEvent.PIECE_JUMP,
                                     new ActionData(piece.getPlayer(), "piece " + piece + " jumping")));
-        } catch (IllegalCmdException e){
+        } catch (IllegalCmdException e) {
+            // Publish an event for an illegal jump attempt
             String message = "Illegal jump " + piece;
             EventPublisher.getInstance()
                     .publish(EGameEvent.ILLEGAL_CMD,

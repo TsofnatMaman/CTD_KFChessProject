@@ -11,8 +11,7 @@ import java.util.Optional;
 import java.util.Queue;
 
 /**
- * Main game class. Handles game loop, player turns, command execution, and win detection.
- * The board and players are injected into this class.
+ * Main game class. Manages the game loop, player turns, command execution, and win detection.
  */
 public class Game implements IGame {
 
@@ -24,11 +23,10 @@ public class Game implements IGame {
     private volatile boolean running;
 
     /**
-     * Constructs a new game instance.
-     * The board and players are provided by a factory.
+     * Constructs a new game with the given board and players.
      *
-     * @param board   The game board instance.
-     * @param players The array of players.
+     * @param board   The game board
+     * @param players Array of players
      */
     public Game(IBoard board, IPlayer[] players) {
         this.board = board;
@@ -39,23 +37,22 @@ public class Game implements IGame {
     }
 
     /**
-     * Adds a command to the queue for execution.
+     * Adds a command to the queue.
      *
-     * @param cmd Command to execute
+     * @param cmd Command to enqueue
      */
     private void addCommand(ICommand cmd) {
         commandQueue.add(cmd);
     }
 
     /**
-     * Executes all commands currently in the queue.
+     * Updates the game state by executing queued commands and updating the board.
      */
     @Override
     public void update() {
-        ICommand cmd;
-
         board.updateAll();
 
+        ICommand cmd;
         while ((cmd = commandQueue.poll()) != null) {
             cmd.execute();
         }
@@ -81,11 +78,10 @@ public class Game implements IGame {
     }
 
     /**
-     * Handles a selection made by a player at a given position.
-     * If a valid command is returned, it is added to the command queue.
+     * Handles a selection by a player and queues the resulting command if present.
      *
      * @param player   The player making the selection
-     * @param selected Selected position
+     * @param selected Selected position on the board
      */
     @Override
     public void handleSelection(IPlayer player, Position selected) {
@@ -99,9 +95,9 @@ public class Game implements IGame {
     }
 
     /**
-     * Checks for a winner. Returns the winning player or null if no winner yet.
+     * Determines the winning player, or returns null if no winner yet.
      *
-     * @return Winning IPlayer or null
+     * @return Winning player or null
      */
     @Override
     public IPlayer win() {

@@ -3,20 +3,26 @@ package endpoint.view;
 import javax.swing.*;
 
 /**
- * Utility class to prompt the user for their name using a Swing dialog.
+ * Utility class responsible for prompting the user for their username
+ * via a Swing input dialog.
  */
 public class AskUserName {
 
     /**
      * Displays a modal input dialog asking the user for their name.
      *
-     * @return The entered username, "Anonymous" if blank, or null if cancelled.
-     * @throws Exception If interrupted while waiting for the Swing thread.
+     * <p>The dialog runs on the Swing Event Dispatch Thread (EDT) for thread safety.
+     * If the user cancels, this method returns {@code null}. If the user leaves
+     * the input blank, the default name "Anonymous" is used.</p>
+     *
+     * @return The entered username, "Anonymous" if left blank, or {@code null} if cancelled.
+     * @throws Exception If interrupted while waiting for the Swing thread to execute.
      */
     public static String askUsername() throws Exception {
-        final String[] result = new String[1];      // Stores the entered name
-        final boolean[] cancelled = {false};        // Tracks if the dialog was cancelled
+        final String[] result = new String[1];   // Stores the entered name
+        final boolean[] cancelled = {false};     // Tracks if the dialog was cancelled
 
+        // Runnable to safely show the input dialog on the EDT
         Runnable prompt = () -> {
             String input = (String) JOptionPane.showInputDialog(
                     null,
@@ -28,18 +34,19 @@ public class AskUserName {
                     null
             );
 
-            if (input == null) { // User cancelled the dialog
+            if (input == null) {
+                // User cancelled the dialog
                 cancelled[0] = true;
                 return;
             }
 
-            // Use default "Anonymous" if input is blank
+            // Use default "Anonymous" if input is blank, otherwise trim spaces
             result[0] = input.trim().isEmpty()
                     ? utils.ConfigLoader.getMessage("anonymous.name", "Anonymous")
                     : input.trim();
         };
 
-        // Run on the Event Dispatch Thread (EDT) for Swing safety
+        // Ensure the dialog is executed on the Event Dispatch Thread
         if (SwingUtilities.isEventDispatchThread()) {
             prompt.run();
         } else {

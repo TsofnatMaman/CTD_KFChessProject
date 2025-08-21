@@ -5,7 +5,9 @@ import pieces.Position;
 /**
  * Utility class for various helper functions related to the game.
  */
-public class Utils {
+public final class Utils {
+
+    private Utils() {} // Prevent instantiation
 
     /**
      * Returns the standard chess notation for a given position.
@@ -13,12 +15,14 @@ public class Utils {
      *
      * @param pos the position on the board
      * @return the position as a string in chess notation
+     * @throws IllegalArgumentException if pos is null
      */
     public static String getName(Position pos) {
-        // 'A' offset defined in constants
+        if (pos == null) throw new IllegalArgumentException("Position cannot be null");
+
         char rowChar = (char) (pos.getRow() + constants.PieceConstants.ROW_LETTER_OFFSET);
         int colNum = pos.getCol() + constants.PieceConstants.COLUMN_OFFSET;
-        return rowChar + "" + colNum;
+        return rowChar + String.valueOf(colNum);
     }
 
     /**
@@ -26,8 +30,11 @@ public class Utils {
      *
      * @param elapsedMillis elapsed time in milliseconds
      * @return formatted string in minutes and seconds
+     * @throws IllegalArgumentException if elapsedMillis is negative
      */
     public static String formatElapsedTime(long elapsedMillis) {
+        if (elapsedMillis < 0) throw new IllegalArgumentException("Elapsed time cannot be negative");
+
         int seconds = (int) (elapsedMillis / 1000) % 60;
         int minutes = (int) (elapsedMillis / (1000 * 60));
         return String.format("%02d:%02d", minutes, seconds);

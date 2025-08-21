@@ -1,20 +1,25 @@
 package pieces;
 
 /**
- * Enum representing different chess piece types with their properties.
+ * Enum representing different chess piece types with associated properties.
  * Each piece type has a letter code, jump capability, and point value.
  */
 public enum EPieceType {
     /** Bishop - moves diagonally */
     B("B", false, 3),
+
     /** King - moves one square in any direction */
     K("K", false, 0),
+
     /** Knight - can jump over other pieces */
     N("N", true, 3),
+
     /** Pawn - basic piece, can be promoted */
     P("P", false, 1),
+
     /** Queen - moves in any direction */
     Q("Q", false, 9),
+
     /** Rook - moves horizontally and vertically */
     R("R", false, 5);
 
@@ -33,7 +38,7 @@ public enum EPieceType {
         return val;
     }
 
-    /** @return True if this piece can jump over others */
+    /** @return True if this piece can jump over other pieces */
     public boolean isCanSkip() {
         return canSkip;
     }

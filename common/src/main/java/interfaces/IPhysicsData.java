@@ -6,65 +6,43 @@ import state.EState;
 
 /**
  * Interface for physics data operations controlling piece movement.
+ * Handles piece interpolation, speed, and current position in pixels.
  */
 public interface IPhysicsData {
 
-    /**
-     * Retrieves the speed of the piece in meters per second.
-     * @return Speed in meters per second
-     */
+    /** Returns speed of the piece in meters per second. */
     double getSpeedMetersPerSec();
 
-    /**
-     * Sets the speed of the piece in meters per second.
-     * @param speedMetersPerSec Speed value
-     */
+    /** Sets speed of the piece in meters per second. */
     void setSpeedMetersPerSec(double speedMetersPerSec);
 
     /**
-     * Resets the physics data for a new movement.
-     * @param state Current state
-     * @param startPos Starting board position
-     * @param to Target board position
+     * Resets physics data for a new movement.
+     * Typically called before a move or jump action.
+     *
+     * @param state Current state of the piece
+     * @param startPos Starting board position (grid coordinates)
+     * @param to Target board position (grid coordinates)
      * @param bc Board configuration
      * @param startTimeNanos Start time in nanoseconds
      */
     void reset(EState state, Position startPos, Position to, BoardConfig bc, long startTimeNanos);
 
-    /**
-     * Updates the physics data for the piece based on current time.
-     * @param now Current time in nanoseconds
-     */
+    /** Updates physics data for the current piece. Should be called every frame. */
     void update(long now);
 
-    /**
-     * Determines if the movement action is finished.
-     * @param now Current time in nanoseconds
-     * @return True if finished, false otherwise
-     */
+    /** Returns true if the movement action is finished. */
     boolean isActionFinished(long now);
 
-    /**
-     * Gets the current X position in pixels.
-     * @return X coordinate
-     */
+    /** Gets current X position in pixels (screen coordinates). */
     double getCurrentX();
 
-    /**
-     * Gets the current Y position in pixels.
-     * @return Y coordinate
-     */
+    /** Gets current Y position in pixels (screen coordinates). */
     double getCurrentY();
 
-    /**
-     * Gets the starting board position for the current movement.
-     * @return Starting position
-     */
+    /** Gets starting board position of the current movement. */
     Position getStartPos();
 
-    /**
-     * Gets the target board position for the current movement.
-     * @return Target position
-     */
+    /** Gets target board position of the current movement. */
     Position getTargetPos();
 }

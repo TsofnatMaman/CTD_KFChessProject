@@ -11,29 +11,27 @@ import java.util.*;
 
 /**
  * Utility class for loading and caching piece sprite images.
- * Supports loading individual frames or all frames for a given piece type, player, and state.
+ * Supports loading individual frames or all frames for a piece type, player, and state.
  */
 public class GraphicsLoader {
 
-    /** Cache to avoid reloading the same image multiple times. */
+    /** Cache to prevent reloading the same image multiple times. */
     private static final Map<String, BufferedImage> cache = new HashMap<>();
 
     /**
-     * Loads a single sprite image by piece type, player, state, and frame index (1-based).
+     * Loads a single sprite image for a given piece type, player, state, and frame index (1-based).
      *
-     * @param pieceType The type of piece
-     * @param player    Player index (0 or 1)
-     * @param stateName The state of the piece
-     * @param frameIndex Frame number (1-based)
+     * @param pieceType  Piece type
+     * @param player     Player index (0 or 1)
+     * @param stateName  Piece state
+     * @param frameIndex Frame index (1-based)
      * @return BufferedImage of the sprite, or null if failed
      */
     public static BufferedImage loadSprite(EPieceType pieceType, int player, EState stateName, int frameIndex) {
         String path = String.format("/pieces/%s/states/%s/sprites/sprites%d/%d.png",
                 pieceType.getVal(), stateName, player, frameIndex);
 
-        if (cache.containsKey(path)) {
-            return cache.get(path);
-        }
+        if (cache.containsKey(path)) return cache.get(path);
 
         try {
             BufferedImage image = ImageIO.read(
@@ -48,14 +46,14 @@ public class GraphicsLoader {
     }
 
     /**
-     * Loads all sequential sprite frames for a given piece type, player, and state.
-     * Continues until a frame file does not exist.
+     * Loads all sequential sprite frames for a piece type, player, and state.
+     * Stops when a frame file is missing.
      *
-     * @param pieceType The type of piece
-     * @param player    Player index (0 or 1)
-     * @param stateName The state of the piece
-     * @return Array of BufferedImages containing all loaded frames
-     * @throws RuntimeException if no frames were successfully loaded
+     * @param pieceType Piece type
+     * @param player    Player index
+     * @param stateName Piece state
+     * @return Array of BufferedImages containing all frames
+     * @throws RuntimeException if no frames are loaded
      */
     public static BufferedImage[] loadAllSprites(EPieceType pieceType, int player, EState stateName) {
         List<BufferedImage> sprites = new ArrayList<>();

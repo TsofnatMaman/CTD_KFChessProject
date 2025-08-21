@@ -53,8 +53,8 @@ class PieceTest {
     void testUpdateUpdatesPositionWhenActionFinished() {
         // Update should move the piece to target position if action is finished
         piece.update(System.currentTimeMillis());
-        assertEquals(2, piece.getPosition().getCol());
-        assertEquals(2, piece.getPosition().getRow());
+        assertEquals(2, piece.getPos().getCol());
+        assertEquals(2, piece.getPos().getRow());
     }
 
     @Test
@@ -98,14 +98,14 @@ class PieceTest {
     @Test
     void testCanCapturableDelegatesToState() {
         // canCapturable should reflect state
-        assertTrue(piece.canCapturable());
+        assertTrue(piece.isCapturable());
     }
 
     @Test
     void testGetters() {
         // Basic getter checks
         assertEquals(EPieceType.P, piece.getType());
-        assertEquals(1, piece.getPlayerId());
+        assertEquals(1, piece.getPlayer());
         assertEquals(startPos, piece.getPos());
         assertNotNull(piece.getMoves());
     }

@@ -7,62 +7,37 @@ import java.awt.image.BufferedImage;
  */
 public interface IGraphicsData {
 
-    /**
-     * Resets the animation to the initial frame and state.
-     */
+    /** Resets the animation to the initial frame and state. */
     void reset();
 
     /**
      * Updates the animation frame based on elapsed time.
-     * @param now The current time in nanoseconds
+     * Typically called in the game loop or timer.
+     * @param now Current time in nanoseconds
      */
     void update(long now);
 
-    /**
-     * Gets the current frame index.
-     * @return The current frame number
-     */
+    /** Returns the current frame number (1-based for UI). */
     int getCurrentNumFrame();
 
-    /**
-     * Gets the total number of animation frames.
-     * @return Total frames
-     */
+    /** Returns the total number of frames in the animation. */
     int getTotalFrames();
 
-    /**
-     * Gets the animation speed in frames per second.
-     * @return Frames per second
-     */
+    /** Returns the animation speed in frames per second. */
     double getFramesPerSec();
 
-    /**
-     * Retrieves the current frame as an image.
-     * @return Current frame as BufferedImage
-     */
+    /** Returns the current frame image. */
     BufferedImage getCurrentFrame();
 
-    /**
-     * Returns the index of the current frame.
-     * @return Current frame index
-     */
+    /** Returns the current frame index (0-based in array). */
     int getCurrentFrameIdx();
 
-    /**
-     * Sets the frames array for the animation.
-     * @param frames Array of BufferedImages
-     */
+    /** Sets the frames array for the animation. */
     void setFrames(BufferedImage[] frames);
 
-    /**
-     * Sets the total number of frames for the animation.
-     * @param totalFrames Total frame count
-     */
+    /** Sets the total number of frames. */
     void setTotalFrames(int totalFrames);
 
-    /**
-     * Sets the last frame update time (used for testing purposes).
-     * @param nanos Time in nanoseconds
-     */
+    /** Sets the last frame update time (for testing or manual control). */
     void setLastFrameTimeNanos(long nanos);
 }

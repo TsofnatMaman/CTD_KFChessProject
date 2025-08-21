@@ -7,7 +7,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Singleton event publisher that manages event listeners and publishes events to them.
+ * <p>
  * Supports thread-safe subscription, unsubscription, and event publishing.
+ * Listeners are stored per event type, and CopyOnWriteArrayList ensures
+ * safe iteration during concurrent modifications.
+ * </p>
  */
 public class EventPublisher {
 
@@ -22,6 +26,7 @@ public class EventPublisher {
 
     /**
      * Returns the singleton instance of EventPublisher.
+     *
      * @return the EventPublisher instance
      */
     public static EventPublisher getInstance() {
@@ -30,7 +35,8 @@ public class EventPublisher {
 
     /**
      * Subscribes a listener to a specific game event topic.
-     * @param topic the game event to subscribe to
+     *
+     * @param topic    the game event to subscribe to
      * @param listener the listener to notify when the event occurs
      */
     public void subscribe(EGameEvent topic, IEventListener listener) {
@@ -39,7 +45,8 @@ public class EventPublisher {
 
     /**
      * Unsubscribes a listener from a specific game event topic.
-     * @param topic the game event to unsubscribe from
+     *
+     * @param topic    the game event to unsubscribe from
      * @param listener the listener to remove
      */
     public void unsubscribe(EGameEvent topic, IEventListener listener) {
@@ -54,7 +61,10 @@ public class EventPublisher {
 
     /**
      * Publishes an event to all listeners subscribed to the specified topic.
-     * Thread-safe iteration ensures safe publishing even during concurrent subscribe/unsubscribe.
+     * <p>
+     * Thread-safe iteration ensures safe publishing even during concurrent subscribe/unsubscribe operations.
+     * </p>
+     *
      * @param topic the game event topic
      * @param event the event to publish
      */

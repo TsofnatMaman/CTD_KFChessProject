@@ -1,15 +1,15 @@
 package pieces;
 
 /**
- * Enum representing the different events a piece can perform.
+ * Enum representing the different events a piece can trigger.
  */
 public enum EPieceEvent {
-    /** Normal move of a piece */
+    /** Standard move of the piece */
     MOVE,
 
-    /** Jump action (typically for capture) */
+    /** Jump action, typically for capturing */
     JUMP,
 
-    /** Piece has finished its current action */
+    /** Indicates the piece has completed its current action */
     DONE
 }

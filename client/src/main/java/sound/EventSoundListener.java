@@ -6,17 +6,23 @@ import events.GameEvent;
 import events.IEventListener;
 
 /**
- * Listens to game events and plays corresponding sound effects.
+ * Event listener that reacts to specific game events by playing
+ * corresponding sound effects.
+ * <p>
+ * Subscribes automatically to several event types upon construction
+ * and delegates sound playback to {@link SoundManager}.
+ * </p>
  */
 public class EventSoundListener implements IEventListener {
 
     /**
-     * Constructor subscribes this listener to relevant game events.
+     * Constructs a new {@code EventSoundListener} and subscribes it
+     * to relevant game events that should trigger sound effects.
      */
     public EventSoundListener() {
         EventPublisher publisher = EventPublisher.getInstance();
 
-        // Subscribe to events that require sound effects
+        // Subscribe to game events that require sound feedback
         publisher.subscribe(EGameEvent.PIECE_CAPTURED, this);
         publisher.subscribe(EGameEvent.GAME_ENDED, this);
         publisher.subscribe(EGameEvent.PIECE_JUMP, this);
@@ -24,15 +30,22 @@ public class EventSoundListener implements IEventListener {
     }
 
     /**
-     * Called when a subscribed event occurs.
-     * Plays a sound file corresponding to the event type.
+     * Handles incoming game events by mapping each event type
+     * to a sound effect file and playing it.
+     * <p>
+     * The convention is: {@code eventType.getVal() + ".wav"}.
+     * Example: if {@code event.type() == PIECE_CAPTURED},
+     * it will attempt to play {@code "PIECE_CAPTURED.wav"}.
+     * </p>
      *
-     * @param event The game event
+     * @param event the game event that occurred
      */
     @Override
     public void onEvent(GameEvent event) {
-        // Example: PIECE_CAPTURED -> "PIECE_CAPTURED.wav"
+        // Build filename based on event type
         String soundFile = event.type().getVal() + ".wav";
+
+        // Delegate playback to SoundManager
         SoundManager.playSound(soundFile);
     }
 }

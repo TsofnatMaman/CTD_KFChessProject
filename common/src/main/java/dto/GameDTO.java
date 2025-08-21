@@ -4,8 +4,8 @@ import board.BoardConfig;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
- * Data Transfer Object representing the game state.
- * Contains board configuration, player information, player ID, and start time.
+ * Data Transfer Object representing the current game state.
+ * Includes board configuration, players, player ID, and start time.
  */
 public class GameDTO {
 
@@ -31,10 +31,10 @@ public class GameDTO {
     /**
      * Constructs a GameDTO with the specified parameters.
      *
-     * @param boardConfig board configuration
-     * @param players array of players
-     * @param yourId current player ID
-     * @param startTimeNano game start time in nanoseconds
+     * @param boardConfig Board configuration
+     * @param players Array of players
+     * @param yourId Current player ID
+     * @param startTimeNano Game start time in nanoseconds
      */
     public GameDTO(BoardConfig boardConfig, PlayerDTO[] players, int yourId, long startTimeNano) {
         this.boardConfig = boardConfig;
@@ -43,15 +43,35 @@ public class GameDTO {
         this.startTimeNano = startTimeNano;
     }
 
-    public BoardConfig getBoardConfig() { return boardConfig; }
-    public void setBoardConfig(BoardConfig boardConfig) { this.boardConfig = boardConfig; }
+    public BoardConfig getBoardConfig() {
+        return boardConfig;
+    }
 
-    public PlayerDTO[] getPlayers() { return players; }
-    public void setPlayers(PlayerDTO[] players) { this.players = players; }
+    public void setBoardConfig(BoardConfig boardConfig) {
+        this.boardConfig = boardConfig;
+    }
 
-    public int getYourId() { return yourId; }
-    public void setYourId(int yourId) { this.yourId = yourId; }
+    public PlayerDTO[] getPlayers() {
+        return players;
+    }
 
-    public long getStartTimeNano() { return startTimeNano; }
-    public void setStartTimeNano(long startTimeNano) { this.startTimeNano = startTimeNano; }
+    public void setPlayers(PlayerDTO[] players) {
+        this.players = players;
+    }
+
+    public int getYourId() {
+        return yourId;
+    }
+
+    public void setYourId(int yourId) {
+        this.yourId = yourId;
+    }
+
+    public long getStartTimeNano() {
+        return startTimeNano;
+    }
+
+    public void setStartTimeNano(long startTimeNano) {
+        this.startTimeNano = startTimeNano;
+    }
 }

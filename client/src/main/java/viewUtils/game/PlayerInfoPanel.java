@@ -12,33 +12,42 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * JPanel that displays information for a single player:
- * - Player name
- * - Current score
- * - List of moves performed
- *
- * It also listens to game events and updates the UI accordingly.
+ * JPanel that displays information for a single player, including:
+ * <ul>
+ *     <li>Player name</li>
+ *     <li>Current score</li>
+ *     <li>List of moves performed</li>
+ * </ul>
+ * <p>
+ * The panel also listens to game events and updates its UI accordingly.
+ * </p>
  */
 public class PlayerInfoPanel extends JPanel implements IEventListener {
 
+    /** The player whose information is displayed. */
     private final IPlayer player;
+
+    /** JLabel displaying the player's current score. */
     private final JLabel scoreLabel;
+
+    /** Text area displaying the moves performed by the player. */
     private final JTextArea movesArea;
 
     /**
      * Constructs a PlayerInfoPanel for a given player.
-     * @param player The player whose info will be displayed
+     *
+     * @param player the player whose info will be displayed
      */
     public PlayerInfoPanel(IPlayer player) {
         this.player = player;
 
-        // Panel layout and size
+        // Set layout and preferred size
         setLayout(new BorderLayout(5, 5));
         setPreferredSize(new Dimension(200, 0));
 
         // Name label setup
         JLabel nameLabel = new JLabel(player.getName());
-        nameLabel.setOpaque(true); // background color visible
+        nameLabel.setOpaque(true);
         nameLabel.setBackground(PlayerConstants.PIECES_COLOR[player.getId()]);
         nameLabel.setForeground(PlayerConstants.PLAYER_COLORS[player.getId()]);
         nameLabel.setHorizontalAlignment(SwingConstants.CENTER);
@@ -46,17 +55,19 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
         // Score label setup
         scoreLabel = new JLabel("Score: " + player.getScore());
 
-        // Moves text area setup
+        // Moves area setup
         movesArea = new JTextArea(10, 15);
         movesArea.setEditable(false);
         movesArea.setLineWrap(true);
         movesArea.setWrapStyleWord(true);
         JScrollPane scrollPane = new JScrollPane(movesArea);
+        movesArea.setFocusable(false);
 
         // Top panel contains name and score
         JPanel topPanel = new JPanel(new GridLayout(2, 1));
         topPanel.add(nameLabel);
         topPanel.add(scoreLabel);
+
 
         // Add components to main panel
         add(topPanel, BorderLayout.NORTH);
@@ -69,6 +80,11 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
         EventPublisher.getInstance().subscribe(EGameEvent.PIECE_CAPTURED, this);
     }
 
+    /**
+     * Handles subscribed game events and updates the UI accordingly.
+     *
+     * @param event the game event
+     */
     @Override
     public void onEvent(GameEvent event) {
         switch (event.type()) {
@@ -83,22 +99,24 @@ public class PlayerInfoPanel extends JPanel implements IEventListener {
 
     /**
      * Updates the displayed score for the player.
-     * @param score The new score
+     *
+     * @param score the new score
      */
     public void setScore(int score) {
         scoreLabel.setText("Score: " + score);
     }
 
     /**
-     * Adds a move to the moves text area.
-     * @param move Move description
+     * Adds a move description to the moves text area.
+     *
+     * @param move move description string
      */
     public void addMove(String move) {
         movesArea.append(move + "\n");
     }
 
     /**
-     * Clears all moves from the moves area.
+     * Clears all moves from the moves text area.
      */
     public void clearMoves() {
         movesArea.setText("");

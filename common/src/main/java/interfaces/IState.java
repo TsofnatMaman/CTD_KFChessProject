@@ -36,24 +36,12 @@ public interface IState extends Serializable {
      */
     boolean isActionFinished(long now);
 
-    /**
-     * Gets the physics data associated with this state.
-     *
-     * @return IPhysicsData instance
-     */
+    /** Returns the physics data associated with this state. */
     IPhysicsData getPhysics();
 
-    /**
-     * Gets the graphics data associated with this state.
-     *
-     * @return IGraphicsData instance
-     */
+    /** Returns the graphics data associated with this state. */
     IGraphicsData getGraphics();
 
-    /**
-     * Gets the name/type of the current state.
-     *
-     * @return EState representing the state's name
-     */
+    /** Returns the name/type of the current state. */
     EState getName();
 }

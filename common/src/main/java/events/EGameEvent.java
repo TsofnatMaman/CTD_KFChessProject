@@ -2,7 +2,10 @@ package events;
 
 /**
  * Enum representing different game events for the event publishing system.
- * Each event has a corresponding string value used for identification.
+ * <p>
+ * Each event has a corresponding string value used for identification
+ * when publishing or subscribing to events.
+ * </p>
  */
 public enum EGameEvent {
 
@@ -33,6 +36,11 @@ public enum EGameEvent {
     /** String value representing the event name. */
     private final String val;
 
+    /**
+     * Constructs a new game event with the specified string identifier.
+     *
+     * @param val string value of the event
+     */
     EGameEvent(String val){
         this.val = val;
     }

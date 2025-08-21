@@ -7,99 +7,135 @@ import java.io.Serializable;
 import java.util.List;
 
 /**
- * Interface for board operations and queries.
+ * Interface representing a game board.
+ * Provides methods to query pieces, move them, and check board state.
  */
 public interface IBoard extends Serializable {
 
     /**
      * Checks if a piece exists at the given position.
-     * @param pos The position to check
-     * @return true if a piece exists, false otherwise
+     *
+     * @param pos Position to check
+     * @return true if a piece exists at the position, false otherwise
      */
     boolean hasPiece(Position pos);
 
     /**
-     * Checks if a piece exists or the position is a valid target.
-     * @param pos The position to check
-     * @return true if occupied or valid target
+     * Checks if a piece exists at the given position
+     * or if the position is marked as a valid target.
+     *
+     * @param pos Position to check
+     * @return true if occupied or a valid target
      */
     boolean hasPieceOrIsTarget(Position pos);
 
     /**
-     * Gets the piece at the specified position.
-     * @param pos The position object
-     * @return The piece or null if none
+     * Returns the piece located at the specified position.
+     *
+     * @param pos Position to query
+     * @return IPiece object at the position, or null if empty
      */
     IPiece getPiece(Position pos);
 
     /**
-     * Returns the player index for a given position.
-     * @param pos The position object
-     * @return The player index
+     * Returns the player index that owns the given position.
+     *
+     * @param pos Position to query
+     * @return Player index
      */
     int getPlayerOf(Position pos);
 
     /**
      * Moves a piece from one position to another.
-     * @param from The starting position
-     * @param to The target position
+     *
+     * @param from Starting position
+     * @param to   Target position
      */
     void move(Position from, Position to);
 
     /**
-     * Updates all pieces and handles captures and board state.
-     */
-    void updateAll();
-
-    /**
-     * Checks if the specified position is within board bounds.
-     * @param p The position object
-     * @return true if in bounds, false otherwise
-     */
-    boolean isInBounds(Position p);
-
-    /**
      * Performs a jump action for the given piece.
-     * @param p The piece object
+     *
+     * @param p Piece to jump
      */
     void jump(IPiece p);
 
     /**
-     * Returns the array of players.
-     * @return Array of players
+     * Updates all pieces on the board and handles any required board state changes.
+     */
+    void updateAll();
+
+    /**
+     * Checks whether a given position is within the board boundaries.
+     *
+     * @param p Position to check
+     * @return true if within bounds, false otherwise
+     */
+    boolean isInBounds(Position p);
+
+    /**
+     * Returns all players on the board.
+     *
+     * @return Array of IPlayer objects
      */
     IPlayer[] getPlayers();
 
     /**
-     * Returns the number of rows on the board.
-     * @return Number of rows
+     * Returns the number of rows of the board.
+     *
+     * @return Row count
      */
     int getRows();
 
     /**
-     * Returns the number of columns on the board.
-     * @return Number of columns
+     * Returns the number of columns of the board.
+     *
+     * @return Column count
      */
     int getCols();
 
     /**
      * Returns the board configuration.
+     *
      * @return BoardConfig object
      */
     BoardConfig getBoardConfig();
 
     /**
-     * Returns all legal moves from the given selected position.
-     * @param selectedPosition The position of the selected piece
-     * @return List of positions that are legal moves
+     * Returns all legal moves available from the given selected position.
+     *
+     * @param selectedPosition Position of the selected piece
+     * @return List of positions representing legal moves
      */
     List<Position> getLegalMoves(Position selectedPosition);
 
+    /**
+     * Returns the target state at the given position.
+     *
+     * @param pos Position to query
+     * @return Target value (player index) or indicator of no target
+     */
     int getTarget(Position pos);
 
+    /**
+     * Sets a piece at the specified position on the board grid.
+     *
+     * @param pos   Position to place the piece
+     * @param piece IPiece object to place
+     */
     void setGrid(Position pos, IPiece piece);
 
+    /**
+     * Marks the specified position as having no target.
+     *
+     * @param pos Position to update
+     */
     void setIsNoTarget(Position pos);
 
+    /**
+     * Returns the board rules engine responsible for move legality and piece actions.
+     *
+     * @return IBoardEngine instance
+     */
     IBoardEngine getBoardRulesEngine();
 }

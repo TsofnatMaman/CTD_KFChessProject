@@ -13,33 +13,32 @@ import events.listeners.JumpsLogger;
 import events.listeners.MovesLogger;
 
 /**
- * A factory class for creating and assembling game components.
- * This class is responsible for dependency injection.
+ * Factory class for assembling and creating a complete game instance.
+ * Handles dependency injection for board, rules engine, and players.
  */
 public class GameFactory {
 
     /**
-     * Creates and initializes a complete new game instance.
+     * Creates a fully initialized game with the specified board configuration and players.
      *
-     * @param bc      Board configuration.
-     * @param players Array of players.
-     * @return A fully initialized IGame instance.
+     * @param bc      Board configuration
+     * @param players Array of players
+     * @return Fully initialized IGame instance
      */
     public static IGame createNewGame(BoardConfig bc, IPlayer[] players) {
-        // Step 1: Create the rules engine.
+        // Create the rules engine.
         KFCEngine rulesEngine = new KFCEngine();
 
-        // Step 2: Create the board, injecting the rules engine.
+        // Create the board with injected rules engine and players.
         IBoard board = new Board(bc, rulesEngine, players);
 
-        // Step 3: Initialize event loggers. This is a side concern,
-        // so it's best handled during assembly.
+        // Initialize event loggers.
         new MovesLogger();
         new JumpsLogger();
         new CapturedLogger();
         new GameEndLogger();
 
-        // Step 4: Create and return the Game instance, injecting the board and players.
+        // Return the assembled Game instance.
         return new Game(board, players);
     }
 }

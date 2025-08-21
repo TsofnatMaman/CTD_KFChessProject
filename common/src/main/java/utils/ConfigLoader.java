@@ -7,30 +7,35 @@ import java.util.Properties;
  * Utility class for loading configuration and message properties from resource files.
  * Provides safe access with default fallback values.
  */
-public class ConfigLoader {
+public final class ConfigLoader {
 
-    /** Application configuration properties */
     private static final Properties config = new Properties();
-
-    /** Localized message properties */
     private static final Properties messages = new Properties();
+
+    // Prevent instantiation
+    private ConfigLoader() {}
 
     // Static initializer: load properties once
     static {
-        // Load config.properties
-        try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream("config.properties")) {
-            if (in != null) {
-                config.load(in);
-            }
-        } catch (Exception ignored) {}
+        loadProperties("config.properties", config);
+        loadProperties("messages.properties", messages);
+    }
 
-        // Load messages.properties
-        try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream("messages.properties")) {
+    /**
+     * Loads a properties file from the classpath into the given Properties object.
+     *
+     * @param resourceName name of the resource file
+     * @param props        Properties object to load into
+     */
+    private static void loadProperties(String resourceName, Properties props) {
+        try (InputStream in = ConfigLoader.class.getClassLoader().getResourceAsStream(resourceName)) {
             if (in != null) {
-                messages.load(in);
+                props.load(in);
+            } else {
+                utils.LogUtils.logDebug("Resource not found: " + resourceName);
             }
         } catch (Exception e) {
-            LogUtils.logDebug(e.getMessage());
+            utils.LogUtils.logDebug("Failed to load resource " + resourceName + ": " + e.getMessage());
         }
     }
 

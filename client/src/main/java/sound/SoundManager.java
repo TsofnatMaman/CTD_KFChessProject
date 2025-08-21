@@ -6,20 +6,35 @@ import javax.sound.sampled.*;
 import java.net.URL;
 
 /**
- * Utility class to play sound effects from resource files.
+ * Utility class responsible for playing sound effects from resource files.
+ * <p>
+ * Looks for sound files in the {@code /sounds/} directory inside the classpath
+ * and plays them asynchronously using the Java Sound API.
+ * </p>
  */
 public class SoundManager {
 
     /**
-     * Plays a sound from the "sounds" resources folder.
-     * If the file is not found, logs a debug message.
+     * Plays a sound file from the {@code /sounds/} resources folder.
+     * <p>
+     * The method:
+     * <ol>
+     *     <li>Searches for the file in the {@code sounds} package.</li>
+     *     <li>Opens an {@link AudioInputStream} from the resource.</li>
+     *     <li>Initializes a {@link Clip} and starts playback.</li>
+     *     <li>Closes the clip automatically once playback ends.</li>
+     * </ol>
+     * </p>
      *
-     * @param fileName The name of the sound file (e.g., "PIECE_CAPTURED.wav")
+     * @param fileName the name of the sound file (e.g., {@code "PIECE_CAPTURED.wav"})
      */
     public static void playSound(String fileName) {
         try {
             // Locate the sound resource in the classpath
-            URL soundURL = SoundManager.class.getClassLoader().getResource("sounds/" + fileName);
+            URL soundURL = SoundManager.class
+                    .getClassLoader()
+                    .getResource("sounds/" + fileName);
+
             if (soundURL == null) {
                 LogUtils.logDebug("Sound file not found: " + fileName);
                 return;
@@ -29,17 +44,16 @@ public class SoundManager {
             try (AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundURL)) {
                 Clip clip = AudioSystem.getClip();
 
-                // Close the clip automatically after playback ends
+                // Automatically close the clip after playback ends
                 clip.addLineListener(event -> {
                     if (event.getType() == LineEvent.Type.STOP) {
                         clip.close();
                     }
                 });
 
-                // Open and start playing the sound
+                // Load audio data into the clip and start playback
                 clip.open(audioInputStream);
                 clip.start();
-
             }
 
         } catch (Exception e) {

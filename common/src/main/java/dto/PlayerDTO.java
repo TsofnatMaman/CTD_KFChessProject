@@ -8,17 +8,17 @@ import java.awt.*;
 /**
  * Data Transfer Object representing a player.
  *
- * @param id the player's ID
- * @param name the player's name
- * @param colorHex the player's color in hex format (e.g., "#ff0000")
+ * @param id Player's unique ID
+ * @param name Player's display name
+ * @param colorHex Player's color in hexadecimal format (e.g., "#ff0000")
  */
 public record PlayerDTO(int id, String name, String colorHex) {
 
     /**
-     * Converts an IPlayer instance to a PlayerDTO.
+     * Converts an IPlayer instance into a PlayerDTO.
      *
-     * @param player the IPlayer instance
-     * @return a PlayerDTO representing the player
+     * @param player IPlayer instance
+     * @return PlayerDTO representing the player
      */
     public static PlayerDTO from(IPlayer player) {
         Color c = player.getColor();
@@ -28,11 +28,11 @@ public record PlayerDTO(int id, String name, String colorHex) {
     }
 
     /**
-     * Converts a PlayerDTO back to an IPlayer instance using the PlayerFactory.
+     * Converts a PlayerDTO back into an IPlayer using the PlayerFactory.
      *
-     * @param playerDTO the PlayerDTO instance
-     * @param bc the board configuration
-     * @return an IPlayer instance
+     * @param playerDTO The PlayerDTO instance
+     * @param bc Board configuration
+     * @return IPlayer instance
      */
     public static IPlayer to(PlayerDTO playerDTO, BoardConfig bc) {
         return player.PlayerFactory.createPlayer(playerDTO.id(), playerDTO.name(), bc);
