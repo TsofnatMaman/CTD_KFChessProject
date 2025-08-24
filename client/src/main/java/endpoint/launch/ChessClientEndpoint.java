@@ -4,7 +4,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import dto.EventType;
 import dto.Message;
-import utils.LogUtils;
+import interfaces.AppLogger;
+import utils.Slf4jAdapter;
 
 import javax.websocket.*;
 import java.io.Closeable;
@@ -21,6 +22,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
  */
 @ClientEndpoint
 public class ChessClientEndpoint implements Closeable {
+
+    private static final AppLogger logger = new Slf4jAdapter(ChessClientEndpoint.class);
 
     /** The current WebSocket session */
     private Session session;
@@ -79,7 +82,7 @@ public class ChessClientEndpoint implements Closeable {
         this.session = session;
         connected.set(true);
         reconnectAttempts = 0;
-        log("Connected to server");
+        logger.info("Connected to server");
     }
 
     @OnMessage
@@ -91,13 +94,13 @@ public class ChessClientEndpoint implements Closeable {
     @OnClose
     public void onClose(Session session, CloseReason reason) {
         connected.set(false);
-        log("Connection closed: " + reason);
+        logger.info("Connection closed: " + reason);
         if (!closing.get()) scheduleReconnect();
     }
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        LogUtils.logDebug("WebSocket error: " + throwable.getMessage());
+        logger.error("WebSocket error",   throwable);
         // Reconnection handled by onClose
     }
 
@@ -123,11 +126,11 @@ public class ChessClientEndpoint implements Closeable {
 
             switch (eventType) {
                 case PLAYER_ID -> updatePlayerId(data.asInt(-1));
-                default -> LogUtils.logDebug("Unknown message type: " + type);
+                default -> logger.debug("Unknown message type: " + type);
             }
 
         } catch (Exception e) {
-            LogUtils.logDebug("Failed to parse incoming message: " + e);
+            logger.error("Failed to parse incoming message", e);
         }
     }
 
@@ -138,7 +141,7 @@ public class ChessClientEndpoint implements Closeable {
      */
     private void updatePlayerId(int id) {
         playerId = id;
-        log("Updated playerId to " + playerId);
+        logger.info("Updated playerId to " + playerId);
     }
 
     // ---------------------- Reconnect Logic ----------------------
@@ -155,7 +158,7 @@ public class ChessClientEndpoint implements Closeable {
             try {
                 connect();
             } catch (Exception e) {
-                log("Reconnect attempt failed: " + e);
+                logger.error("Reconnect attempt failed", e);
                 scheduleReconnect();
             }
         }, delay, TimeUnit.SECONDS);
@@ -237,21 +240,10 @@ public class ChessClientEndpoint implements Closeable {
             try {
                 session.close();
             } catch (IOException e) {
-                log("Error closing WebSocket session: " + e.getMessage());
+                logger.error("Error closing WebSocket session", e);
             }
         }
 
         reconnectExecutor.shutdownNow();
-    }
-
-    // ---------------------- Helper Logging ----------------------
-
-    /**
-     * Simple log helper.
-     *
-     * @param msg the message to log
-     */
-    private void log(String msg) {
-        System.out.println("[ChessClientEndpoint] " + msg);
     }
 }

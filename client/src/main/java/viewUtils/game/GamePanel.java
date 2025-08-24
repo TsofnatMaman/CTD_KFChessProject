@@ -2,8 +2,9 @@ package viewUtils.game;
 
 import constants.PlayerConstants;
 import endpoint.controller.IGameUI;
+import interfaces.AppLogger;
 import interfaces.IPlayer;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 import viewUtils.board.BaseBoardPanel;
 
 import javax.imageio.ImageIO;
@@ -28,6 +29,8 @@ import java.util.Objects;
  * </p>
  */
 public class GamePanel extends JPanel implements IGameUI {
+
+    private static final AppLogger logger = new Slf4jAdapter(GamePanel.class);
 
     /**
      * Reference to the board panel displaying the chess board.
@@ -70,7 +73,7 @@ public class GamePanel extends JPanel implements IGameUI {
         timerPanel = new TimerPanel();
         initUI();
 
-        LogUtils.logDebug("GamePanel initialized");
+        logger.debug("GamePanel initialized");
     }
 
     // ----------- UI Initialization -----------
@@ -100,7 +103,7 @@ public class GamePanel extends JPanel implements IGameUI {
         try {
             return ImageIO.read(Objects.requireNonNull(getClass().getClassLoader().getResource(path)));
         } catch (IOException | IllegalArgumentException e) {
-            LogUtils.logDebug("Could not load background image: " + e.getMessage());
+            logger.error("Could not load background image", e);
             return null;
         }
     }

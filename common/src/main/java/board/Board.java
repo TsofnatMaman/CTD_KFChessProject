@@ -120,7 +120,7 @@ public class Board implements IBoard {
         long now = System.nanoTime();
 
         for (IPlayer player : players) {
-            for (int i = 0; i < player.getPieces().size(); i++) {
+            for (int i = 0; i < player.getPieces().size(); i++) {//Cannot be an iterator because Piece may be replaced during the loop
                 IPiece piece = player.getPieces().get(i);
                 boardRulesEngine.handleUpdatePiece(this, player, piece, now);
 

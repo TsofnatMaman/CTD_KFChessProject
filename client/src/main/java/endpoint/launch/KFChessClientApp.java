@@ -10,14 +10,14 @@ import endpoint.view.AskUserName;
 import endpoint.view.WaitDialog;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import interfaces.AppLogger;
+import utils.Slf4jAdapter;
 import viewUtils.game.GamePanel;
 
 import javax.swing.*;
 import java.net.URI;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * Main client application for KFChess.
@@ -27,7 +27,7 @@ import java.util.logging.Logger;
  */
 public class KFChessClientApp implements GameEventListener {
 
-    private static final Logger logger = Logger.getLogger(KFChessClientApp.class.getName());
+    private static final AppLogger logger = new Slf4jAdapter(KFChessClientApp.class);
 
     /** WebSocket client endpoint */
     private ChessClientEndpoint client;
@@ -147,7 +147,7 @@ public class KFChessClientApp implements GameEventListener {
 
     @Override
     public void onUnknownMessage(String type) {
-        logger.warning("Unknown message type: " + type);
+        logger.warn("Unknown message type: " + type);
     }
 
     @Override
@@ -193,7 +193,7 @@ public class KFChessClientApp implements GameEventListener {
             if (controller != null) controller.stopListening();
             if (client != null) client.close();
         } catch (Exception e) {
-            logger.log(Level.WARNING, "Error during shutdown", e);
+            logger.error("Error during shutdown", e);
         }
     }
 

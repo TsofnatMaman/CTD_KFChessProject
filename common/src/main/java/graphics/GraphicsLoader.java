@@ -1,8 +1,9 @@
 package graphics;
 
+import interfaces.AppLogger;
 import state.EState;
 import pieces.EPieceType;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -14,6 +15,8 @@ import java.util.*;
  * Supports loading individual frames or all frames for a piece type, player, and state.
  */
 public class GraphicsLoader {
+
+    private static final AppLogger logger = new Slf4jAdapter(GraphicsLoader.class);
 
     /** Cache to prevent reloading the same image multiple times. */
     private static final Map<String, BufferedImage> cache = new HashMap<>();
@@ -40,7 +43,7 @@ public class GraphicsLoader {
             cache.put(path, image);
             return image;
         } catch (IOException | IllegalArgumentException | NullPointerException e) {
-            LogUtils.logDebug("Failed to load sprite: " + path);
+            logger.error("Failed to load sprite: " + path, e);
             return null;
         }
     }

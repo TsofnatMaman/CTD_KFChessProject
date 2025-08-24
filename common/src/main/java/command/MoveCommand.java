@@ -4,11 +4,12 @@ import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
 import events.listeners.ActionData;
+import interfaces.AppLogger;
 import interfaces.ICommand;
 import interfaces.IBoard;
 import pieces.Position;
+import utils.Slf4jAdapter;
 import utils.Utils;
-import utils.LogUtils;
 
 /**
  * Command representing a move action for a piece on the board.
@@ -18,6 +19,8 @@ import utils.LogUtils;
  * </p>
  */
 public class MoveCommand implements ICommand {
+
+    private static final AppLogger logger = new Slf4jAdapter(MoveCommand.class);
 
     /** The starting position of the piece. */
     private final Position from;
@@ -82,6 +85,6 @@ public class MoveCommand implements ICommand {
         }
 
         // Log the move or illegal attempt
-        LogUtils.logDebug(message);
+        logger.debug(message);
     }
 }

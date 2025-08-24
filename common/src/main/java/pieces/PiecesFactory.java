@@ -4,11 +4,12 @@ import board.BoardConfig;
 import graphics.GraphicsLoader;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import interfaces.AppLogger;
 import state.*;
 import interfaces.IGraphicsData;
 import interfaces.IPhysicsData;
 import interfaces.IState;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -23,6 +24,8 @@ import java.util.jar.JarFile;
  * Loads all states, physics, and graphics from resources.
  */
 public class PiecesFactory {
+
+    private static final AppLogger logger = new Slf4jAdapter(PiecesFactory.class);
 
     private static final ObjectMapper mapper = new ObjectMapper();
 
@@ -69,7 +72,7 @@ public class PiecesFactory {
             }
 
             if (stateNames.isEmpty()) {
-                LogUtils.logDebug("No states found for piece: " + code.getVal());
+                logger.warn("No states found for piece: " + code.getVal());
                 return null;
             }
 
@@ -79,7 +82,7 @@ public class PiecesFactory {
 
                 try (InputStream is = PiecesFactory.class.getResourceAsStream(configPath)) {
                     if (is == null) {
-                        LogUtils.logDebug("Missing config for state: " + stateNameStr);
+                        logger.debug("Missing config for state: " + stateNameStr);
                         continue;
                     }
 
@@ -89,7 +92,7 @@ public class PiecesFactory {
                     BufferedImage[] sprites = GraphicsLoader.loadAllSprites(code, playerId, stateName);
 
                     if (sprites.length == 0) {
-                        LogUtils.logDebug("No sprites for state: " + stateNameStr);
+                        logger.debug("No sprites for state: " + stateNameStr);
                         continue;
                     }
 
@@ -102,7 +105,7 @@ public class PiecesFactory {
             }
 
             if (states.isEmpty()) {
-                LogUtils.logDebug("No valid states loaded for piece: " + code.getVal());
+                logger.debug("No valid states loaded for piece: " + code.getVal());
                 return null;
             }
 
@@ -121,7 +124,7 @@ public class PiecesFactory {
 
         } catch (Exception e) {
             String msg = "Exception in createPieceByCode: " + e.getMessage();
-            LogUtils.logDebug(msg);
+            logger.error(msg, e);
             throw new RuntimeException(msg, e);
         }
     }

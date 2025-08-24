@@ -133,10 +133,13 @@ Or run `KFChessClientApp` from your IDE. Client prompts for username and connect
 Run:
 
 ```bash
-client/src/main/java/local/launch/Main.java
+mvn clean install -DskipTests
+mvn -pl client exec:java -Dexec.mainClass="local.launch.Main"
 ```
 
 This starts the UI with an in-process `Game` for rapid iteration and UI debugging.
+
+note: Player 1 plays with the arrows and the Enter key and the second with WASD and space.
 
 ---
 

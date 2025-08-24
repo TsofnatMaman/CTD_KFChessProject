@@ -1,5 +1,7 @@
 package utils;
 
+import interfaces.AppLogger;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -9,6 +11,8 @@ import java.util.Properties;
  * Provides safe access with default fallback values.
  */
 public final class ConfigLoader {
+
+    private static final AppLogger logger = new Slf4jAdapter(ConfigLoader.class);
 
     private static final Properties config = new Properties();
     private static final Properties messages = new Properties();
@@ -34,10 +38,10 @@ public final class ConfigLoader {
             if (in != null) {
                 props.load(in);
             } else {
-                utils.LogUtils.logDebug("Resource not found: " + resourceName);
+                logger.debug("Resource not found: " + resourceName);
             }
         } catch (IOException e) {
-            utils.LogUtils.logDebug("Failed to load resource " + resourceName + ": " + e.getMessage());
+            logger.error("Failed to load resource " + resourceName, e);
         }
     }
 

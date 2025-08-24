@@ -60,6 +60,12 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- for loggers-->
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>1.5.13</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -91,6 +97,16 @@
                     </execution>
                 </executions>
             </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.2.0</version>
+                <configuration>
+                    <mainClass>local.launch.Main</mainClass>
+                </configuration>
+            </plugin>
+
         </plugins>
     </build>
 </project>

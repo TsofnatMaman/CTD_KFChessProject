@@ -1,7 +1,5 @@
 package constants;
 
-import utils.ConfigLoader;
-
 /**
  * Internal game constants for board size, player count, and timers.
  * <p>

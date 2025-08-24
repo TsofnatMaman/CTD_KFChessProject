@@ -8,11 +8,12 @@ import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
 import game.GameLoop;
+import interfaces.AppLogger;
 import interfaces.IGame;
 import interfaces.IGameLoop;
 import pieces.Position;
 import sound.EventSoundListener;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 import utils.Utils;
 
 import java.util.List;
@@ -28,6 +29,8 @@ import java.util.function.Consumer;
  * </p>
  */
 public class GameController implements Runnable, IEventListener {
+
+    private static final AppLogger logger = new Slf4jAdapter(GameController.class);
 
     /**
      * The game model representing the current state of the game
@@ -105,7 +108,7 @@ public class GameController implements Runnable, IEventListener {
             listenerThread = new Thread(this, "GameController-Listener");
             listenerThread.setDaemon(true);
             listenerThread.start();
-            LogUtils.logDebug("GameController started listening thread");
+            logger.debug("GameController started listening thread");
         }
     }
 
@@ -120,7 +123,7 @@ public class GameController implements Runnable, IEventListener {
             } catch (InterruptedException ignored) {
                 Thread.currentThread().interrupt();
             }
-            LogUtils.logDebug("GameController stopped listening thread");
+            logger.debug("GameController stopped listening thread");
         }
     }
 
@@ -139,16 +142,16 @@ public class GameController implements Runnable, IEventListener {
      */
     @Override
     public void run() {
-        LogUtils.logDebug("GameController run() loop started");
+        logger.debug("GameController run() loop started");
         while (!Thread.currentThread().isInterrupted()) {
             try {
                 String message = client.pollNextMessage(500, TimeUnit.MILLISECONDS);
                 if (message != null) serverMessageHandler.handleMessage(message);
             } catch (InterruptedException e) {
-                LogUtils.logDebug("Error in GameController loop: " + e);
+                logger.error("Error in GameController loop", e);
             }
         }
-        LogUtils.logDebug("GameController run() loop ended");
+        logger.debug("GameController run() loop ended");
     }
 
     // ------------------- Event Handling -------------------
@@ -182,7 +185,7 @@ public class GameController implements Runnable, IEventListener {
             try {
                 action.accept(l);
             } catch (Exception e) {
-                LogUtils.logDebug("Listener error: " + e);
+                logger.error("Listener error: ", e);
             }
         }
     }

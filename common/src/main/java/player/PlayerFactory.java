@@ -1,12 +1,13 @@
 package player;
 
 import board.BoardConfig;
+import interfaces.AppLogger;
 import interfaces.IPiece;
 import interfaces.IPlayer;
 import pieces.EPieceType;
 import pieces.PiecesFactory;
 import pieces.Position;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ import java.util.List;
  * and the initial piece layout stored in LoadPieces.board.
  */
 public class PlayerFactory {
+
+    private static final AppLogger logger = new Slf4jAdapter(PlayerFactory.class);
 
     /**
      * Creates a single Player by reading the initial piece codes from LoadPieces.board
@@ -52,8 +55,8 @@ public class PlayerFactory {
                 try {
                     pieceType = EPieceType.valueOf(typeChar);
                 } catch (IllegalArgumentException e) {
-                    LogUtils.logDebug(
-                            "Unknown piece code '" + typeChar + "' at row " + startRow + ", col " + col + " for player " + id
+                    logger.error(
+                            "Unknown piece code '" + typeChar + "' at row " + startRow + ", col " + col + " for player " + id, e
                     );
                     continue;
                 }
@@ -67,9 +70,11 @@ public class PlayerFactory {
                 if (piece != null) {
                     playerPieces.add(piece);
                 } else {
-                    LogUtils.logDebug(
+                    logger.debug(
                             "Failed to create piece of type " + pieceType + " for player " + id + " at " + piecePosition
                     );
+
+                    throw new RuntimeException();
                 }
             }
         }

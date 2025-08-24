@@ -1,6 +1,7 @@
 package sound;
 
-import utils.LogUtils;
+import interfaces.AppLogger;
+import utils.Slf4jAdapter;
 
 import javax.sound.sampled.*;
 import java.io.IOException;
@@ -14,6 +15,8 @@ import java.net.URL;
  * </p>
  */
 public class SoundManager {
+
+    private static final AppLogger logger = new Slf4jAdapter(SoundManager.class);
 
     /**
      * Plays a sound file from the {@code /sounds/} resources folder.
@@ -37,7 +40,7 @@ public class SoundManager {
                     .getResource("sounds/" + fileName);
 
             if (soundURL == null) {
-                LogUtils.logDebug("Sound file not found: " + fileName);
+                logger.warn("Sound file not found: " + fileName);
                 return;
             }
 
@@ -56,11 +59,11 @@ public class SoundManager {
                 clip.open(audioInputStream);
                 clip.start();
             } catch (UnsupportedAudioFileException | IOException e) {
-                throw new RuntimeException(e);
+                throw e;
             }
 
-        } catch (LineUnavailableException | RuntimeException e) {
-            LogUtils.logDebug("Error playing sound '" + fileName + "': " + e.getMessage());
+        } catch (UnsupportedAudioFileException | LineUnavailableException | IOException e) {
+            logger.error("Error playing sound '" + fileName + "': ", e);
         }
     }
 }

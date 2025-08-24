@@ -3,14 +3,11 @@ package player;
 import board.BoardConfig;
 import command.JumpCommand;
 import command.MoveCommand;
-import interfaces.ICommand;
-import interfaces.IBoard;
-import interfaces.IPiece;
-import interfaces.IPlayer;
+import interfaces.*;
 import pieces.EPieceType;
 import pieces.PiecesFactory;
 import pieces.Position;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 
 import java.awt.*;
 import java.util.*;
@@ -24,6 +21,8 @@ import java.util.List;
  * </p>
  */
 public class Player implements IPlayer {
+
+    private static final AppLogger logger = new Slf4jAdapter(Player.class);
 
     private final int id;
     private String name;
@@ -147,7 +146,7 @@ public class Player implements IPlayer {
             if (board.hasPiece(selected) && piece.canAction()) {
                 setPendingFrom(selected);
             } else {
-                LogUtils.logDebug("Cannot choose piece at " + selected + " for player " + id);
+                logger.debug("Cannot choose piece at " + selected + " for player " + id);
             }
 
         } else {
@@ -193,7 +192,7 @@ public class Player implements IPlayer {
             pieces.add(queen);
             score += queen.getType().getScore();
         } else {
-            LogUtils.logDebug("Failed to promote piece to Queen at " + targetPos + " for player " + id);
+            logger.info("Failed to promote piece to Queen at " + targetPos + " for player " + id);
         }
 
         return queen;

@@ -22,3 +22,18 @@ GameController run() loop ended
 GameController stopped listening thread
 GamePanel initialized
 Sound file not found: this_file_does_not_exist_hopefully.wav
+[2025-08-22 16:24:10] GameController run() loop started
+[2025-08-22 16:24:10] GameController started listening thread
+[2025-08-22 16:24:10] GameController run() loop ended
+[2025-08-22 16:24:10] GameController stopped listening thread
+[2025-08-22 16:24:10] Sound file not found: this_file_does_not_exist_hopefully.wav
+[2025-08-22 16:26:21] GameController run() loop started
+[2025-08-22 16:26:21] GameController started listening thread
+[2025-08-22 16:26:21] GameController run() loop ended
+[2025-08-22 16:26:21] GameController stopped listening thread
+[2025-08-22 16:26:21] Sound file not found: this_file_does_not_exist_hopefully.wav
+[2025-08-22 16:31:10] GameController run() loop started
+[2025-08-22 16:31:10] GameController started listening thread
+[2025-08-22 16:31:10] GameController run() loop ended
+[2025-08-22 16:31:10] GameController stopped listening thread
+[2025-08-22 16:31:10] Sound file not found: this_file_does_not_exist_hopefully.wav

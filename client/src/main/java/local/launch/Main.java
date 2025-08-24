@@ -2,7 +2,6 @@ package local.launch;
 
 import board.BoardConfig;
 import constants.BoardConstants;
-import constants.GameConstants;
 import game.GameFactory;
 import game.GameLoop;
 import interfaces.IGame;

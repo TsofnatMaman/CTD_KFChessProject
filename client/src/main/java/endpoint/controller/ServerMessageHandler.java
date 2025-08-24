@@ -3,7 +3,8 @@ package endpoint.controller;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import dto.*;
-import utils.LogUtils;
+import interfaces.AppLogger;
+import utils.Slf4jAdapter;
 
 /**
  * Handles parsing and reacting to messages received from the server.
@@ -13,6 +14,8 @@ import utils.LogUtils;
  * appropriate methods in {@link GameController} based on its type.</p>
  */
 public class ServerMessageHandler {
+
+    private static final AppLogger logger = new Slf4jAdapter(ServerMessageHandler.class);
 
     /** Reference to the main game controller to trigger actions. */
     private final GameController controller;
@@ -59,7 +62,7 @@ public class ServerMessageHandler {
             }
         } catch (JsonProcessingException e) {
             // Log JSON parsing errors for debugging purposes
-            LogUtils.logDebug("Failed to parse JSON message: " + e.getMessage());
+            logger.error("Failed to parse JSON message", e);
         }
     }
 }

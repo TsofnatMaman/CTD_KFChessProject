@@ -6,8 +6,9 @@ import events.EventPublisher;
 import events.GameEvent;
 import events.IEventListener;
 import game.IBoardView;
+import interfaces.AppLogger;
 import interfaces.IBoard;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -33,6 +34,8 @@ import java.net.URL;
  * to {@link EGameEvent#GAME_UPDATE} to repaint when game state changes.
  */
 public abstract class BaseBoardPanel extends JPanel implements IBoardView, IEventListener {
+
+    private static final AppLogger logger = new Slf4jAdapter(BaseBoardPanel.class);
 
     /** Background image of the board (loaded from resources). */
     protected BufferedImage boardImage;
@@ -109,10 +112,10 @@ public abstract class BaseBoardPanel extends JPanel implements IBoardView, IEven
             if (imageUrl != null) {
                 boardImage = ImageIO.read(imageUrl);
             } else {
-                LogUtils.logDebug("Board image not found in resources!");
+                logger.debug("Board image not found in resources!");
             }
         } catch (IOException e) {
-            LogUtils.logDebug("Exception loading board image: " + e.getMessage());
+            logger.error("Exception loading board image", e);
         }
     }
 

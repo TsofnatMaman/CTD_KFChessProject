@@ -4,10 +4,11 @@ import constants.GameConstants;
 import events.EGameEvent;
 import events.EventPublisher;
 import events.GameEvent;
+import interfaces.AppLogger;
 import interfaces.IGame;
 import interfaces.IGameLoop;
 import interfaces.IPlayer;
-import utils.LogUtils;
+import utils.Slf4jAdapter;
 
 import javax.swing.*;
 
@@ -16,6 +17,8 @@ import javax.swing.*;
  * Responsible for updating game state, processing commands, and publishing events.
  */
 public class GameLoop implements IGameLoop {
+
+    private static final AppLogger logger = new Slf4jAdapter(GameLoop.class);
 
     private Timer timer;
     private final IGame game;
@@ -63,7 +66,7 @@ public class GameLoop implements IGameLoop {
                     new GameEvent(EGameEvent.GAME_ENDED, null)
             );
             stopGameLoop();
-            LogUtils.logDebug("Game Over. Winner: Player " + winner.getName());
+            logger.debug("Game Over. Winner: Player " + winner.getName());
         }
     }
 
