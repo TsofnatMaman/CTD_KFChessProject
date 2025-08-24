@@ -1,36 +1,51 @@
-# Stage 1: Build the application
-# Use a Maven image that includes the build tools and the Java SDK
-FROM maven:3-openjdk-17 AS build
+# ---------- Stage 1: Build ----------
+FROM maven:3-eclipse-temurin-21 AS build
 WORKDIR /app
 
-# Copy the pom.xml files first to enable caching of dependencies.
-# This makes subsequent builds faster if the dependencies haven't changed.
-COPY pom.xml .
-COPY server/pom.xml server/
-COPY common/pom.xml common/
-COPY client/pom.xml client/
+# Optional: cleaner logs & headless JVM
+ENV MAVEN_OPTS="-Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn -Dorg.slf4j.simpleLogger.showDateTime=true -Djava.awt.headless=true"
 
-# Copy the source code of the project
+# Copy only POMs first to leverage Docker layer caching
+COPY pom.xml .
+COPY common/pom.xml common/
+COPY server/pom.xml server/
+
+# Warm up dependency cache for the server-only profile (best with BuildKit)
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn -B -P server-only -DskipTests dependency:go-offline
+
+# Now copy sources
 COPY common/src common/src
 COPY server/src server/src
-COPY client/src client/src
 
-# Run the Maven package command. The -DskipTests flag skips the tests.
-RUN mvn package -DskipTests
+# Build from the root using the server-only profile (builds common+server; excludes client)
+RUN --mount=type=cache,target=/root/.m2 \
+    mvn -B -P server-only -DskipTests clean package
 
-# Stage 2: Final (Runtime) Stage
-# Use a smaller Java Runtime Environment image for the final application.
-# This image is much smaller as it only contains what is needed to run the app.
-FROM eclipse-temurin:17-jre-focal
+# Normalize artifact name so the runtime stage can copy a fixed path
+# Works for either *-shaded.jar or a regular *.jar
+RUN set -eux; \
+    JAR="$(ls server/target/*-shaded.jar 2>/dev/null || ls server/target/*.jar | head -n1)"; \
+    test -n "$JAR"; \
+    cp "$JAR" /app/app.jar
+
+
+# ---------- Stage 2: Runtime ----------
+FROM eclipse-temurin:21-jre-jammy
 WORKDIR /app
 
-# Expose the standard web server port.
-# It is important that your Java code is configured to listen on this port.
+# Run as non-root
+RUN useradd --system --create-home --uid 10001 appuser
+USER appuser
+
+# Copy the built jar
+COPY --from=build /app/app.jar ./app.jar
+
+# Informational; app must read $PORT at runtime (your code already does via ServerConfig)
 EXPOSE 8080
 
-# Copy the application's JAR file from the build stage into the final image.
-# The --from=build flag specifies the source stage.
-COPY --from=build /app/server/target/chess-websocket-server-1.0.0-shaded.jar app.jar
+# JVM flags can be injected at runtime (e.g., on Render)
+ENV JAVA_OPTS=""
 
-# Define the command to run the application when the container starts.
-CMD ["java", "-jar", "app.jar"]
+# Use exec so the JVM is PID 1 (proper signal handling)
+ENTRYPOINT ["sh","-c","exec java $JAVA_OPTS -jar app.jar"]

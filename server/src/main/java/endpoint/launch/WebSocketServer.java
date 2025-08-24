@@ -42,8 +42,8 @@ public class WebSocketServer {
             );
 
             // Keep server running until user presses a key
-            System.out.println("Press any key to stop...");
-            System.in.read();
+//            System.out.println("Press any key to stop...");
+            Thread.currentThread().join();
         } finally {
             // Ensure server is stopped gracefully
             server.stop();

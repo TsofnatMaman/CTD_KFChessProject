@@ -15,11 +15,12 @@ public final class ServerConfig {
     public static final String SERVER_ENDPOINT = "/game";
 
     /** Hostname or IP address of the server. Default is "localhost". */
-    public static final String HOST = ConfigLoader.getConfig("server.host", "localhost");
+    public static final String HOST = ConfigLoader.getConfig("server.host", "0.0.0.0");
 
     /** Port number of the server. Default is 8025. */
-    public static final int PORT = Integer.parseInt(ConfigLoader.getConfig("server.port", "8025"));
-
+    public static final int PORT = Integer.parseInt(
+            System.getenv().getOrDefault("PORT", ConfigLoader.getConfig("server.port", "8025"))
+    );
     /** WebSocket base path. Default is "/ws". */
     public static final String WS_PATH = ConfigLoader.getConfig("server.ws.path", "/ws");
 
