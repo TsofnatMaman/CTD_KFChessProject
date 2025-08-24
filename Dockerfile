@@ -8,10 +8,12 @@ WORKDIR /app
 COPY pom.xml .
 COPY server/pom.xml server/
 COPY common/pom.xml common/
+COPY client/pom.xml client/
 
 # Copy the source code of the project
 COPY common/src common/src
 COPY server/src server/src
+COPY client/src client/src
 
 # Run the Maven package command. The -DskipTests flag skips the tests.
 RUN mvn package -DskipTests
