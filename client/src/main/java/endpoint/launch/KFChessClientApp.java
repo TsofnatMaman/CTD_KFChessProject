@@ -68,13 +68,12 @@ public class KFChessClientApp implements GameEventListener {
      * @throws Exception if WebSocket connection or player ID retrieval fails
      */
     private void initUIAndConnect() throws Exception {
-        String wsUrl = String.format("ws://%s:%s%s%s",
-                ServerConfig.HOST,
-                ServerConfig.PORT,
-                ServerConfig.WS_PATH,
-                ServerConfig.SERVER_ENDPOINT);
+        // קישור ישיר לשירות ברנדר
+        String wsUrl = "wss://ctd-kfchessproject-3.onrender.com/ws/game";//adding -DWS_URL=wss://ctd-kfchessproject-3.onrender.com/ws/game -Djavax.net.ssl.trustStoreType=Windows-ROOT -Djavax.net.ssl.trustStore=NONE
 
+        logger.info("Connecting to WebSocket: " + wsUrl);
         client = new ChessClientEndpoint(new URI(wsUrl));
+
 
         // Prompt user for a username
         String username;

@@ -1,7 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-                             https://maven.apache.org/xsd/maven-4.0.0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.kfchess</groupId>
@@ -9,16 +8,27 @@
     <version>1.0-SNAPSHOT</version>
     <packaging>pom</packaging>
 
-    <!-- NOTICE: removed top-level <modules> -->
-
+    <!-- Centralized versions and build properties -->
     <properties>
+        <!-- Java toolchain -->
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Libraries -->
         <jackson.version>2.15.2</jackson.version>
         <slf4j.version>2.0.7</slf4j.version>
         <tyrus.version>1.17</tyrus.version>
+
+        <!-- Plugin versions (managed here for consistency) -->
+        <maven.compiler.plugin.version>3.11.0</maven.compiler.plugin.version>
+        <maven.surefire.plugin.version>3.0.0-M8</maven.surefire.plugin.version>
+        <maven.shade.plugin.version>3.4.1</maven.shade.plugin.version>
+        <exec.maven.plugin.version>3.5.1</exec.maven.plugin.version>
+        <jacoco.maven.plugin.version>0.8.11</jacoco.maven.plugin.version>
     </properties>
 
+    <!-- Centralized dependency versions (used by child modules without repeating versions) -->
     <dependencyManagement>
         <dependencies>
             <dependency>
@@ -36,11 +46,13 @@
                 <artifactId>jackson-annotations</artifactId>
                 <version>${jackson.version}</version>
             </dependency>
+
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
+            <!-- If any module uses slf4j-simple explicitly, it inherits the version here -->
             <dependency>
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-simple</artifactId>
@@ -49,13 +61,43 @@
         </dependencies>
     </dependencyManagement>
 
+    <!-- Centralized plugin versions/config skeletons; child modules can rely on these -->
     <build>
         <pluginManagement>
             <plugins>
                 <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven.compiler.plugin.version}</version>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                    </configuration>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${maven.surefire.plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven.shade.plugin.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${exec.maven.plugin.version}</version>
+                </plugin>
+
+                <plugin>
                     <groupId>org.jacoco</groupId>
                     <artifactId>jacoco-maven-plugin</artifactId>
-                    <version>0.8.11</version>
+                    <version>${jacoco.maven.plugin.version}</version>
                     <executions>
                         <execution>
                             <goals>
@@ -75,8 +117,11 @@
         </pluginManagement>
     </build>
 
+    <!-- Profile-based module selection:
+         - default "all-modules": build common + client + server
+         - "server-only": build only common + server (useful for Docker/Render images)
+    -->
     <profiles>
-        <!-- Default: build everything when not in Docker -->
         <profile>
             <id>all-modules</id>
             <activation>
@@ -89,7 +134,6 @@
             </modules>
         </profile>
 
-        <!-- Docker / server-only build -->
         <profile>
             <id>server-only</id>
             <modules>
