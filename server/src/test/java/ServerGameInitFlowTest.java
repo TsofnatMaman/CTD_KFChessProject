@@ -1,4 +1,3 @@
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import server.GameHandler;
 
@@ -13,13 +12,6 @@ import static org.junit.jupiter.api.Assertions.*;
  * Uses reflection to inspect GameHandler.game static.
  */
 class ServerGameInitFlowTest {
-
-    @AfterEach
-    void tearDown() throws Exception {
-        Field g = GameHandler.class.getDeclaredField("game");
-        g.setAccessible(true);
-        g.set(null, null);
-    }
 
     @Test
     void twoPlayers_setName_triggersGameInitialization() throws Exception {
@@ -37,10 +29,10 @@ class ServerGameInitFlowTest {
         handler.handleMessage("{\"type\":\"SET_NAME\",\"data\":\"Alice\"}", s1);
         handler.handleMessage("{\"type\":\"SET_NAME\",\"data\":\"Bob\"}", s2);
 
-        // inspect static game field
+        // inspect instance game field
         Field gameField = GameHandler.class.getDeclaredField("game");
         gameField.setAccessible(true);
-        Object game = gameField.get(null);
+        Object game = gameField.get(handler);
 
         assertNotNull(game, "Game should have been created after two names provided");
     }

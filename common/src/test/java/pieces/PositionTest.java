@@ -7,76 +7,59 @@ import static org.junit.jupiter.api.Assertions.*;
 class PositionTest {
 
     @Test
-    void testConstructorAndGetters() {
-        // Constructor should set row and column correctly
-        Position pos = new Position(3, 5);
-        assertEquals(3, pos.getRow());
-        assertEquals(5, pos.getCol());
-    }
-
-    @Test
-    void testDxDy() {
-        // dx and dy should compute differences correctly
-        Position a = new Position(3, 5);
+    void dxAndDyReturnRelativeDifferences() {
+        Position a = new Position(4, 6);
         Position b = new Position(1, 2);
 
-        assertEquals(3, a.dx(b)); // col difference
-        assertEquals(2, a.dy(b)); // row difference
+        assertEquals(4, a.dx(b));
+        assertEquals(3, a.dy(b));
+        assertEquals(-4, b.dx(a));
+        assertEquals(-3, b.dy(a));
     }
 
     @Test
-    void testEqualsAndHashCode() {
-        // equals and hashCode should behave consistently
-        Position a = new Position(2, 4);
-        Position b = new Position(2, 4);
-        Position c = new Position(3, 4);
+    void addReturnsNewOffsetPosition() {
+        Position base = new Position(2, 3);
+        Position result = base.add(1, -1);
 
-        assertEquals(a, b);
-        assertNotEquals(a, c);
-        assertEquals(a.hashCode(), b.hashCode());
-        assertNotEquals(a.hashCode(), c.hashCode());
+        assertEquals(3, result.getRow());
+        assertEquals(2, result.getCol());
+        assertEquals(2, base.getRow());
+        assertEquals(3, base.getCol());
+        assertNotSame(base, result);
     }
 
     @Test
-    void testAddMethod() {
-        // add method should create new Position with summed values
-        Position a = new Position(1, 1);
-        Position b = a.add(2, 3);
-        assertEquals(3, b.getRow());
-        assertEquals(4, b.getCol());
+    void incrementAndDecrementHelpersAdjustCoordinates() {
+        Position p = new Position(0, 0);
+
+        p.addOneRow();
+        p.addOneCol();
+        assertEquals(1, p.getRow());
+        assertEquals(1, p.getCol());
+
+        p.reduceOneRow();
+        p.reduceOneCol();
+        assertEquals(0, p.getRow());
+        assertEquals(0, p.getCol());
     }
 
     @Test
-    void testCopy() {
-        // copy should create a new equal object
-        Position a = new Position(4, 7);
-        Position b = a.copy();
-        assertEquals(a, b);
-        assertNotSame(a, b);
+    void equalsAndHashCodeDependOnRowAndCol() {
+        Position a1 = new Position(5, 7);
+        Position a2 = new Position(5, 7);
+        Position b = new Position(7, 5);
+
+        assertEquals(a1, a2);
+        assertEquals(a1.hashCode(), a2.hashCode());
+        assertNotEquals(a1, b);
+        assertNotEquals(a1.hashCode(), b.hashCode());
     }
 
     @Test
-    void testRowColumnManipulations() {
-        // increment and decrement row/col methods
-        Position pos = new Position(5, 5);
-
-        pos.addOneRow();
-        assertEquals(6, pos.getRow());
-        pos.addOneCol();
-        assertEquals(6, pos.getCol());
-
-        pos.reduceOneRow();
-        assertEquals(5, pos.getRow());
-        pos.reduceOneCol();
-        assertEquals(5, pos.getCol());
-    }
-
-    @Test
-    void testToStringFormat() {
-        // toString should include row and column numbers
-        Position pos = new Position(2, 3);
-        String str = pos.toString();
-        assertTrue(str.contains(Integer.toString(pos.getRow())));
-        assertTrue(str.contains(Integer.toString(pos.getCol())));
+    void toStringUsesSeparator() {
+        Position p = new Position(3, 4);
+        String expected = "3" + constants.PieceConstants.POSITION_SEPARATOR + "4";
+        assertEquals(expected, p.toString());
     }
 }

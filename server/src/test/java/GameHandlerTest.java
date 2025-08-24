@@ -1,4 +1,3 @@
-
 import dto.Message;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,9 +17,11 @@ import static org.mockito.Mockito.*;
 class GameHandlerTest {
 
     private GameHandler handler;
+    private Runnable shutdownHook;
 
     @BeforeEach
     void setup() {
+        shutdownHook = mock(Runnable.class);
         handler = new GameHandler();
     }
 
@@ -40,18 +41,14 @@ class GameHandlerTest {
     }
 
     @Test
-    void handleClose_removesSession() {
+    void handleClose_invokesShutdownHookWhenAllPlayersLeave() throws IOException {
         Session session = mock(Session.class);
         when(session.getId()).thenReturn("s2");
 
-        // open then close to ensure no exceptions
-        try {
-            handler.handleOpen(session);
-        } catch (IOException ignored) {}
+        handler.handleOpen(session);
 
         handler.handleClose(session, new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "test"));
 
-        // closing should not throw and subsequent close is fine
-        handler.handleClose(session, new CloseReason(CloseReason.CloseCodes.NORMAL_CLOSURE, "again"));
+        verify(shutdownHook, times(1)).run();
     }
 }

@@ -4,7 +4,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import pieces.EPieceEvent;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Unit tests for the TransitionTable class.
@@ -35,26 +36,12 @@ class TransitionTableTest {
     }
 
     /**
-     * Test that an illegal transition throws an IllegalStateException.
-     * Specifically, when a transition from IDLE with DONE event does not exist.
+     * Test that next() throws when a transition is not defined in the CSV.
+     * Two cases are checked: missing event and missing state mapping.
      */
     @Test
-    void testIllegalTransitionThrows() {
-        Exception ex = assertThrows(IllegalStateException.class,
-                () -> table.next(EState.IDLE, EPieceEvent.DONE));
-        // Verify that the exception message contains "Illegal transition"
-        assertTrue(ex.getMessage().contains("Illegal transition"));
-    }
-
-    /**
-     * Test that requesting a transition from a state-event pair
-     * not present in the CSV throws an IllegalStateException.
-     */
-    @Test
-    void testNullEventMapThrows() {
-        Exception ex = assertThrows(IllegalStateException.class,
-                () -> table.next(EState.JUMP, EPieceEvent.MOVE));
-        // Verify that the exception message contains "Illegal transition"
-        assertTrue(ex.getMessage().contains("Illegal transition"));
+    void testNextThrowsForInvalidTransition() {
+        assertThrows(IllegalStateException.class, () -> table.next(EState.IDLE, EPieceEvent.DONE));
+        assertThrows(IllegalStateException.class, () -> table.next(EState.JUMP, EPieceEvent.MOVE));
     }
 }

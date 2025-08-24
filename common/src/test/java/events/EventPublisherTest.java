@@ -76,4 +76,19 @@ class EventPublisherTest {
         // Listener should receive the event twice
         verify(listener1, times(2)).onEvent(event);
     }
+
+    @Test
+    void testSubscribePublishThenUnsubscribeStopsEvents() {
+        // Subscribe a listener and verify it receives the first event
+        publisher.subscribe(EGameEvent.PIECE_START_MOVED, listener1);
+        GameEvent first = new GameEvent(EGameEvent.PIECE_START_MOVED, "first");
+        publisher.publish(EGameEvent.PIECE_START_MOVED, first);
+        verify(listener1, times(1)).onEvent(first);
+
+        // Unsubscribe and ensure no further events are received
+        publisher.unsubscribe(EGameEvent.PIECE_START_MOVED, listener1);
+        GameEvent second = new GameEvent(EGameEvent.PIECE_START_MOVED, "second");
+        publisher.publish(EGameEvent.PIECE_START_MOVED, second);
+        verifyNoMoreInteractions(listener1);
+    }
 }
