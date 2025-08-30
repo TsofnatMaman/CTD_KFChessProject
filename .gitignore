@@ -43,3 +43,4 @@ build/
 /TODO.txt
 /debug.log
 /logs
+/server/logs
